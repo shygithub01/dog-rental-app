@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 interface Dog {
   id: string;
@@ -22,23 +22,43 @@ interface DogCardProps {
   dog: Dog;
   onEdit: (dog: Dog) => void;
   onDelete: () => void;
+  onRent?: (dog: Dog) => void;
   currentUserId: string;
 }
 
-const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, currentUserId }) => {
+const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, currentUserId }) => {
   const [loading, setLoading] = useState(false);
   const { db } = useFirebase();
   const isOwner = dog.ownerId === currentUserId;
 
   const handleDelete = async () => {
+    // Check if dog has pending requests or is rented
+    if (dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) {
+      alert(`Cannot delete ${dog.name} while it has pending requests or is currently rented. Please wait until the rental period ends.`);
+      return;
+    }
+
     if (!window.confirm(`Are you sure you want to delete ${dog.name}?`)) {
       return;
     }
 
     setLoading(true);
     try {
+      // Delete the dog
       await deleteDoc(doc(db, 'dogs', dog.id));
       console.log('Dog deleted successfully!');
+
+      // Clean up any pending rental requests for this dog
+      const requestsQuery = query(
+        collection(db, 'rentalRequests'),
+        where('dogId', '==', dog.id)
+      );
+      const requestsSnapshot = await getDocs(requestsQuery);
+      
+      const deletePromises = requestsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(deletePromises);
+      
+      console.log(`Cleaned up ${requestsSnapshot.size} rental requests for deleted dog`);
       onDelete();
     } catch (error) {
       console.error('Error deleting dog:', error);
@@ -70,10 +90,12 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, currentUserId 
         borderRadius: '20px',
         fontSize: '0.8rem',
         fontWeight: 'bold',
-        backgroundColor: dog.isAvailable ? '#48bb78' : '#e53e3e',
+        backgroundColor: dog.isAvailable ? '#48bb78' : 
+                       dog.status === 'requested' ? '#ed8936' : '#e53e3e',
         color: 'white'
       }}>
-        {dog.isAvailable ? 'Available' : 'Rented'}
+        {dog.isAvailable ? 'Available' : 
+         dog.status === 'requested' ? 'Requested' : 'Rented'}
       </div>
 
       {/* Dog Info */}
@@ -169,67 +191,81 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, currentUserId 
           <>
             <button
               onClick={() => onEdit(dog)}
-              disabled={loading}
+              disabled={loading || dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable}
               style={{
                 padding: '8px 16px',
-                backgroundColor: '#4299e1',
+                backgroundColor: (dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? '#cbd5e0' : '#4299e1',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
-                cursor: loading ? 'not-allowed' : 'pointer',
+                cursor: (loading || dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? 'not-allowed' : 'pointer',
                 fontWeight: 'bold',
                 fontSize: '0.9rem',
                 transition: 'all 0.2s'
               }}
               onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#3182ce';
+                if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#3182ce';
               }}
               onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#4299e1';
+                if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#4299e1';
               }}
+              title={(dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? 'Cannot edit while dog is rented or has pending requests' : 'Edit dog details'}
             >
               ✏️ Edit
             </button>
             <button
               onClick={handleDelete}
-              disabled={loading}
+              disabled={loading || dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable}
               style={{
                 padding: '8px 16px',
-                backgroundColor: loading ? '#cbd5e0' : '#e53e3e',
+                backgroundColor: (loading || dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? '#cbd5e0' : '#e53e3e',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
-                cursor: loading ? 'not-allowed' : 'pointer',
+                cursor: (loading || dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? 'not-allowed' : 'pointer',
                 fontWeight: 'bold',
                 fontSize: '0.9rem',
                 transition: 'all 0.2s'
               }}
               onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#c53030';
+                if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#c53030';
               }}
               onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#e53e3e';
+                if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#e53e3e';
               }}
+              title={(dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? 'Cannot delete while dog is rented or has pending requests' : 'Delete dog'}
             >
               {loading ? 'Deleting...' : '🗑️ Delete'}
             </button>
           </>
         ) : (
-          <button style={{
-            padding: '10px 20px',
-            backgroundColor: '#48bb78',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            transition: 'all 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
+          <button 
+            onClick={() => {
+              console.log('Request button clicked for dog:', dog.name);
+              console.log('onRent function:', onRent);
+              onRent?.(dog);
+            }}
+            disabled={!dog.isAvailable}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: dog.isAvailable ? '#ed8936' : '#cbd5e0',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: dog.isAvailable ? 'pointer' : 'not-allowed',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={(e) => {
+              if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#dd6b20';
+            }}
+            onMouseOut={(e) => {
+              if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#ed8936';
+            }}
           >
-            🐕 Rent This Dog
+            {dog.isAvailable ? '📝 Request This Dog' : 
+             dog.status === 'requested' ? '⏳ Request Pending' : '🚫 Currently Rented'}
           </button>
         )}
       </div>

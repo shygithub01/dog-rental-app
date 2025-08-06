@@ -46,6 +46,11 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
     setError('');
 
     try {
+      // Check if dog has pending requests or is rented
+      if (dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) {
+        throw new Error('Cannot edit dog while it has pending requests or is currently rented. Please wait until the rental period ends.');
+      }
+
       console.log('Updating dog in database:', formData);
 
       await updateDoc(doc(db, 'dogs', dog.id), {

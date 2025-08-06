@@ -8,6 +8,9 @@ import Login from './components/Auth/Login'
 import AddDogForm from './components/Dogs/AddDogForm'
 import DogCard from './components/Dogs/DogCard'
 import EditDogForm from './components/Dogs/EditDogForm'
+import RentalRequestForm from './components/Rentals/RentalRequestForm'
+import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
+import { cleanupOrphanedData } from './utils/dataCleanup'
 import { collection, addDoc, getDocs, orderBy, Timestamp } from 'firebase/firestore'
 
 function AppContent() {
@@ -16,7 +19,10 @@ function AppContent() {
   const [user, setUser] = useState<any>(null)
   const [showAddDog, setShowAddDog] = useState(false)
   const [showEditDog, setShowEditDog] = useState(false)
+  const [showRentDog, setShowRentDog] = useState(false)
+  const [showApprovalPanel, setShowApprovalPanel] = useState(false)
   const [editingDog, setEditingDog] = useState<any>(null)
+  const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -32,29 +38,96 @@ function AppContent() {
       console.log('Auth state changed:', user)
       setUser(user)
       if (user) {
-        loadDogs()
+        console.log('User authenticated, loading dogs...')
+        // Use the user parameter directly instead of relying on state
+        loadDogsWithUser(user)
       }
     })
 
     return () => unsubscribe()
   }, [auth])
 
-  const loadDogs = async () => {
-    if (!user) return
+  const loadDogsWithUser = async (currentUser: any) => {
+    console.log('=== loadDogsWithUser START ===')
+    console.log('loadDogsWithUser called, user:', currentUser)
+    console.log('user type:', typeof currentUser)
+    console.log('user truthy:', !!currentUser)
+    
+    if (!currentUser) {
+      console.log('No user, skipping loadDogsWithUser')
+      return
+    }
+    
+    console.log('About to set loading...')
     setLoading(true)
+    
     try {
       console.log('Loading dogs from database...')
+      console.log('Current user:', currentUser.uid)
+      console.log('About to call getDocs...')
+      
       const querySnapshot = await getDocs(collection(db, 'dogs'))
+      console.log('Query snapshot size:', querySnapshot.size)
+      
       const allDogs = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }))
       console.log('Dogs loaded:', allDogs)
+      console.log('Number of dogs:', allDogs.length)
+      
+      console.log('About to setDogs...')
       setDogs(allDogs)
+      console.log('setDogs called')
+      
     } catch (error) {
       console.error('Error loading dogs:', error)
     } finally {
+      console.log('Setting loading to false...')
       setLoading(false)
+      console.log('=== loadDogsWithUser END ===')
+    }
+  }
+
+  const loadDogs = async () => {
+    console.log('=== loadDogs START ===')
+    console.log('loadDogs called, user:', user)
+    console.log('user type:', typeof user)
+    console.log('user truthy:', !!user)
+    
+    if (!user) {
+      console.log('No user, skipping loadDogs')
+      return
+    }
+    
+    console.log('About to set loading...')
+    setLoading(true)
+    
+    try {
+      console.log('Loading dogs from database...')
+      console.log('Current user:', user.uid)
+      console.log('About to call getDocs...')
+      
+      const querySnapshot = await getDocs(collection(db, 'dogs'))
+      console.log('Query snapshot size:', querySnapshot.size)
+      
+      const allDogs = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      console.log('Dogs loaded:', allDogs)
+      console.log('Number of dogs:', allDogs.length)
+      
+      console.log('About to setDogs...')
+      setDogs(allDogs)
+      console.log('setDogs called')
+      
+    } catch (error) {
+      console.error('Error loading dogs:', error)
+    } finally {
+      console.log('Setting loading to false...')
+      setLoading(false)
+      console.log('=== loadDogs END ===')
     }
   }
 
@@ -77,6 +150,28 @@ function AppContent() {
   const handleDeleteDog = () => {
     loadDogs()
   }
+
+  const handleRentDog = (dog: any) => {
+    setRentingDog(dog)
+    setShowRentDog(true)
+  }
+
+  const handleRentDogSuccess = () => {
+    setShowRentDog(false)
+    setRentingDog(null)
+    loadDogsWithUser(user)
+  }
+
+  const handleDataCleanup = async () => {
+    try {
+      const cleanedCount = await cleanupOrphanedData();
+      alert(`Data cleanup complete! Removed ${cleanedCount} orphaned requests.`);
+      loadDogsWithUser(user);
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+      alert('Error during data cleanup. Please try again.');
+    }
+  };
 
   if (!user) {
     return (
@@ -271,6 +366,149 @@ function AppContent() {
     )
   }
 
+  if (showRentDog && rentingDog) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '20px'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '20px',
+          padding: '40px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+          maxWidth: '800px',
+          margin: '0 auto'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '30px',
+            paddingBottom: '20px',
+            borderBottom: '2px solid #f7fafc'
+          }}>
+            <div>
+              <h1 style={{
+                fontSize: '2.5rem',
+                color: '#2d3748',
+                margin: 0,
+                fontWeight: 'bold'
+              }}>
+                🐕 Dog Rental App
+              </h1>
+              <p style={{
+                color: '#4a5568',
+                fontSize: '1.1rem',
+                margin: '5px 0 0 0'
+              }}>
+                Rent {rentingDog.name}
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setShowRentDog(false)
+                setRentingDog(null)
+              }}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#718096',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'all 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+          <RentalRequestForm
+            dog={rentingDog}
+            onSuccess={handleRentDogSuccess}
+            onCancel={() => {
+              setShowRentDog(false)
+              setRentingDog(null)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  if (showApprovalPanel) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '20px'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '20px',
+          padding: '40px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+          maxWidth: '1000px',
+          margin: '0 auto'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '30px',
+            paddingBottom: '20px',
+            borderBottom: '2px solid #f7fafc'
+          }}>
+            <div>
+              <h1 style={{
+                fontSize: '2.5rem',
+                color: '#2d3748',
+                margin: 0,
+                fontWeight: 'bold'
+              }}>
+                🐕 Dog Rental App
+              </h1>
+              <p style={{
+                color: '#4a5568',
+                fontSize: '1.1rem',
+                margin: '5px 0 0 0'
+              }}>
+                Rental Request Management
+              </p>
+            </div>
+            <button
+              onClick={() => setShowApprovalPanel(false)}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#718096',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'all 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+          <RentalApprovalPanel
+            currentUserId={user.uid}
+            onRequestUpdate={() => {
+              loadDogsWithUser(user)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -360,10 +598,10 @@ function AppContent() {
             <h3 style={{ margin: '0 0 15px 0', fontSize: '1.5rem' }}>
               📊 Dashboard
             </h3>
-            <div style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '10px' }}>
-              {loading ? '...' : dogs.length}
-            </div>
-            <p style={{ margin: 0, opacity: 0.9 }}>Dogs Available</p>
+                                  <div style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '10px' }}>
+                        {loading ? '...' : dogs.filter(dog => dog.isAvailable).length}
+                      </div>
+                      <p style={{ margin: 0, opacity: 0.9 }}>Dogs Available</p>
           </div>
 
           {/* Quick Actions */}
@@ -411,9 +649,27 @@ function AppContent() {
               >
                 🔍 Browse Dogs
               </button>
+              <button 
+                onClick={() => setShowApprovalPanel(true)}
+                style={{
+                  padding: '15px 20px',
+                  backgroundColor: '#ed8936',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dd6b20'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ed8936'}
+              >
+                📋 Rental Requests
+              </button>
               <button style={{
                 padding: '15px 20px',
-                backgroundColor: '#ed8936',
+                backgroundColor: '#805ad5',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -422,10 +678,28 @@ function AppContent() {
                 fontSize: '1rem',
                 transition: 'all 0.2s'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dd6b20'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ed8936'}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6b46c1'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#805ad5'}
               >
                 📅 My Rentals
+              </button>
+              <button 
+                onClick={handleDataCleanup}
+                style={{
+                  padding: '15px 20px',
+                  backgroundColor: '#e53e3e',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
+              >
+                🧹 Clean Data
               </button>
             </div>
           </div>
@@ -481,6 +755,7 @@ function AppContent() {
                   dog={dog}
                   onEdit={handleEditDog}
                   onDelete={handleDeleteDog}
+                  onRent={handleRentDog}
                   currentUserId={user.uid}
                 />
               ))}
