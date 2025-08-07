@@ -134,48 +134,100 @@ export class UserService {
         };
       });
 
-      // Get recent rentals (simplified query to avoid index requirement)
-      const rentalsQuery = query(
+      // Get rentals where user is the renter
+      const renterRentalsQuery = query(
         collection(this.db, 'rentals'),
         where('renterId', '==', userId)
       );
-      const rentalsSnapshot = await getDocs(rentalsQuery);
-      const recentRentals: RentalSummary[] = rentalsSnapshot.docs
-        .map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            dogName: data.dogName,
-            dogBreed: data.dogBreed,
-            startDate: data.startDate.toDate(),
-            endDate: data.endDate.toDate(),
-            status: data.status,
-            totalCost: data.totalCost
-          };
-        })
+      const renterRentalsSnapshot = await getDocs(renterRentalsQuery);
+      const renterRentals = renterRentalsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          dogName: data.dogName,
+          dogBreed: data.dogBreed,
+          startDate: data.startDate.toDate(),
+          endDate: data.endDate.toDate(),
+          status: data.status,
+          totalCost: data.totalCost,
+          type: 'rented' as const
+        };
+      });
+
+      // Get rentals where user is the dog owner (for earnings)
+      const ownerRentalsQuery = query(
+        collection(this.db, 'rentals'),
+        where('dogOwnerId', '==', userId)
+      );
+      const ownerRentalsSnapshot = await getDocs(ownerRentalsQuery);
+      const ownerRentals = ownerRentalsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          dogName: data.dogName,
+          dogBreed: data.dogBreed,
+          startDate: data.startDate.toDate(),
+          endDate: data.endDate.toDate(),
+          status: data.status,
+          totalCost: data.totalCost,
+          type: 'owned' as const
+        };
+      });
+
+      // Combine all rentals for display
+      const allRentals = [...renterRentals, ...ownerRentals];
+      const recentRentals: RentalSummary[] = allRentals
         .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
-        .slice(0, 5); // Get only the 5 most recent
+        .slice(0, 5)
+        .map(rental => ({
+          id: rental.id,
+          dogName: rental.dogName,
+          dogBreed: rental.dogBreed,
+          startDate: rental.startDate,
+          endDate: rental.endDate,
+          status: rental.status,
+          totalCost: rental.totalCost
+        }));
 
       // Get reviews (placeholder for now)
       const reviews: ReviewSummary[] = [];
 
       // Calculate updated stats based on actual data
+      const totalRentalsAsRenter = renterRentals.length;
+      const totalRentalsAsOwner = ownerRentals.length;
+      const completedRentalsAsRenter = renterRentals.filter(r => r.status === 'completed').length;
+      const completedRentalsAsOwner = ownerRentals.filter(r => r.status === 'completed').length;
+      
+      const totalEarnings = ownerRentals
+        .filter(r => r.status === 'completed')
+        .reduce((sum, r) => sum + r.totalCost, 0);
+      
+      const totalSpent = renterRentals
+        .filter(r => r.status === 'completed')
+        .reduce((sum, r) => sum + r.totalCost, 0);
+
       const updatedStats = {
         dogsOwned: dogs.length,
-        dogsRented: recentRentals.length,
-        totalRentals: recentRentals.length,
-        completedRentals: recentRentals.filter(r => r.status === 'completed').length,
-        cancelledRentals: recentRentals.filter(r => r.status === 'cancelled').length,
+        dogsRented: totalRentalsAsRenter,
+        totalRentals: totalRentalsAsRenter + totalRentalsAsOwner,
+        completedRentals: completedRentalsAsRenter + completedRentalsAsOwner,
+        cancelledRentals: allRentals.filter(r => r.status === 'cancelled').length,
         averageRating: user.stats.averageRating,
-        totalEarnings: recentRentals
-          .filter(r => r.status === 'completed')
-          .reduce((sum, r) => sum + r.totalCost, 0),
-        totalSpent: recentRentals
-          .filter(r => r.status === 'completed')
-          .reduce((sum, r) => sum + r.totalCost, 0),
+        totalEarnings: totalEarnings,
+        totalSpent: totalSpent,
         memberSince: user.stats.memberSince,
-        lastRentalDate: recentRentals.length > 0 ? recentRentals[0].startDate : undefined
+        lastRentalDate: allRentals.length > 0 ? allRentals[0].startDate : undefined
       };
+
+      console.log('Calculated stats:', {
+        dogsOwned: updatedStats.dogsOwned,
+        totalRentals: updatedStats.totalRentals,
+        completedRentals: updatedStats.completedRentals,
+        totalEarnings: updatedStats.totalEarnings,
+        totalSpent: updatedStats.totalSpent,
+        renterRentals: renterRentals.length,
+        ownerRentals: ownerRentals.length
+      });
 
       // Update user stats in database if they're different
       if (
