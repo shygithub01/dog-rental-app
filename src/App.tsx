@@ -8,10 +8,12 @@ import EditDogForm from './components/Dogs/EditDogForm'
 import RentalRequestForm from './components/Rentals/RentalRequestForm'
 import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
 import NotificationBell from './components/Notifications/NotificationBell'
+import UserProfile from './components/User/UserProfile'
 import { cleanupOrphanedData } from './utils/dataCleanup'
 import { collection, getDocs } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { useNotificationService } from './services/notificationService'
+import { useUserService } from './services/userService'
 
 function AppContent() {
   const [user, setUser] = useState<any>(null)
@@ -19,6 +21,7 @@ function AppContent() {
   const [showEditDog, setShowEditDog] = useState(false)
   const [showRentDog, setShowRentDog] = useState(false)
   const [showApprovalPanel, setShowApprovalPanel] = useState(false)
+  const [showUserProfile, setShowUserProfile] = useState(false)
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
@@ -26,6 +29,7 @@ function AppContent() {
 
   const { auth, db } = useFirebase()
   const notificationService = useNotificationService()
+  const userService = useUserService()
 
   useEffect(() => {
     console.log('Firebase Auth initialized:', auth)
@@ -39,6 +43,13 @@ function AppContent() {
         console.log('User authenticated, loading dogs...')
         // Use the user parameter directly instead of relying on state
         loadDogsWithUser(user)
+        
+        // Create or update user profile
+        try {
+          await createOrUpdateUserProfile(user)
+        } catch (error) {
+          console.error('Error creating/updating user profile:', error)
+        }
         
         // Create welcome notification for new users
         try {
@@ -62,6 +73,37 @@ function AppContent() {
 
     return () => unsubscribe()
   }, [auth])
+
+  const createOrUpdateUserProfile = async (user: any) => {
+    try {
+      // Check if user profile exists
+      const existingUser = await userService.getUser(user.uid)
+      
+      if (!existingUser) {
+        // Create new user profile
+        await userService.createUser(user.uid, {
+          email: user.email,
+          displayName: user.displayName || user.email,
+          photoURL: user.photoURL,
+          phoneNumber: user.phoneNumber,
+          location: '',
+          bio: ''
+        })
+        console.log('New user profile created!')
+      } else {
+        // Update existing user profile with latest info
+        await userService.updateUser(user.uid, {
+          displayName: user.displayName || user.email,
+          photoURL: user.photoURL,
+          email: user.email
+        })
+        console.log('User profile updated!')
+      }
+    } catch (error) {
+      console.error('Error in createOrUpdateUserProfile:', error)
+      throw error
+    }
+  }
 
   const loadDogsWithUser = async (currentUser: any) => {
     console.log('=== loadDogsWithUser START ===')
@@ -325,6 +367,15 @@ function AppContent() {
     )
   }
 
+  if (showUserProfile) {
+    return (
+      <UserProfile
+        userId={user.uid}
+        onClose={() => setShowUserProfile(false)}
+      />
+    )
+  }
+
     return (
     <div style={{
       minHeight: '100vh',
@@ -403,6 +454,23 @@ function AppContent() {
                 }}>
                   🔥 Connected
                 </div>
+                <button
+                  onClick={() => setShowUserProfile(true)}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: 'transparent',
+                    color: '#4a5568',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f7fafc'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  Profile
+                </button>
                 <button
                   onClick={() => auth.signOut()}
                   style={{
