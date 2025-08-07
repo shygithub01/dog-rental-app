@@ -133,46 +133,16 @@ export class MessageService {
     try {
       console.log('Loading messages for conversation between:', user1Id, 'and', user2Id);
       
-      // Get messages where user1 is sender
-      const messagesQuery1 = query(
-        collection(this.db, 'messages'),
-        where('senderId', '==', user1Id)
-      );
-      
-      const messagesSnapshot1 = await getDocs(messagesQuery1);
+      // Get all messages and filter on client side
+      const messagesQuery = query(collection(this.db, 'messages'));
+      const messagesSnapshot = await getDocs(messagesQuery);
       const messages: Message[] = [];
       
-      // Process messages where user1 is sender
-      for (const doc of messagesSnapshot1.docs) {
+      for (const doc of messagesSnapshot.docs) {
         const data = doc.data();
-        if (data.receiverId === user2Id) {
-          messages.push({
-            id: doc.id,
-            senderId: data.senderId,
-            senderName: data.senderName,
-            receiverId: data.receiverId,
-            receiverName: data.receiverName,
-            content: data.content,
-            timestamp: data.timestamp.toDate(),
-            isRead: data.isRead,
-            rentalId: data.rentalId,
-            dogId: data.dogId
-          });
-        }
-      }
-
-      // Get messages where user2 is sender
-      const messagesQuery2 = query(
-        collection(this.db, 'messages'),
-        where('senderId', '==', user2Id)
-      );
-      
-      const messagesSnapshot2 = await getDocs(messagesQuery2);
-      
-      // Process messages where user2 is sender
-      for (const doc of messagesSnapshot2.docs) {
-        const data = doc.data();
-        if (data.receiverId === user1Id) {
+        // Check if this message is part of the conversation
+        if ((data.senderId === user1Id && data.receiverId === user2Id) ||
+            (data.senderId === user2Id && data.receiverId === user1Id)) {
           messages.push({
             id: doc.id,
             senderId: data.senderId,

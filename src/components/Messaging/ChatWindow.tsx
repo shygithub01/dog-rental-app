@@ -77,23 +77,47 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim() || !conversation) return;
 
+    const messageContent = newMessage.trim();
+    setNewMessage(''); // Clear input immediately
+
     try {
+      // Create a temporary message for immediate display
+      const tempMessage: Message = {
+        id: `temp-${Date.now()}`,
+        senderId: currentUserId,
+        senderName: currentUserName,
+        receiverId: conversation.otherUserId,
+        receiverName: conversation.otherUserName,
+        content: messageContent,
+        timestamp: new Date(),
+        isRead: false
+      };
+
+      // Add message to local state immediately
+      setMessages(prev => [...prev, tempMessage]);
+
+      // Send message to Firebase
       await messageService.sendMessage(currentUserId, currentUserName, {
         receiverId: conversation.otherUserId,
         receiverName: conversation.otherUserName,
-        content: newMessage.trim()
+        content: messageContent
       });
-      setNewMessage('');
+
+      console.log('Message sent successfully');
     } catch (error) {
       console.error('Error sending message:', error);
       setError('Failed to send message');
+      // Remove the temporary message if sending failed
+      setMessages(prev => prev.filter(msg => msg.id !== `temp-${Date.now()}`));
     }
   };
 
