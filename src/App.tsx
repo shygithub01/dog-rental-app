@@ -9,11 +9,13 @@ import RentalRequestForm from './components/Rentals/RentalRequestForm'
 import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
 import NotificationBell from './components/Notifications/NotificationBell'
 import UserProfile from './components/User/UserProfile'
+import MessagingCenter from './components/Messaging/MessagingCenter'
 import { cleanupOrphanedData } from './utils/dataCleanup'
 import { collection, getDocs } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { useNotificationService } from './services/notificationService'
 import { useUserService } from './services/userService'
+import { useMessageService } from './services/messageService'
 
 function AppContent() {
   const [user, setUser] = useState<any>(null)
@@ -22,6 +24,8 @@ function AppContent() {
   const [showRentDog, setShowRentDog] = useState(false)
   const [showApprovalPanel, setShowApprovalPanel] = useState(false)
   const [showUserProfile, setShowUserProfile] = useState(false)
+  const [showMessaging, setShowMessaging] = useState(false)
+  const [selectedDogForMessage, setSelectedDogForMessage] = useState<any>(null)
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
@@ -30,6 +34,7 @@ function AppContent() {
   const { auth, db } = useFirebase()
   const notificationService = useNotificationService()
   const userService = useUserService()
+  const messageService = useMessageService()
 
   useEffect(() => {
     console.log('Firebase Auth initialized:', auth)
@@ -216,7 +221,29 @@ function AppContent() {
 
   const handleRentDog = (dog: any) => {
     setRentingDog(dog)
-    setShowRentDog(true)
+  }
+
+  const handleMessageDogOwner = async (dog: any) => {
+    if (!user) {
+      alert('Please sign in to message the dog owner')
+      return
+    }
+
+    try {
+      // Start a conversation with the dog owner
+      await messageService.sendMessage(user.uid, user.displayName || user.email!, {
+        receiverId: dog.ownerId,
+        receiverName: dog.ownerName,
+        content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about the dog?`,
+        dogId: dog.id
+      })
+
+      // Show messaging center
+      setShowMessaging(true)
+    } catch (error) {
+      console.error('Error starting conversation:', error)
+      alert('Failed to start conversation. Please try again.')
+    }
   }
 
   const handleRentDogSuccess = () => {
@@ -381,6 +408,16 @@ function AppContent() {
     )
   }
 
+  if (showMessaging) {
+    return (
+      <MessagingCenter
+        currentUserId={user?.uid || ''}
+        currentUserName={user?.displayName || user?.email || ''}
+        onClose={() => setShowMessaging(false)}
+      />
+    )
+  }
+
     return (
     <div style={{
       minHeight: '100vh',
@@ -449,12 +486,33 @@ function AppContent() {
             {user ? (
               <>
                 <NotificationBell userId={user.uid} />
-                <div style={{
-                  padding: '6px 12px',
+                <button
+                  onClick={() => setShowMessaging(true)}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#38a169',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  💬 Messages
+                </button>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '5px',
+                  padding: '8px 12px',
                   backgroundColor: '#48bb78',
                   color: 'white',
-                  borderRadius: '15px',
-                  fontSize: '0.8rem',
+                  borderRadius: '20px',
+                  fontSize: '0.9rem',
                   fontWeight: 'bold'
                 }}>
                   🔥 Connected
@@ -463,16 +521,14 @@ function AppContent() {
                   onClick={() => setShowUserProfile(true)}
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: 'transparent',
-                    color: '#4a5568',
-                    border: '1px solid #e2e8f0',
+                    backgroundColor: '#4299e1',
+                    color: 'white',
+                    border: 'none',
                     borderRadius: '8px',
                     cursor: 'pointer',
-                    fontWeight: '500',
-                    transition: 'all 0.2s'
+                    fontWeight: 'bold',
+                    fontSize: '14px'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f7fafc'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   Profile
                 </button>
@@ -480,16 +536,14 @@ function AppContent() {
                   onClick={() => auth.signOut()}
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: 'transparent',
-                    color: '#4a5568',
-                    border: '1px solid #e2e8f0',
+                    backgroundColor: '#e53e3e',
+                    color: 'white',
+                    border: 'none',
                     borderRadius: '8px',
                     cursor: 'pointer',
-                    fontWeight: '500',
-                    transition: 'all 0.2s'
+                    fontWeight: 'bold',
+                    fontSize: '14px'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f7fafc'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   Sign Out
                 </button>
@@ -819,6 +873,7 @@ function AppContent() {
                   onEdit={handleEditDog}
                   onDelete={handleDeleteDog}
                   onRent={handleRentDog}
+                  onMessage={handleMessageDogOwner}
                   currentUserId={user.uid}
                 />
               ))}

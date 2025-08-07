@@ -25,10 +25,11 @@ interface DogCardProps {
   onEdit: (dog: Dog) => void;
   onDelete: () => void;
   onRent?: (dog: Dog) => void;
+  onMessage?: (dog: Dog) => void;
   currentUserId: string;
 }
 
-const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, currentUserId }) => {
+const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMessage, currentUserId }) => {
   const [loading, setLoading] = useState(false);
   const [imageError, setImageError] = useState(false);
   const { db } = useFirebase();
@@ -322,35 +323,57 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, curren
               </button>
             </>
           ) : (
-            <button 
-              onClick={() => {
-                console.log('Request button clicked for dog:', dog.name);
-                console.log('onRent function:', onRent);
-                onRent?.(dog);
-              }}
-              disabled={!dog.isAvailable}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: dog.isAvailable ? '#ed8936' : '#cbd5e0',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: dog.isAvailable ? 'pointer' : 'not-allowed',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                transition: 'all 0.2s'
-              }}
-              className="mobile-action-btn"
-              onMouseOver={(e) => {
-                if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#dd6b20';
-              }}
-              onMouseOut={(e) => {
-                if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#ed8936';
-              }}
-            >
-              {dog.isAvailable ? '📝 Request This Dog' : 
-               dog.status === 'requested' ? '⏳ Request Pending' : '🚫 Currently Rented'}
-            </button>
+            <>
+              <button
+                onClick={() => onMessage?.(dog)}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#38a169',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '0.9rem',
+                  transition: 'all 0.2s'
+                }}
+                className="mobile-action-btn"
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#2f855a'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
+                title="Message the dog owner"
+              >
+                💬 Message
+              </button>
+              <button 
+                onClick={() => {
+                  console.log('Request button clicked for dog:', dog.name);
+                  console.log('onRent function:', onRent);
+                  onRent?.(dog);
+                }}
+                disabled={!dog.isAvailable}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: dog.isAvailable ? '#ed8936' : '#cbd5e0',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: dog.isAvailable ? 'pointer' : 'not-allowed',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  transition: 'all 0.2s'
+                }}
+                className="mobile-action-btn"
+                onMouseOver={(e) => {
+                  if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#dd6b20';
+                }}
+                onMouseOut={(e) => {
+                  if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#ed8936';
+                }}
+              >
+                {dog.isAvailable ? '📝 Request This Dog' : 
+                 dog.status === 'requested' ? '⏳ Request Pending' : '🚫 Currently Rented'}
+              </button>
+            </>
           )}
         </div>
       </div>
