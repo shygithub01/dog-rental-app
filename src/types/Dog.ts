@@ -1,3 +1,5 @@
+import type { Location } from './Location';
+
 export interface Dog {
   id: string;
   name: string;
@@ -10,7 +12,8 @@ export interface Dog {
   ownerId: string;
   ownerName: string;
   isAvailable: boolean;
-  location: string;
+  location: string; // Address string
+  coordinates?: Location; // Lat/Lng coordinates
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +26,7 @@ export interface CreateDogData {
   description: string;
   pricePerDay: number;
   location: string;
+  coordinates?: Location;
   imageUrl?: string;
 }
 

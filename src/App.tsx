@@ -10,6 +10,7 @@ import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
 import NotificationBell from './components/Notifications/NotificationBell'
 import UserProfile from './components/User/UserProfile'
 import MessagingCenter from './components/Messaging/MessagingCenter'
+import MapsView from './components/Maps/MapsView'
 import { cleanupOrphanedData } from './utils/dataCleanup'
 import { collection, getDocs } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
@@ -25,6 +26,7 @@ function AppContent() {
   const [showApprovalPanel, setShowApprovalPanel] = useState(false)
   const [showUserProfile, setShowUserProfile] = useState(false)
   const [showMessaging, setShowMessaging] = useState(false)
+  const [showMaps, setShowMaps] = useState(false)
   const [selectedDogForMessage, setSelectedDogForMessage] = useState<any>(null)
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
@@ -423,6 +425,17 @@ function AppContent() {
     )
   }
 
+  if (showMaps) {
+    return (
+      <MapsView
+        dogs={dogs}
+        onRentDog={handleRentDog}
+        onMessageOwner={handleMessageDogOwner}
+        onBack={() => setShowMaps(false)}
+      />
+    )
+  }
+
     return (
     <div style={{
       minHeight: '100vh',
@@ -504,6 +517,24 @@ function AppContent() {
                   }}
                 >
                   💬 Messages
+                </button>
+                <button
+                  onClick={() => setShowMaps(true)}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#805ad5',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  🗺️ Maps
                 </button>
                 <div style={{ 
                   display: 'flex', 
