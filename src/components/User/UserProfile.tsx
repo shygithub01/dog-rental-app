@@ -20,12 +20,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
 
   const loadUserProfile = async () => {
     setLoading(true);
+    setError('');
     try {
+      console.log('Loading user profile for userId:', userId);
       const userProfile = await userService.getUserProfile(userId);
+      console.log('User profile loaded:', userProfile);
       setProfile(userProfile);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading user profile:', error);
-      setError('Failed to load user profile');
+      setError(error.message || 'Failed to load user profile');
     } finally {
       setLoading(false);
     }

@@ -76,11 +76,15 @@ function AppContent() {
 
   const createOrUpdateUserProfile = async (user: any) => {
     try {
+      console.log('Creating/updating user profile for:', user.uid);
+      
       // Check if user profile exists
-      const existingUser = await userService.getUser(user.uid)
+      const existingUser = await userService.getUser(user.uid);
+      console.log('Existing user found:', existingUser);
       
       if (!existingUser) {
         // Create new user profile
+        console.log('Creating new user profile...');
         await userService.createUser(user.uid, {
           email: user.email,
           displayName: user.displayName || user.email,
@@ -88,20 +92,21 @@ function AppContent() {
           phoneNumber: user.phoneNumber,
           location: '',
           bio: ''
-        })
-        console.log('New user profile created!')
+        });
+        console.log('New user profile created successfully!');
       } else {
         // Update existing user profile with latest info
+        console.log('Updating existing user profile...');
         await userService.updateUser(user.uid, {
           displayName: user.displayName || user.email,
           photoURL: user.photoURL,
           email: user.email
-        })
-        console.log('User profile updated!')
+        });
+        console.log('User profile updated successfully!');
       }
     } catch (error) {
-      console.error('Error in createOrUpdateUserProfile:', error)
-      throw error
+      console.error('Error in createOrUpdateUserProfile:', error);
+      throw error;
     }
   }
 

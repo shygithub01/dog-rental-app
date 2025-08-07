@@ -1,7 +1,8 @@
-import { collection, addDoc, getDocs, query, where, orderBy, updateDoc, doc, getDoc, Timestamp, limit } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, updateDoc, doc, getDoc, Timestamp, limit, setDoc } from 'firebase/firestore';
 import { useFirebase } from '../contexts/FirebaseContext';
 import type { User, UserProfileData, CreateUserData, UpdateUserData, UserPreferences, UserStats } from '../types/User';
 import type { DogSummary, RentalSummary, ReviewSummary } from '../types/User';
+import { checkAndUpdateDogAvailability } from '../utils/rentalUtils';
 
 export class UserService {
   private db: any;
@@ -50,7 +51,8 @@ export class UserService {
         stats: defaultStats
       };
 
-      await addDoc(collection(this.db, 'users'), {
+      // Use setDoc with the userId as the document ID
+      await setDoc(doc(this.db, 'users', userId), {
         ...user,
         joinDate: Timestamp.fromDate(user.joinDate),
         lastActive: Timestamp.fromDate(user.lastActive),
@@ -67,21 +69,17 @@ export class UserService {
   // Get user profile by ID
   async getUser(userId: string): Promise<User | null> {
     try {
-      const q = query(
-        collection(this.db, 'users'),
-        where('id', '==', userId)
-      );
+      const docRef = doc(this.db, 'users', userId);
+      const docSnap = await getDoc(docRef);
       
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
+      if (!docSnap.exists()) {
         return null;
       }
 
-      const doc = querySnapshot.docs[0];
-      const data = doc.data();
+      const data = docSnap.data();
       
       return {
-        id: doc.id,
+        id: docSnap.id,
         email: data.email,
         displayName: data.displayName,
         photoURL: data.photoURL,
@@ -111,14 +109,16 @@ export class UserService {
   // Get complete user profile with dogs, rentals, and reviews
   async getUserProfile(userId: string): Promise<UserProfileData | null> {
     try {
+      // First, check and update dog availability
+      await checkAndUpdateDogAvailability(this.db);
+      
       const user = await this.getUser(userId);
       if (!user) return null;
 
-      // Get user's dogs
+      // Get user's dogs (simplified query to avoid index requirement)
       const dogsQuery = query(
         collection(this.db, 'dogs'),
-        where('ownerId', '==', userId),
-        orderBy('createdAt', 'desc')
+        where('ownerId', '==', userId)
       );
       const dogsSnapshot = await getDocs(dogsQuery);
       const dogs: DogSummary[] = dogsSnapshot.docs.map(doc => {
@@ -134,32 +134,71 @@ export class UserService {
         };
       });
 
-      // Get recent rentals
+      // Get recent rentals (simplified query to avoid index requirement)
       const rentalsQuery = query(
         collection(this.db, 'rentals'),
-        where('renterId', '==', userId),
-        orderBy('createdAt', 'desc'),
-        limit(5)
+        where('renterId', '==', userId)
       );
       const rentalsSnapshot = await getDocs(rentalsQuery);
-      const recentRentals: RentalSummary[] = rentalsSnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          dogName: data.dogName,
-          dogBreed: data.dogBreed,
-          startDate: data.startDate.toDate(),
-          endDate: data.endDate.toDate(),
-          status: data.status,
-          totalCost: data.totalCost
-        };
-      });
+      const recentRentals: RentalSummary[] = rentalsSnapshot.docs
+        .map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            dogName: data.dogName,
+            dogBreed: data.dogBreed,
+            startDate: data.startDate.toDate(),
+            endDate: data.endDate.toDate(),
+            status: data.status,
+            totalCost: data.totalCost
+          };
+        })
+        .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
+        .slice(0, 5); // Get only the 5 most recent
 
       // Get reviews (placeholder for now)
       const reviews: ReviewSummary[] = [];
 
+      // Calculate updated stats based on actual data
+      const updatedStats = {
+        dogsOwned: dogs.length,
+        dogsRented: recentRentals.length,
+        totalRentals: recentRentals.length,
+        completedRentals: recentRentals.filter(r => r.status === 'completed').length,
+        cancelledRentals: recentRentals.filter(r => r.status === 'cancelled').length,
+        averageRating: user.stats.averageRating,
+        totalEarnings: recentRentals
+          .filter(r => r.status === 'completed')
+          .reduce((sum, r) => sum + r.totalCost, 0),
+        totalSpent: recentRentals
+          .filter(r => r.status === 'completed')
+          .reduce((sum, r) => sum + r.totalCost, 0),
+        memberSince: user.stats.memberSince,
+        lastRentalDate: recentRentals.length > 0 ? recentRentals[0].startDate : undefined
+      };
+
+      // Update user stats in database if they're different
+      if (
+        updatedStats.dogsOwned !== user.stats.dogsOwned ||
+        updatedStats.totalRentals !== user.stats.totalRentals ||
+        updatedStats.totalEarnings !== user.stats.totalEarnings
+      ) {
+        try {
+          await this.updateUserStats(userId, updatedStats);
+          console.log('Updated user stats based on actual data');
+        } catch (error) {
+          console.error('Error updating user stats:', error);
+        }
+      }
+
+      // Return profile with updated stats
+      const updatedUser = {
+        ...user,
+        stats: updatedStats
+      };
+
       return {
-        user,
+        user: updatedUser,
         dogs,
         recentRentals,
         reviews
@@ -173,17 +212,7 @@ export class UserService {
   // Update user profile
   async updateUser(userId: string, updateData: UpdateUserData): Promise<void> {
     try {
-      const q = query(
-        collection(this.db, 'users'),
-        where('id', '==', userId)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        throw new Error('User not found');
-      }
-
-      const docRef = querySnapshot.docs[0].ref;
+      const docRef = doc(this.db, 'users', userId);
       await updateDoc(docRef, {
         ...updateData,
         lastActive: Timestamp.now()
@@ -199,17 +228,7 @@ export class UserService {
   // Update user preferences
   async updateUserPreferences(userId: string, preferences: Partial<UserPreferences>): Promise<void> {
     try {
-      const q = query(
-        collection(this.db, 'users'),
-        where('id', '==', userId)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        throw new Error('User not found');
-      }
-
-      const docRef = querySnapshot.docs[0].ref;
+      const docRef = doc(this.db, 'users', userId);
       await updateDoc(docRef, {
         'preferences': preferences,
         lastActive: Timestamp.now()
@@ -225,17 +244,7 @@ export class UserService {
   // Update user stats
   async updateUserStats(userId: string, stats: Partial<UserStats>): Promise<void> {
     try {
-      const q = query(
-        collection(this.db, 'users'),
-        where('id', '==', userId)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        throw new Error('User not found');
-      }
-
-      const docRef = querySnapshot.docs[0].ref;
+      const docRef = doc(this.db, 'users', userId);
       const updateData: any = {
         lastActive: Timestamp.now()
       };
@@ -262,14 +271,14 @@ export class UserService {
   }
 
   // Search users
-  async searchUsers(searchTerm: string, limit: number = 10): Promise<User[]> {
+  async searchUsers(searchTerm: string, resultLimit: number = 10): Promise<User[]> {
     try {
       const q = query(
         collection(this.db, 'users'),
         where('displayName', '>=', searchTerm),
         where('displayName', '<=', searchTerm + '\uf8ff'),
         orderBy('displayName'),
-        limit(limit)
+        limit(resultLimit)
       );
       
       const querySnapshot = await getDocs(q);
