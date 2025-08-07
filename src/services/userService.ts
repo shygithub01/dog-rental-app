@@ -195,15 +195,15 @@ export class UserService {
       // Calculate updated stats based on actual data
       const totalRentalsAsRenter = renterRentals.length;
       const totalRentalsAsOwner = ownerRentals.length;
-      const completedRentalsAsRenter = renterRentals.filter(r => r.status === 'completed').length;
-      const completedRentalsAsOwner = ownerRentals.filter(r => r.status === 'completed').length;
+      const completedRentalsAsRenter = renterRentals.filter(r => r.status === 'completed' || r.status === 'active').length;
+      const completedRentalsAsOwner = ownerRentals.filter(r => r.status === 'completed' || r.status === 'active').length;
       
       const totalEarnings = ownerRentals
-        .filter(r => r.status === 'completed')
+        .filter(r => r.status === 'completed' || r.status === 'active')
         .reduce((sum, r) => sum + r.totalCost, 0);
       
       const totalSpent = renterRentals
-        .filter(r => r.status === 'completed')
+        .filter(r => r.status === 'completed' || r.status === 'active')
         .reduce((sum, r) => sum + r.totalCost, 0);
 
       // Determine if user is primarily an owner or renter

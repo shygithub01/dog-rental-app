@@ -294,7 +294,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               </div>
               
               <div style={{ textAlign: 'center', padding: '10px', backgroundColor: 'white', borderRadius: '6px' }}>
-                <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>Completed</div>
+                <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>Active/Completed</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#27ae60' }}>{user.stats.completedRentals}</div>
               </div>
               
@@ -411,7 +411,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                       <strong>{user.stats.totalRentals}</strong> total rentals
                     </div>
                     <div style={{ marginBottom: '8px' }}>
-                      <strong>{user.stats.completedRentals}</strong> completed
+                      <strong>{user.stats.completedRentals}</strong> active/completed
                     </div>
                     <div>
                       {user.stats.dogsOwned > 0 ? (
