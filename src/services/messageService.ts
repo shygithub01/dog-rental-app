@@ -20,14 +20,30 @@ export class MessageService {
         content: messageData.content,
         timestamp: new Date(),
         isRead: false,
-        rentalId: messageData.rentalId,
-        dogId: messageData.dogId
+        rentalId: messageData.rentalId || null,
+        dogId: messageData.dogId || null
       };
 
-      const docRef = await addDoc(collection(this.db, 'messages'), {
-        ...message,
-        timestamp: Timestamp.fromDate(message.timestamp)
-      });
+      // Only include defined fields in the Firebase document
+      const firebaseMessage: any = {
+        senderId: message.senderId,
+        senderName: message.senderName,
+        receiverId: message.receiverId,
+        receiverName: message.receiverName,
+        content: message.content,
+        timestamp: Timestamp.fromDate(message.timestamp),
+        isRead: message.isRead
+      };
+
+      // Only add optional fields if they exist
+      if (message.rentalId) {
+        firebaseMessage.rentalId = message.rentalId;
+      }
+      if (message.dogId) {
+        firebaseMessage.dogId = message.dogId;
+      }
+
+      const docRef = await addDoc(collection(this.db, 'messages'), firebaseMessage);
 
       // Update or create conversation
       await this.updateConversation(senderId, messageData.receiverId, senderName, messageData.receiverName, message.content);

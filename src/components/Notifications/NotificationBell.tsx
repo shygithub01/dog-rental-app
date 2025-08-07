@@ -17,43 +17,40 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
   const { db } = useFirebase();
 
   useEffect(() => {
-    if (userId) {
-      // Set up real-time listener for unread notifications count
-      const unreadQuery = query(
+    if (!userId) return;
+
+    const unsubscribe = onSnapshot(
+      query(
         collection(db, 'notifications'),
         where('userId', '==', userId),
-        where('read', '==', false),
-        orderBy('createdAt', 'desc')
-      );
-
-      const unsubscribe = onSnapshot(unreadQuery, (snapshot) => {
-        setUnreadCount(snapshot.size);
-        console.log(`Real-time update: ${snapshot.size} unread notifications`);
-      }, (error) => {
+        where('isRead', '==', false)
+      ),
+      (snapshot) => {
+        const unreadCount = snapshot.size;
+        setUnreadCount(unreadCount);
+        setLoading(false);
+      },
+      (error) => {
         console.error('Error listening to notifications:', error);
-      });
+        setLoading(false);
+      }
+    );
 
-      return () => unsubscribe();
-    }
+    return () => unsubscribe();
   }, [userId, db]);
 
   useEffect(() => {
-    if (isOpen && userId) {
-      setLoading(true);
-      
-      // Set up real-time listener for all user notifications
-      const notificationsQuery = query(
-        collection(db, 'notifications'),
-        where('userId', '==', userId),
-        orderBy('createdAt', 'desc')
-      );
+    if (!isOpen || !userId) return;
 
-      const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-        const notificationsData: Notification[] = [];
-        
-        snapshot.forEach((doc) => {
+    const unsubscribe = onSnapshot(
+      query(
+        collection(db, 'notifications'),
+        where('userId', '==', userId)
+      ),
+      (snapshot) => {
+        const notificationsData: Notification[] = snapshot.docs.map(doc => {
           const data = doc.data();
-          const notification = {
+          return {
             id: doc.id,
             userId: data.userId,
             type: data.type,
@@ -64,19 +61,18 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
             createdAt: data.createdAt.toDate(),
             expiresAt: data.expiresAt?.toDate()
           };
-          notificationsData.push(notification);
-        });
+        }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
         
         setNotifications(notificationsData);
         setLoading(false);
-        console.log(`Real-time update: ${notificationsData.length} notifications loaded`);
-      }, (error) => {
-        console.error('Error listening to notifications:', error);
+      },
+      (error) => {
+        console.error('Error loading notifications:', error);
         setLoading(false);
-      });
+      }
+    );
 
-      return () => unsubscribe();
-    }
+    return () => unsubscribe();
   }, [isOpen, userId, db]);
 
   const handleBellClick = () => {
