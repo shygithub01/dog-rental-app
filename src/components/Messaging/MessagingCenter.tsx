@@ -24,6 +24,10 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
     setSelectedConversation(null);
   };
 
+  const handleBackToDashboard = () => {
+    onClose(); // This will close the entire messaging modal and return to dashboard
+  };
+
   return (
     <div style={{
       position: 'fixed',
@@ -66,7 +70,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {selectedConversation && (
               <button
-                onClick={handleBackToList}
+                onClick={handleBackToDashboard}
                 style={{
                   padding: '8px 12px',
                   backgroundColor: '#6c757d',
@@ -106,7 +110,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
               currentUserId={currentUserId}
               currentUserName={currentUserName}
               conversation={selectedConversation}
-              onBack={handleBackToList}
+              onBack={handleBackToDashboard}
             />
           ) : (
             <ChatList
