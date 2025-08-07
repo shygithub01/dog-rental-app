@@ -23,6 +23,7 @@ export interface CreateDogData {
   description: string;
   pricePerDay: number;
   location: string;
+  imageUrl?: string;
 }
 
 export interface UpdateDogData extends Partial<CreateDogData> {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
+import ImageUpload from '../Common/ImageUpload';
 
 interface Dog {
   id: string;
@@ -10,6 +11,7 @@ interface Dog {
   size: 'small' | 'medium' | 'large';
   description: string;
   pricePerDay: number;
+  imageUrl?: string;
   location: string;
   ownerId: string;
   ownerName: string;
@@ -33,6 +35,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
     description: dog.description,
     pricePerDay: dog.pricePerDay,
     location: dog.location,
+    imageUrl: dog.imageUrl || '',
     isAvailable: dog.isAvailable
   });
   const [loading, setLoading] = useState(false);
@@ -77,9 +80,23 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
     }));
   };
 
+  const handleImageUploaded = (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrl
+    }));
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        {/* Image Upload Section */}
+        <ImageUpload 
+          onImageUploaded={handleImageUploaded}
+          currentImageUrl={formData.imageUrl}
+          label="Update Dog Photo"
+        />
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
           <div>
             <label htmlFor="name" style={{ 

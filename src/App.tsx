@@ -484,15 +484,19 @@ function AppContent() {
         position: 'sticky',
         top: 0,
         zIndex: 100
-      }}>
+      }} className="mobile-header">
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           maxWidth: '1200px',
           margin: '0 auto'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        }} className="mobile-header-content">
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '20px'
+          }} className="mobile-nav">
             <h1 style={{
               fontSize: '2rem',
               color: '#2d3748',
@@ -501,16 +505,36 @@ function AppContent() {
               display: 'flex',
               alignItems: 'center',
               gap: '10px'
-            }}>
+            }} className="mobile-logo">
               🐕 DogRental
             </h1>
-            <div style={{ display: 'flex', gap: '20px', marginLeft: '40px' }}>
-              <a href="#" style={{ color: '#4a5568', textDecoration: 'none', fontWeight: '500' }}>Browse Dogs</a>
-              <a href="#" style={{ color: '#4a5568', textDecoration: 'none', fontWeight: '500' }}>Add Your Dog</a>
-              <a href="#" style={{ color: '#4a5568', textDecoration: 'none', fontWeight: '500' }}>My Rentals</a>
+            <div style={{ 
+              display: 'flex', 
+              gap: '20px', 
+              marginLeft: '40px'
+            }} className="mobile-nav-links">
+              <a href="#" style={{ 
+                color: '#4a5568', 
+                textDecoration: 'none', 
+                fontWeight: '500'
+              }}>Browse Dogs</a>
+              <a href="#" style={{ 
+                color: '#4a5568', 
+                textDecoration: 'none', 
+                fontWeight: '500'
+              }}>Add Your Dog</a>
+              <a href="#" style={{ 
+                color: '#4a5568', 
+                textDecoration: 'none', 
+                fontWeight: '500'
+              }}>My Rentals</a>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '15px'
+          }} className="mobile-auth">
             {user ? (
               <>
                 <div style={{
@@ -558,6 +582,7 @@ function AppContent() {
                     alignItems: 'center',
                     gap: '8px'
                   }}
+                  className="mobile-signin-btn"
                   onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3367d6'}
                   onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4285f4'}
                 >
@@ -585,7 +610,7 @@ function AppContent() {
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative'
-      }}>
+      }} className="mobile-hero">
         <div style={{
           maxWidth: '1200px',
           width: '100%',
@@ -594,167 +619,165 @@ function AppContent() {
           gridTemplateColumns: '1fr 400px',
           gap: '60px',
           alignItems: 'center'
-        }}>
+        }} className="mobile-hero-content">
           {/* Hero Text */}
-          <div style={{ color: 'white' }}>
+          <div style={{ color: 'white' }} className="mobile-hero-text">
             <h2 style={{
-              fontSize: '3.5rem',
+              fontSize: '3rem',
               margin: '0 0 20px 0',
               fontWeight: 'bold',
               lineHeight: '1.2'
             }}>
-              Loving dog companions<br />
-              in your neighborhood
+              Loving dog companions for every moment
             </h2>
             <p style={{
               fontSize: '1.3rem',
               margin: '0 0 30px 0',
-              opacity: 0.9,
-              lineHeight: '1.5'
+              lineHeight: '1.6',
+              opacity: 0.9
             }}>
-              Book trusted dogs for walks, companionship, and adventures.
+              Book trusted dogs for walks, companionship, and adventures. Perfect for busy days or when you need a furry friend.
             </p>
             {user ? (
               <div style={{
                 display: 'flex',
                 gap: '20px',
                 alignItems: 'center'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  fontSize: '1.1rem'
+              }} className="mobile-stats">
+                <span style={{
+                  fontSize: '1.1rem',
+                  opacity: 0.9
                 }}>
-                  <span style={{ fontSize: '1.5rem' }}>📊</span>
-                  <span><strong>{loading ? '...' : dogs.filter(dog => dog.isAvailable).length}</strong> dogs available</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  fontSize: '1.1rem'
+                  📊 <strong>{loading ? '...' : dogs.filter(dog => dog.isAvailable).length}</strong> dogs available
+                </span>
+                <span style={{
+                  fontSize: '1.1rem',
+                  opacity: 0.9
                 }}>
-                  <span style={{ fontSize: '1.5rem' }}>👥</span>
-                  <span>Trusted by <strong>100+</strong> pet lovers</span>
-                </div>
+                  👥 Trusted by <strong>100+</strong> pet lovers
+                </span>
               </div>
             ) : (
               <div style={{
                 display: 'flex',
                 gap: '20px',
                 alignItems: 'center'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  fontSize: '1.1rem'
+              }} className="mobile-stats">
+                <span style={{
+                  fontSize: '1.1rem',
+                  opacity: 0.9
                 }}>
-                  <span style={{ fontSize: '1.5rem' }}>🔐</span>
-                  <span>Sign in to start renting dogs</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  fontSize: '1.1rem'
+                  🔐 Sign in to start renting dogs
+                </span>
+                <span style={{
+                  fontSize: '1.1rem',
+                  opacity: 0.9
                 }}>
-                  <span style={{ fontSize: '1.5rem' }}>👥</span>
-                  <span>Join <strong>100+</strong> pet lovers</span>
-                </div>
+                  👥 Join <strong>100+</strong> pet lovers
+                </span>
               </div>
             )}
           </div>
 
-          {/* Search Form */}
+          {/* Search Form / Quick Actions */}
           <div style={{
             background: 'white',
-            borderRadius: '15px',
-            padding: '30px',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-            maxWidth: '400px'
+            padding: '40px',
+            borderRadius: '20px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
           }}>
             {user ? (
               <>
                 <h3 style={{
-                  margin: '0 0 20px 0',
+                  fontSize: '1.8rem',
                   color: '#2d3748',
-                  fontSize: '1.3rem',
+                  margin: '0 0 20px 0',
                   fontWeight: 'bold'
                 }}>
                   Find your perfect companion
                 </h3>
-                
-                {/* Service Type Tabs */}
-                <div style={{ marginBottom: '20px' }}>
-                  <p style={{ margin: '0 0 10px 0', color: '#4a5568', fontSize: '0.9rem' }}>
-                    I'm looking for:
-                  </p>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '10px'
-                  }}>
-                    <button
-                      onClick={() => setShowAddDog(true)}
-                      style={{
-                        padding: '12px 16px',
-                        backgroundColor: '#4299e1',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3182ce'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4299e1'}
-                    >
-                      🐕 Add My Dog
-                    </button>
-                    <button 
-                      onClick={() => setShowApprovalPanel(true)}
-                      style={{
-                        padding: '12px 16px',
-                        backgroundColor: '#ed8936',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dd6b20'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ed8936'}
-                    >
-                      📋 My Requests
-                    </button>
-                  </div>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '15px',
+                  marginBottom: '30px'
+                }} className="mobile-actions">
+                  <button
+                    onClick={() => setShowAddDog(true)}
+                    style={{
+                      padding: '15px 20px',
+                      backgroundColor: '#48bb78',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1rem',
+                      transition: 'all 0.2s'
+                    }}
+                    className="mobile-action-btn"
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
+                  >
+                    🐕 Add My Dog
+                  </button>
+                  <button
+                    onClick={() => setShowApprovalPanel(true)}
+                    style={{
+                      padding: '15px 20px',
+                      backgroundColor: '#4299e1',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1rem',
+                      transition: 'all 0.2s'
+                    }}
+                    className="mobile-action-btn"
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3182ce'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4299e1'}
+                  >
+                    📋 My Requests
+                  </button>
+                  <button
+                    onClick={handleDataCleanup}
+                    style={{
+                      padding: '15px 20px',
+                      backgroundColor: '#e53e3e',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1rem',
+                      transition: 'all 0.2s'
+                    }}
+                    className="mobile-action-btn"
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
+                  >
+                    🧹 Clean Data
+                  </button>
                 </div>
               </>
             ) : (
               <>
                 <h3 style={{
-                  margin: '0 0 20px 0',
+                  fontSize: '1.8rem',
                   color: '#2d3748',
-                  fontSize: '1.3rem',
+                  margin: '0 0 20px 0',
                   fontWeight: 'bold'
                 }}>
                   Join DogRental today
                 </h3>
-                
                 <p style={{
-                  margin: '0 0 20px 0',
                   color: '#4a5568',
-                  fontSize: '1rem',
-                  lineHeight: '1.5'
+                  margin: '0 0 30px 0',
+                  lineHeight: '1.6'
                 }}>
                   Sign in to start renting dogs or list your dogs for rent
                 </p>
-                
                 <button
                   onClick={handleGoogleSignIn}
                   style={{
@@ -773,10 +796,11 @@ function AppContent() {
                     justifyContent: 'center',
                     gap: '10px'
                   }}
+                  className="mobile-signin-btn"
                   onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3367d6'}
                   onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4285f4'}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24">
+                  <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -789,90 +813,47 @@ function AppContent() {
 
             {/* Quick Stats */}
             <div style={{
-              background: '#f7fafc',
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '30px',
               padding: '20px',
+              backgroundColor: '#f7fafc',
               borderRadius: '10px',
-              marginBottom: '20px'
+              gap: '15px',
+              textAlign: 'center'
             }}>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '15px',
-                textAlign: 'center'
-              }}>
-                <div>
-                  <div style={{
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
-                    color: '#2d3748',
-                    marginBottom: '5px'
-                  }}>
-                    {loading ? '...' : dogs.filter(dog => dog.isAvailable).length}
-                  </div>
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: '#4a5568'
-                  }}>
-                    Available Dogs
-                  </div>
+              <div>
+                <div style={{
+                  fontSize: '2rem',
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  marginBottom: '5px'
+                }}>
+                  {loading ? '...' : dogs.filter(dog => dog.isAvailable).length}
                 </div>
-                <div>
-                  <div style={{
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
-                    color: '#2d3748',
-                    marginBottom: '5px'
-                  }}>
-                    {dogs.length}
-                  </div>
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: '#4a5568'
-                  }}>
-                    Total Dogs
-                  </div>
+                <div style={{
+                  fontSize: '0.8rem',
+                  color: '#4a5568'
+                }}>
+                  Available Dogs
                 </div>
               </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <button
-                onClick={() => setShowAddDog(true)}
-                style={{
-                  padding: '15px 20px',
-                  backgroundColor: '#48bb78',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
+              <div>
+                <div style={{
+                  fontSize: '2rem',
                   fontWeight: 'bold',
-                  fontSize: '1rem',
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
-              >
-                ➕ Add Your Dog
-              </button>
-              <button 
-                onClick={handleDataCleanup}
-                style={{
-                  padding: '12px 20px',
-                  backgroundColor: '#e53e3e',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '0.9rem',
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
-              >
-                🧹 Clean Data
-              </button>
+                  color: '#2d3748',
+                  marginBottom: '5px'
+                }}>
+                  {dogs.length}
+                </div>
+                <div style={{
+                  fontSize: '0.8rem',
+                  color: '#4a5568'
+                }}>
+                  Total Dogs
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -883,7 +864,7 @@ function AppContent() {
         <div style={{
           background: 'white',
           padding: '60px 40px'
-        }}>
+        }} className="mobile-dogs-section">
           <div style={{
             maxWidth: '1200px',
             margin: '0 auto'
@@ -894,14 +875,14 @@ function AppContent() {
               margin: '0 0 40px 0',
               fontWeight: 'bold',
               textAlign: 'center'
-            }}>
+            }} className="mobile-dogs-title">
               🐕 Available Dogs
             </h2>
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
               gap: '30px'
-            }}>
+            }} className="mobile-dogs-grid">
               {dogs.map((dog) => (
                 <DogCard
                   key={dog.id}
@@ -921,7 +902,7 @@ function AppContent() {
       <div style={{
         background: '#f7fafc',
         padding: '80px 40px'
-      }}>
+      }} className="mobile-services-section">
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto'
@@ -932,7 +913,7 @@ function AppContent() {
             margin: '0 0 20px 0',
             fontWeight: 'bold',
             textAlign: 'center'
-          }}>
+          }} className="mobile-services-title">
             Our Services
           </h2>
           <p style={{
@@ -941,7 +922,7 @@ function AppContent() {
             margin: '0 0 60px 0',
             textAlign: 'center',
             lineHeight: '1.6'
-          }}>
+          }} className="mobile-services-subtitle">
             Discover the perfect way to connect with dogs in your neighborhood
           </p>
           
@@ -949,7 +930,7 @@ function AppContent() {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
             gap: '30px'
-          }}>
+          }} className="mobile-services-grid">
             {/* Dog Rental */}
             <div style={{
               background: 'white',
@@ -957,7 +938,7 @@ function AppContent() {
               borderRadius: '15px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               border: '2px solid #e2e8f0'
-            }}>
+            }} className="mobile-service-card">
               <div style={{
                 fontSize: '3rem',
                 marginBottom: '20px',
@@ -991,7 +972,7 @@ function AppContent() {
               borderRadius: '15px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               border: '2px solid #e2e8f0'
-            }}>
+            }} className="mobile-service-card">
               <div style={{
                 fontSize: '3rem',
                 marginBottom: '20px',
@@ -1014,7 +995,7 @@ function AppContent() {
                 margin: 0,
                 textAlign: 'center'
               }}>
-                List your dogs and earn money by sharing them with the community. Your dogs get new friends, you get income.
+                Host dogs in your home when their owners are away. Provide a loving environment and earn extra income.
               </p>
             </div>
 
@@ -1025,13 +1006,13 @@ function AppContent() {
               borderRadius: '15px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               border: '2px solid #e2e8f0'
-            }}>
+            }} className="mobile-service-card">
               <div style={{
                 fontSize: '3rem',
                 marginBottom: '20px',
                 textAlign: 'center'
               }}>
-                🦮
+                🚶
               </div>
               <h3 style={{
                 fontSize: '1.5rem',
@@ -1048,7 +1029,7 @@ function AppContent() {
                 margin: 0,
                 textAlign: 'center'
               }}>
-                Take dogs for walks around your neighborhood. Perfect for exercise, companionship, and outdoor adventures.
+                Professional dog walking services for busy pet parents. Regular exercise and outdoor adventures for your furry friends.
               </p>
             </div>
 
@@ -1059,13 +1040,13 @@ function AppContent() {
               borderRadius: '15px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               border: '2px solid #e2e8f0'
-            }}>
+            }} className="mobile-service-card">
               <div style={{
                 fontSize: '3rem',
                 marginBottom: '20px',
                 textAlign: 'center'
               }}>
-                ☀️
+                🏫
               </div>
               <h3 style={{
                 fontSize: '1.5rem',
@@ -1082,7 +1063,7 @@ function AppContent() {
                 margin: 0,
                 textAlign: 'center'
               }}>
-                Dogs spend the day with trusted hosts. Drop them off in the morning and pick up a happy pup in the evening.
+                Safe and fun day care for dogs while you're at work. Socialization, playtime, and supervision in a loving environment.
               </p>
             </div>
 
@@ -1093,7 +1074,7 @@ function AppContent() {
               borderRadius: '15px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               border: '2px solid #e2e8f0'
-            }}>
+            }} className="mobile-service-card">
               <div style={{
                 fontSize: '3rem',
                 marginBottom: '20px',
@@ -1116,7 +1097,7 @@ function AppContent() {
                 margin: 0,
                 textAlign: 'center'
               }}>
-                Work with experienced dog owners to build new skills and address behaviors. Learn from the community.
+                Professional training services for obedience, behavior modification, and specialized skills. Build a stronger bond with your dog.
               </p>
             </div>
 
@@ -1127,7 +1108,7 @@ function AppContent() {
               borderRadius: '15px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               border: '2px solid #e2e8f0'
-            }}>
+            }} className="mobile-service-card">
               <div style={{
                 fontSize: '3rem',
                 marginBottom: '20px',
@@ -1150,7 +1131,7 @@ function AppContent() {
                 margin: 0,
                 textAlign: 'center'
               }}>
-                Join a trusted community of dog lovers. Connect with neighbors, share experiences, and build lasting friendships.
+                Connect with fellow dog lovers in your neighborhood. Share experiences, tips, and build lasting friendships.
               </p>
             </div>
           </div>

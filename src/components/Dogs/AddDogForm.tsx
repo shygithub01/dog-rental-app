@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import ImageUpload from '../Common/ImageUpload';
 
 interface CreateDogData {
   name: string;
@@ -10,6 +11,7 @@ interface CreateDogData {
   description: string;
   pricePerDay: number;
   location: string;
+  imageUrl?: string;
 }
 
 interface AddDogFormProps {
@@ -25,7 +27,8 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
     size: 'medium',
     description: '',
     pricePerDay: 50,
-    location: ''
+    location: '',
+    imageUrl: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -64,7 +67,8 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
         size: 'medium',
         description: '',
         pricePerDay: 50,
-        location: ''
+        location: '',
+        imageUrl: ''
       });
 
       onSuccess?.();
@@ -84,9 +88,22 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
     }));
   };
 
+  const handleImageUploaded = (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrl
+    }));
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        {/* Image Upload Section */}
+        <ImageUpload 
+          onImageUploaded={handleImageUploaded}
+          currentImageUrl={formData.imageUrl}
+        />
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
           <div>
             <label htmlFor="name" style={{ 
