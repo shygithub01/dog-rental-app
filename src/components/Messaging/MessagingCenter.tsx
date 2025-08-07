@@ -80,7 +80,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                   gap: '5px'
                 }}
               >
-                ← Back to Messages
+                ← Back to Dashboard
               </button>
             )}
             <button

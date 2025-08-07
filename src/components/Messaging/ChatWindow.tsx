@@ -169,9 +169,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             alignItems: 'center',
             gap: '5px'
           }}
-          title="Back to Messages"
+          title="Back to Dashboard"
         >
-          ← Back
+          ← Back to Dashboard
         </button>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
