@@ -20,8 +20,8 @@ export class MessageService {
         content: messageData.content,
         timestamp: new Date(),
         isRead: false,
-        rentalId: messageData.rentalId || null,
-        dogId: messageData.dogId || null
+        rentalId: messageData.rentalId || undefined,
+        dogId: messageData.dogId || undefined
       };
 
       // Only include defined fields in the Firebase document
@@ -131,32 +131,39 @@ export class MessageService {
   // Get messages for a conversation
   async getConversationMessages(user1Id: string, user2Id: string): Promise<Message[]> {
     try {
+      // Simplified query to avoid index requirements
       const messagesQuery = query(
         collection(this.db, 'messages'),
-        where('senderId', 'in', [user1Id, user2Id]),
-        where('receiverId', 'in', [user1Id, user2Id]),
-        orderBy('timestamp', 'asc')
+        where('senderId', '==', user1Id)
       );
-
-      const snapshot = await getDocs(messagesQuery);
+      
+      const messagesSnapshot = await getDocs(messagesQuery);
       const messages: Message[] = [];
-
-      for (const doc of snapshot.docs) {
+      
+      // Filter messages on client side to get conversation
+      for (const doc of messagesSnapshot.docs) {
         const data = doc.data();
-        messages.push({
-          id: doc.id,
-          senderId: data.senderId,
-          senderName: data.senderName,
-          receiverId: data.receiverId,
-          receiverName: data.receiverName,
-          content: data.content,
-          timestamp: data.timestamp.toDate(),
-          isRead: data.isRead,
-          rentalId: data.rentalId,
-          dogId: data.dogId
-        });
+        // Check if this message is part of the conversation
+        if ((data.senderId === user1Id && data.receiverId === user2Id) ||
+            (data.senderId === user2Id && data.receiverId === user1Id)) {
+          messages.push({
+            id: doc.id,
+            senderId: data.senderId,
+            senderName: data.senderName,
+            receiverId: data.receiverId,
+            receiverName: data.receiverName,
+            content: data.content,
+            timestamp: data.timestamp.toDate(),
+            isRead: data.isRead,
+            rentalId: data.rentalId,
+            dogId: data.dogId
+          });
+        }
       }
 
+      // Sort by timestamp
+      messages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      
       return messages;
     } catch (error) {
       console.error('Error getting conversation messages:', error);
@@ -220,8 +227,7 @@ export class MessageService {
   subscribeToConversations(userId: string, callback: (conversations: ConversationSummary[]) => void) {
     const conversationsQuery = query(
       collection(this.db, 'conversations'),
-      where('participants', 'array-contains', userId),
-      orderBy('updatedAt', 'desc')
+      where('participants', 'array-contains', userId)
     );
 
     return onSnapshot(conversationsQuery, async (snapshot) => {
@@ -234,7 +240,7 @@ export class MessageService {
           data.participants[index] === otherUserId
         );
 
-        // Get unread count
+        // Get unread count with simplified query
         const unreadQuery = query(
           collection(this.db, 'messages'),
           where('receiverId', '==', userId),
@@ -254,6 +260,8 @@ export class MessageService {
         });
       }
       
+      // Sort by last message time
+      conversations.sort((a, b) => b.lastMessageTime.getTime() - a.lastMessageTime.getTime());
       callback(conversations);
     });
   }
