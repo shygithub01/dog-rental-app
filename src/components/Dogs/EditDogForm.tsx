@@ -88,318 +88,491 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {/* Image Upload Section */}
-        <ImageUpload 
-          onImageUploaded={handleImageUploaded}
-          currentImageUrl={formData.imageUrl}
-          label="Update Dog Photo"
-        />
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-          <div>
-            <label htmlFor="name" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Dog Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="breed" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Breed *
-            </label>
-            <input
-              type="text"
-              id="breed"
-              name="breed"
-              value={formData.breed}
-              onChange={handleChange}
-              required
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-          <div>
-            <label htmlFor="age" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Age (years) *
-            </label>
-            <input
-              type="number"
-              id="age"
-              name="age"
-              min="1"
-              max="20"
-              value={formData.age}
-              onChange={handleChange}
-              required
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-          <div>
-            <label htmlFor="size" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Size *
-            </label>
-            <select
-              id="size"
-              name="size"
-              value={formData.size}
-              onChange={handleChange}
-              required
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            >
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-            </select>
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="description" style={{ 
-            display: 'block', 
-            marginBottom: '8px', 
-            fontWeight: 'bold',
-            color: '#2d3748'
-          }}>
-            Description *
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            rows={4}
-            placeholder="Tell us about your dog's personality, training, and special needs..."
-            style={{ 
-              width: '100%', 
-              padding: '12px', 
-              border: '2px solid #e2e8f0',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              resize: 'vertical',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-            onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-          <div>
-            <label htmlFor="pricePerDay" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Price per Day ($) *
-            </label>
-            <input
-              type="number"
-              id="pricePerDay"
-              name="pricePerDay"
-              min="1"
-              value={formData.pricePerDay}
-              onChange={handleChange}
-              required
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-          <div>
-            <label htmlFor="location" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Location *
-            </label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder="City, State"
-              required
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '10px',
-            cursor: 'pointer'
-          }}>
-            <input
-              type="checkbox"
-              name="isAvailable"
-              checked={formData.isAvailable}
-              onChange={handleChange}
-              style={{
-                width: '18px',
-                height: '18px',
-                cursor: 'pointer'
-              }}
-            />
-            <span style={{
-              fontWeight: 'bold',
-              color: '#2d3748'
-            }}>
-              Available for Rent
-            </span>
-          </label>
-        </div>
-
-        {error && (
+    <div style={{
+      background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      padding: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <div style={{
+        background: 'white',
+        borderRadius: '20px',
+        padding: '40px',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+        maxWidth: '800px',
+        width: '100%',
+        margin: '0 auto'
+      }}>
+        {/* Form Header */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '40px',
+          paddingBottom: '20px',
+          borderBottom: '2px solid #f7fafc'
+        }}>
           <div style={{
-            color: '#e53e3e',
-            marginBottom: '20px',
-            padding: '15px',
-            backgroundColor: '#fed7d7',
-            borderRadius: '8px',
-            border: '1px solid #feb2b2'
+            fontSize: '3rem',
+            marginBottom: '15px'
           }}>
-            {error}
+            ✏️
           </div>
-        )}
+          <h2 style={{
+            fontSize: '2.5rem',
+            color: '#2d3748',
+            margin: '0 0 10px 0',
+            fontWeight: 'bold'
+          }}>
+            Edit {dog.name}
+          </h2>
+          <p style={{
+            color: '#4a5568',
+            fontSize: '1.1rem',
+            margin: 0,
+            lineHeight: '1.6'
+          }}>
+            Update your dog's information and photos
+          </p>
+        </div>
 
-        <div style={{ display: 'flex', gap: '15px', justifyContent: 'flex-end' }}>
-          {onCancel && (
+        <form onSubmit={handleSubmit}>
+          {/* Image Upload Section */}
+          <div style={{
+            marginBottom: '30px',
+            padding: '25px',
+            backgroundColor: '#f7fafc',
+            borderRadius: '15px',
+            border: '2px dashed #e2e8f0'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: '0 0 15px 0',
+              fontWeight: 'bold',
+              textAlign: 'center'
+            }}>
+              📸 Update Dog Photo
+            </h3>
+            <ImageUpload 
+              onImageUploaded={handleImageUploaded}
+              currentImageUrl={formData.imageUrl}
+              label="Update Dog Photo"
+            />
+          </div>
+
+          {/* Dog Information */}
+          <div style={{
+            marginBottom: '30px'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: '0 0 20px 0',
+              fontWeight: 'bold'
+            }}>
+              🐾 Basic Information
+            </h3>
+            
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '20px', 
+              marginBottom: '20px'
+            }} className="mobile-form-grid">
+              <div>
+                <label htmlFor="name" style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  fontSize: '1rem'
+                }}>
+                  Dog Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your dog's name"
+                  style={{ 
+                    width: '100%', 
+                    padding: '15px', 
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s',
+                    backgroundColor: 'white'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="breed" style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  fontSize: '1rem'
+                }}>
+                  Breed *
+                </label>
+                <input
+                  type="text"
+                  id="breed"
+                  name="breed"
+                  value={formData.breed}
+                  onChange={handleChange}
+                  required
+                  placeholder="e.g., Golden Retriever"
+                  style={{ 
+                    width: '100%', 
+                    padding: '15px', 
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s',
+                    backgroundColor: 'white'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+              </div>
+            </div>
+
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '20px', 
+              marginBottom: '20px'
+            }} className="mobile-form-grid">
+              <div>
+                <label htmlFor="age" style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  fontSize: '1rem'
+                }}>
+                  Age (years) *
+                </label>
+                <input
+                  type="number"
+                  id="age"
+                  name="age"
+                  min="1"
+                  max="20"
+                  value={formData.age}
+                  onChange={handleChange}
+                  required
+                  style={{ 
+                    width: '100%', 
+                    padding: '15px', 
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s',
+                    backgroundColor: 'white'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+              </div>
+              <div>
+                <label htmlFor="size" style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  fontSize: '1rem'
+                }}>
+                  Size *
+                </label>
+                <select
+                  id="size"
+                  name="size"
+                  value={formData.size}
+                  onChange={handleChange}
+                  required
+                  style={{ 
+                    width: '100%', 
+                    padding: '15px', 
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s',
+                    backgroundColor: 'white',
+                    cursor: 'pointer'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                >
+                  <option value="small">Small (under 20 lbs)</option>
+                  <option value="medium">Medium (20-50 lbs)</option>
+                  <option value="large">Large (over 50 lbs)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div style={{
+            marginBottom: '30px'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: '0 0 20px 0',
+              fontWeight: 'bold'
+            }}>
+              📝 Description
+            </h3>
+            <label htmlFor="description" style={{ 
+              display: 'block', 
+              marginBottom: '8px', 
+              fontWeight: 'bold',
+              color: '#2d3748',
+              fontSize: '1rem'
+            }}>
+              Tell us about your dog *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              rows={4}
+              placeholder="Describe your dog's personality, training, special needs, etc."
+              style={{ 
+                width: '100%', 
+                padding: '15px', 
+                border: '2px solid #e2e8f0',
+                borderRadius: '10px',
+                fontSize: '1rem',
+                transition: 'all 0.2s',
+                backgroundColor: 'white',
+                resize: 'vertical',
+                fontFamily: 'inherit'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+            />
+          </div>
+
+          {/* Pricing & Location */}
+          <div style={{
+            marginBottom: '30px'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: '0 0 20px 0',
+              fontWeight: 'bold'
+            }}>
+              💰 Pricing & Location
+            </h3>
+            
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '20px'
+            }} className="mobile-form-grid">
+              <div>
+                <label htmlFor="pricePerDay" style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  fontSize: '1rem'
+                }}>
+                  Price per day ($) *
+                </label>
+                <input
+                  type="number"
+                  id="pricePerDay"
+                  name="pricePerDay"
+                  min="10"
+                  max="500"
+                  value={formData.pricePerDay}
+                  onChange={handleChange}
+                  required
+                  style={{ 
+                    width: '100%', 
+                    padding: '15px', 
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s',
+                    backgroundColor: 'white'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+              </div>
+              <div>
+                <label htmlFor="location" style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontWeight: 'bold',
+                  color: '#2d3748',
+                  fontSize: '1rem'
+                }}>
+                  Location *
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="City, State"
+                  required
+                  style={{ 
+                    width: '100%', 
+                    padding: '15px', 
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s',
+                    backgroundColor: 'white'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Availability */}
+          <div style={{
+            marginBottom: '30px',
+            padding: '20px',
+            backgroundColor: '#f7fafc',
+            borderRadius: '15px',
+            border: '2px solid #e2e8f0'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: '0 0 20px 0',
+              fontWeight: 'bold'
+            }}>
+              ✅ Availability
+            </h3>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}>
+              <input
+                type="checkbox"
+                id="isAvailable"
+                name="isAvailable"
+                checked={formData.isAvailable}
+                onChange={handleChange}
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  cursor: 'pointer'
+                }}
+              />
+              <label htmlFor="isAvailable" style={{
+                fontSize: '1rem',
+                color: '#2d3748',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}>
+                Make this dog available for rent
+              </label>
+            </div>
+            <p style={{
+              color: '#4a5568',
+              fontSize: '0.9rem',
+              margin: '10px 0 0 0',
+              lineHeight: '1.5'
+            }}>
+              Uncheck this if you want to temporarily remove your dog from the rental listings
+            </p>
+          </div>
+
+          {error && (
+            <div style={{
+              color: '#e53e3e',
+              marginBottom: '20px',
+              padding: '15px',
+              backgroundColor: '#fed7d7',
+              borderRadius: '10px',
+              border: '1px solid #feb2b2',
+              fontSize: '0.95rem'
+            }}>
+              ⚠️ {error}
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div style={{ 
+            display: 'flex', 
+            gap: '15px', 
+            justifyContent: 'center',
+            marginTop: '30px'
+          }}>
+            {onCancel && (
+              <button
+                type="button"
+                onClick={onCancel}
+                style={{
+                  padding: '15px 30px',
+                  backgroundColor: '#718096',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  transition: 'all 0.2s',
+                  minWidth: '120px'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+              >
+                ← Cancel
+              </button>
+            )}
             <button
-              type="button"
-              onClick={onCancel}
+              type="submit"
+              disabled={loading}
               style={{
-                padding: '12px 24px',
-                backgroundColor: '#718096',
+                padding: '15px 30px',
+                backgroundColor: loading ? '#cbd5e0' : '#4299e1',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
+                borderRadius: '10px',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 fontWeight: 'bold',
                 fontSize: '1rem',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                minWidth: '120px'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+              onMouseOver={(e) => {
+                if (!loading) e.currentTarget.style.backgroundColor = '#3182ce';
+              }}
+              onMouseOut={(e) => {
+                if (!loading) e.currentTarget.style.backgroundColor = '#4299e1';
+              }}
             >
-              Cancel
+              {loading ? '✏️ Updating...' : '✅ Update Dog'}
             </button>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: loading ? '#cbd5e0' : '#4299e1',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              transition: 'all 0.2s'
-            }}
-            onMouseOver={(e) => {
-              if (!loading) e.currentTarget.style.backgroundColor = '#3182ce';
-            }}
-            onMouseOut={(e) => {
-              if (!loading) e.currentTarget.style.backgroundColor = '#4299e1';
-            }}
-          >
-            {loading ? 'Updating...' : 'Update Dog'}
-          </button>
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

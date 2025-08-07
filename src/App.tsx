@@ -188,225 +188,50 @@ function AppContent() {
 
   if (showAddDog) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '20px'
-      }}>
-        <div style={{
-          background: 'white',
-          borderRadius: '20px',
-          padding: '40px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-          maxWidth: '800px',
-          margin: '0 auto'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '30px',
-            paddingBottom: '20px',
-            borderBottom: '2px solid #f7fafc'
-          }}>
-            <div>
-              <h1 style={{
-                fontSize: '2.5rem',
-                color: '#2d3748',
-                margin: 0,
-                fontWeight: 'bold'
-              }}>
-                🐕 Dog Rental App
-              </h1>
-              <p style={{
-                color: '#4a5568',
-                fontSize: '1.1rem',
-                margin: '5px 0 0 0'
-              }}>
-                Add Your Dog for Rent
-              </p>
-            </div>
-            <button
-              onClick={() => setShowAddDog(false)}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#718096',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
-            >
-              ← Back to Dashboard
-            </button>
-          </div>
-          <AddDogForm
-            onSuccess={handleAddDogSuccess}
-            onCancel={() => setShowAddDog(false)}
-          />
-        </div>
-      </div>
+      <AddDogForm
+        onSuccess={handleAddDogSuccess}
+        onCancel={() => setShowAddDog(false)}
+      />
     )
   }
 
   if (showEditDog && editingDog) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '20px'
-      }}>
-        <div style={{
-          background: 'white',
-          borderRadius: '20px',
-          padding: '40px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-          maxWidth: '800px',
-          margin: '0 auto'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '30px',
-            paddingBottom: '20px',
-            borderBottom: '2px solid #f7fafc'
-          }}>
-            <div>
-              <h1 style={{
-                fontSize: '2.5rem',
-                color: '#2d3748',
-                margin: 0,
-                fontWeight: 'bold'
-              }}>
-                🐕 Dog Rental App
-              </h1>
-              <p style={{
-                color: '#4a5568',
-                fontSize: '1.1rem',
-                margin: '5px 0 0 0'
-              }}>
-                Edit {editingDog.name}
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setShowEditDog(false)
-                setEditingDog(null)
-              }}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#718096',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
-            >
-              ← Back to Dashboard
-            </button>
-          </div>
-          <EditDogForm
-            dog={editingDog}
-            onSuccess={handleEditDogSuccess}
-            onCancel={() => {
-              setShowEditDog(false)
-              setEditingDog(null)
-            }}
-          />
-        </div>
-      </div>
+      <EditDogForm
+        dog={editingDog}
+        onSuccess={handleEditDogSuccess}
+        onCancel={() => {
+          setShowEditDog(false)
+          setEditingDog(null)
+        }}
+      />
     )
   }
 
   if (showRentDog && rentingDog) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '20px'
-      }}>
-        <div style={{
-          background: 'white',
-          borderRadius: '20px',
-          padding: '40px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-          maxWidth: '800px',
-          margin: '0 auto'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '30px',
-            paddingBottom: '20px',
-            borderBottom: '2px solid #f7fafc'
-          }}>
-            <div>
-              <h1 style={{
-                fontSize: '2.5rem',
-                color: '#2d3748',
-                margin: 0,
-                fontWeight: 'bold'
-              }}>
-                🐕 Dog Rental App
-              </h1>
-              <p style={{
-                color: '#4a5568',
-                fontSize: '1.1rem',
-                margin: '5px 0 0 0'
-              }}>
-                Rent {rentingDog.name}
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setShowRentDog(false)
-                setRentingDog(null)
-              }}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#718096',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
-            >
-              ← Back to Dashboard
-            </button>
-          </div>
-          <RentalRequestForm
-            dog={rentingDog}
-            onSuccess={handleRentDogSuccess}
-            onCancel={() => {
-              setShowRentDog(false)
-              setRentingDog(null)
-            }}
-          />
-        </div>
-      </div>
+      <RentalRequestForm
+        dog={rentingDog}
+        onSuccess={handleRentDogSuccess}
+        onCancel={() => {
+          setShowRentDog(false)
+          setRentingDog(null)
+        }}
+      />
     )
   }
 
   if (showApprovalPanel) {
     return (
       <div style={{
+        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '20px'
+        padding: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
         <div style={{
           background: 'white',
@@ -414,44 +239,58 @@ function AppContent() {
           padding: '40px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
           maxWidth: '1000px',
+          width: '100%',
           margin: '0 auto'
         }}>
+          {/* Form Header */}
           <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '30px',
+            textAlign: 'center',
+            marginBottom: '40px',
             paddingBottom: '20px',
             borderBottom: '2px solid #f7fafc'
           }}>
-            <div>
-              <h1 style={{
-                fontSize: '2.5rem',
-                color: '#2d3748',
-                margin: 0,
-                fontWeight: 'bold'
-              }}>
-                🐕 Dog Rental App
-              </h1>
-              <p style={{
-                color: '#4a5568',
-                fontSize: '1.1rem',
-                margin: '5px 0 0 0'
-              }}>
-                Rental Request Management
-              </p>
+            <div style={{
+              fontSize: '3rem',
+              marginBottom: '15px'
+            }}>
+              📋
             </div>
+            <h2 style={{
+              fontSize: '2.5rem',
+              color: '#2d3748',
+              margin: '0 0 10px 0',
+              fontWeight: 'bold'
+            }}>
+              Rental Request Management
+            </h2>
+            <p style={{
+              color: '#4a5568',
+              fontSize: '1.1rem',
+              margin: 0,
+              lineHeight: '1.6'
+            }}>
+              Review and manage pending rental requests for your dogs
+            </p>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '30px'
+          }}>
             <button
               onClick={() => setShowApprovalPanel(false)}
               style={{
-                padding: '10px 20px',
+                padding: '15px 30px',
                 backgroundColor: '#718096',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
                 cursor: 'pointer',
                 fontWeight: 'bold',
-                transition: 'all 0.2s'
+                fontSize: '1rem',
+                transition: 'all 0.2s',
+                minWidth: '120px'
               }}
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
@@ -459,6 +298,7 @@ function AppContent() {
               ← Back to Dashboard
             </button>
           </div>
+
           <RentalApprovalPanel
             currentUserId={user.uid}
             onRequestUpdate={() => {

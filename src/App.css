@@ -236,6 +236,11 @@
     padding: 12px 20px !important;
     font-size: 1.1rem !important;
   }
+  
+  /* Form Mobile Styles */
+  .mobile-form-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 480px) {
