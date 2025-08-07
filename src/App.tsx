@@ -225,24 +225,29 @@ function AppContent() {
 
   const handleMessageDogOwner = async (dog: any) => {
     if (!user) {
-      alert('Please sign in to message the dog owner')
-      return
+      alert('Please sign in to message dog owners');
+      return;
     }
 
     try {
-      // Start a conversation with the dog owner
-      await messageService.sendMessage(user.uid, user.displayName || user.email!, {
-        receiverId: dog.ownerId,
-        receiverName: dog.ownerName,
-        content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about the dog?`,
-        dogId: dog.id
-      })
+      // Check if conversation already exists
+      const conversationExists = await messageService.conversationExists(user.uid, dog.ownerId);
+      
+      if (!conversationExists) {
+        // Only send auto message if this is a new conversation
+        await messageService.sendMessage(user.uid, user.displayName || user.email!, {
+          receiverId: dog.ownerId,
+          receiverName: dog.ownerName,
+          content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about the dog?`,
+          dogId: dog.id
+        });
+      }
 
       // Show messaging center
-      setShowMessaging(true)
+      setShowMessaging(true);
     } catch (error) {
-      console.error('Error starting conversation:', error)
-      alert('Failed to start conversation. Please try again.')
+      console.error('Error starting conversation:', error);
+      alert('Failed to start conversation. Please try again.');
     }
   }
 

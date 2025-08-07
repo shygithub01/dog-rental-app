@@ -82,6 +82,18 @@ export class MessageService {
     return [user1Id, user2Id].sort().join('_');
   }
 
+  // Check if conversation exists between two users
+  async conversationExists(user1Id: string, user2Id: string): Promise<boolean> {
+    try {
+      const conversationId = this.getConversationId(user1Id, user2Id);
+      const conversationDoc = await getDoc(doc(this.db, 'conversations', conversationId));
+      return conversationDoc.exists();
+    } catch (error) {
+      console.error('Error checking if conversation exists:', error);
+      return false;
+    }
+  }
+
   // Get user's conversations
   async getUserConversations(userId: string): Promise<ConversationSummary[]> {
     try {
