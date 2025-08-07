@@ -275,49 +275,35 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             </div>
           </div>
 
-          <div>
-            <h3 style={{
-              fontSize: '1.2rem',
-              color: '#2d3748',
-              margin: '0 0 15px 0',
-              fontWeight: 'bold'
-            }}>
-              📊 Statistics
-            </h3>
-            <div style={{
-              background: '#f7fafc',
-              padding: '20px',
-              borderRadius: '10px',
-              border: '1px solid #e2e8f0'
-            }}>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '15px'
-              }}>
-                <div>
-                  <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>Dogs Owned</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#2d3748' }}>
-                    {user.stats.dogsOwned}
-                  </div>
+          {/* Statistics Section */}
+          <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+              <span style={{ fontSize: '18px', marginRight: '8px' }}>📊</span>
+              <h3 style={{ margin: 0, color: '#333' }}>Statistics</h3>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+              <div style={{ textAlign: 'center', padding: '10px', backgroundColor: 'white', borderRadius: '6px' }}>
+                <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>Dogs Owned</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>{user.stats.dogsOwned}</div>
+              </div>
+              
+              <div style={{ textAlign: 'center', padding: '10px', backgroundColor: 'white', borderRadius: '6px' }}>
+                <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>Total Rentals</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>{user.stats.totalRentals}</div>
+              </div>
+              
+              <div style={{ textAlign: 'center', padding: '10px', backgroundColor: 'white', borderRadius: '6px' }}>
+                <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>Completed</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#27ae60' }}>{user.stats.completedRentals}</div>
+              </div>
+              
+              <div style={{ textAlign: 'center', padding: '10px', backgroundColor: 'white', borderRadius: '6px' }}>
+                <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>
+                  {user.stats.dogsOwned > 0 ? 'Total Earnings' : 'Total Paid'}
                 </div>
-                <div>
-                  <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>Total Rentals</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#2d3748' }}>
-                    {user.stats.totalRentals}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>Completed</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#48bb78' }}>
-                    {user.stats.completedRentals}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>Total Earnings</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#38a169' }}>
-                    {formatCurrency(user.stats.totalEarnings)}
-                  </div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#27ae60' }}>
+                  ${user.stats.dogsOwned > 0 ? user.stats.totalEarnings : user.stats.totalSpent}.00
                 </div>
               </div>
             </div>
@@ -403,29 +389,38 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                   </p>
                 </div>
 
+                {/* Rental Activity Card */}
                 <div style={{
-                  background: '#fef5e7',
+                  flex: 1,
                   padding: '20px',
+                  backgroundColor: '#fff3cd',
                   borderRadius: '10px',
-                  border: '2px solid #f6ad55'
+                  border: '2px solid #ffc107',
+                  marginLeft: '15px'
                 }}>
-                  <h4 style={{
-                    fontSize: '1.1rem',
-                    color: '#2d3748',
-                    margin: '0 0 10px 0',
-                    fontWeight: 'bold'
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '15px'
                   }}>
-                    📈 Rental Activity
-                  </h4>
-                  <p style={{ margin: '0 0 10px 0', color: '#4a5568' }}>
-                    <strong>{user.stats.totalRentals}</strong> total rentals
-                  </p>
-                  <p style={{ margin: '0 0 10px 0', color: '#4a5568' }}>
-                    <strong>{user.stats.completedRentals}</strong> completed
-                  </p>
-                  <p style={{ margin: 0, color: '#4a5568' }}>
-                    Earned <strong>{formatCurrency(user.stats.totalEarnings)}</strong>
-                  </p>
+                    <span style={{ fontSize: '20px', marginRight: '8px' }}>📈</span>
+                    <h4 style={{ margin: 0, color: '#856404' }}>Rental Activity</h4>
+                  </div>
+                  <div style={{ color: '#856404' }}>
+                    <div style={{ marginBottom: '8px' }}>
+                      <strong>{user.stats.totalRentals}</strong> total rentals
+                    </div>
+                    <div style={{ marginBottom: '8px' }}>
+                      <strong>{user.stats.completedRentals}</strong> completed
+                    </div>
+                    <div>
+                      {user.stats.dogsOwned > 0 ? (
+                        <>Earned <strong>${user.stats.totalEarnings}.00</strong></>
+                      ) : (
+                        <>Paid <strong>${user.stats.totalSpent}.00</strong></>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

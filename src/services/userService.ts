@@ -206,11 +206,15 @@ export class UserService {
         .filter(r => r.status === 'completed')
         .reduce((sum, r) => sum + r.totalCost, 0);
 
+      // Determine if user is primarily an owner or renter
+      const isOwner = dogs.length > 0;
+      
       const updatedStats = {
         dogsOwned: dogs.length,
         dogsRented: totalRentalsAsRenter,
-        totalRentals: totalRentalsAsRenter + totalRentalsAsOwner,
-        completedRentals: completedRentalsAsRenter + completedRentalsAsOwner,
+        // For owners: show their dogs' rentals. For renters: show their own rentals
+        totalRentals: isOwner ? totalRentalsAsOwner : totalRentalsAsRenter,
+        completedRentals: isOwner ? completedRentalsAsOwner : completedRentalsAsRenter,
         cancelledRentals: allRentals.filter(r => r.status === 'cancelled').length,
         averageRating: user.stats.averageRating,
         totalEarnings: totalEarnings,
@@ -226,7 +230,8 @@ export class UserService {
         totalEarnings: updatedStats.totalEarnings,
         totalSpent: updatedStats.totalSpent,
         renterRentals: renterRentals.length,
-        ownerRentals: ownerRentals.length
+        ownerRentals: ownerRentals.length,
+        isOwner: isOwner
       });
 
       // Update user stats in database if they're different
