@@ -131,21 +131,48 @@ export class MessageService {
   // Get messages for a conversation
   async getConversationMessages(user1Id: string, user2Id: string): Promise<Message[]> {
     try {
-      // Simplified query to avoid index requirements
-      const messagesQuery = query(
+      console.log('Loading messages for conversation between:', user1Id, 'and', user2Id);
+      
+      // Get messages where user1 is sender
+      const messagesQuery1 = query(
         collection(this.db, 'messages'),
         where('senderId', '==', user1Id)
       );
       
-      const messagesSnapshot = await getDocs(messagesQuery);
+      const messagesSnapshot1 = await getDocs(messagesQuery1);
       const messages: Message[] = [];
       
-      // Filter messages on client side to get conversation
-      for (const doc of messagesSnapshot.docs) {
+      // Process messages where user1 is sender
+      for (const doc of messagesSnapshot1.docs) {
         const data = doc.data();
-        // Check if this message is part of the conversation
-        if ((data.senderId === user1Id && data.receiverId === user2Id) ||
-            (data.senderId === user2Id && data.receiverId === user1Id)) {
+        if (data.receiverId === user2Id) {
+          messages.push({
+            id: doc.id,
+            senderId: data.senderId,
+            senderName: data.senderName,
+            receiverId: data.receiverId,
+            receiverName: data.receiverName,
+            content: data.content,
+            timestamp: data.timestamp.toDate(),
+            isRead: data.isRead,
+            rentalId: data.rentalId,
+            dogId: data.dogId
+          });
+        }
+      }
+
+      // Get messages where user2 is sender
+      const messagesQuery2 = query(
+        collection(this.db, 'messages'),
+        where('senderId', '==', user2Id)
+      );
+      
+      const messagesSnapshot2 = await getDocs(messagesQuery2);
+      
+      // Process messages where user2 is sender
+      for (const doc of messagesSnapshot2.docs) {
+        const data = doc.data();
+        if (data.receiverId === user1Id) {
           messages.push({
             id: doc.id,
             senderId: data.senderId,
@@ -164,6 +191,7 @@ export class MessageService {
       // Sort by timestamp
       messages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
       
+      console.log('Found', messages.length, 'messages in conversation');
       return messages;
     } catch (error) {
       console.error('Error getting conversation messages:', error);
@@ -196,13 +224,13 @@ export class MessageService {
 
   // Subscribe to real-time messages
   subscribeToMessages(userId: string, callback: (messages: Message[]) => void) {
-    const messagesQuery = query(
+    // Listen to messages where user is receiver
+    const receivedMessagesQuery = query(
       collection(this.db, 'messages'),
-      where('receiverId', '==', userId),
-      orderBy('timestamp', 'desc')
+      where('receiverId', '==', userId)
     );
 
-    return onSnapshot(messagesQuery, (snapshot) => {
+    return onSnapshot(receivedMessagesQuery, (snapshot) => {
       const messages: Message[] = [];
       snapshot.docs.forEach(doc => {
         const data = doc.data();

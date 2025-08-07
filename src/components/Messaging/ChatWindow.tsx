@@ -48,6 +48,28 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     };
 
     loadMessages();
+
+    // Set up real-time listener for new messages
+    const unsubscribe = messageService.subscribeToMessages(currentUserId, (newMessages) => {
+      // Filter messages for this conversation
+      const conversationMessages = newMessages.filter(msg => 
+        (msg.senderId === currentUserId && msg.receiverId === conversation.otherUserId) ||
+        (msg.senderId === conversation.otherUserId && msg.receiverId === currentUserId)
+      );
+      
+      if (conversationMessages.length > 0) {
+        setMessages(prevMessages => {
+          // Combine existing and new messages, avoiding duplicates
+          const allMessages = [...prevMessages, ...conversationMessages];
+          const uniqueMessages = allMessages.filter((message, index, self) => 
+            index === self.findIndex(m => m.id === message.id)
+          );
+          return uniqueMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+        });
+      }
+    });
+
+    return () => unsubscribe();
   }, [conversation, currentUserId]);
 
   useEffect(() => {
