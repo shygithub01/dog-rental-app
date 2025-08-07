@@ -1,22 +1,19 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { FirebaseProvider } from './contexts/FirebaseContext'
 import { useFirebase } from './contexts/FirebaseContext'
-import Login from './components/Auth/Login'
 import AddDogForm from './components/Dogs/AddDogForm'
 import DogCard from './components/Dogs/DogCard'
 import EditDogForm from './components/Dogs/EditDogForm'
 import RentalRequestForm from './components/Rentals/RentalRequestForm'
 import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
+import NotificationBell from './components/Notifications/NotificationBell'
 import { cleanupOrphanedData } from './utils/dataCleanup'
-import { collection, addDoc, getDocs, orderBy, Timestamp } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { useNotificationService } from './services/notificationService'
 
 function AppContent() {
-  const [count, setCount] = useState(0)
-  const [firebaseStatus, setFirebaseStatus] = useState('Checking...')
   const [user, setUser] = useState<any>(null)
   const [showAddDog, setShowAddDog] = useState(false)
   const [showEditDog, setShowEditDog] = useState(false)
@@ -28,20 +25,38 @@ function AppContent() {
   const [loading, setLoading] = useState(false)
 
   const { auth, db } = useFirebase()
+  const notificationService = useNotificationService()
 
   useEffect(() => {
     console.log('Firebase Auth initialized:', auth)
     console.log('Current user:', auth.currentUser)
-    setFirebaseStatus('Connected!')
 
     // Listen for auth state changes
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       console.log('Auth state changed:', user)
       setUser(user)
       if (user) {
         console.log('User authenticated, loading dogs...')
         // Use the user parameter directly instead of relying on state
         loadDogsWithUser(user)
+        
+        // Create welcome notification for new users
+        try {
+          await notificationService.createNotification(
+            user.uid,
+            'welcome',
+            {
+              title: '🐕 Welcome to DogRental!',
+              message: `Welcome ${user.displayName || user.email}! You can now browse dogs, add your own dogs for rent, and start connecting with other dog lovers in your community.`,
+              data: {
+                userId: user.uid,
+                userName: user.displayName || user.email
+              }
+            }
+          );
+        } catch (error) {
+          console.error('Error creating welcome notification:', error);
+        }
       }
     })
 
@@ -377,6 +392,7 @@ function AppContent() {
           }} className="mobile-auth">
             {user ? (
               <>
+                <NotificationBell userId={user.uid} />
                 <div style={{
                   padding: '6px 12px',
                   backgroundColor: '#48bb78',

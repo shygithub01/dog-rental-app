@@ -1,18 +1,6 @@
-import { 
-  collection, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc, 
-  getDocs, 
-  getDoc,
-  query,
-  where,
-  orderBy,
-  Timestamp 
-} from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, updateDoc, doc, deleteDoc, Timestamp, getDoc } from 'firebase/firestore';
 import { useFirebase } from '../contexts/FirebaseContext';
-import { Dog, CreateDogData, UpdateDogData } from '../types/Dog';
+import type { Dog, CreateDogData, UpdateDogData } from '../types/Dog';
 
 export const useDogService = () => {
   const { db } = useFirebase();

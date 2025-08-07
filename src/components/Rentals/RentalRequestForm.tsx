@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, addDoc, updateDoc, doc, Timestamp } from 'firebase/firestore';
+import { useNotificationService } from '../../services/notificationService';
 
 interface Dog {
   id: string;
@@ -33,6 +34,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
   const [error, setError] = useState('');
 
   const { auth, db } = useFirebase();
+  const notificationService = useNotificationService();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,6 +100,26 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         requestedAt: Timestamp.now(),
         updatedAt: Timestamp.now()
       });
+
+      // Create notification for dog owner
+      await notificationService.createNotification(
+        dog.ownerId,
+        'rental_request',
+        {
+          title: `🐕 New Rental Request for ${dog.name}`,
+          message: `${auth.currentUser.displayName || auth.currentUser.email} wants to rent ${dog.name} from ${formData.startDate} to ${formData.endDate}. Check your requests to approve or reject.`,
+          data: {
+            requestId: requestRef.id,
+            dogId: dog.id,
+            dogName: dog.name,
+            renterId: auth.currentUser.uid,
+            renterName: auth.currentUser.displayName || auth.currentUser.email,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+            totalCost
+          }
+        }
+      );
 
       console.log('Rental request created successfully!');
       onSuccess?.();
