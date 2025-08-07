@@ -162,10 +162,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             fontSize: '18px',
             cursor: 'pointer',
             marginRight: '10px',
-            color: '#666'
+            color: '#666',
+            padding: '5px 10px',
+            borderRadius: '5px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px'
           }}
+          title="Back to Messages"
         >
-          ←
+          ← Back
         </button>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
@@ -182,7 +188,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         flex: 1, 
         overflowY: 'auto', 
         padding: '15px',
-        backgroundColor: '#f5f5f5'
+        backgroundColor: '#f5f5f5',
+        maxHeight: '400px' // Add max height to ensure scrolling
       }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>
