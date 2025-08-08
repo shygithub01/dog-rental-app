@@ -153,10 +153,22 @@ export class NotificationService {
       const updatePromises = querySnapshot.docs.map(doc => 
         updateDoc(doc.ref, { read: true })
       );
-      
       await Promise.all(updatePromises);
+      
+      console.log(`Marked ${querySnapshot.size} notifications as read for user ${userId}`);
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
+      throw error;
+    }
+  }
+
+  // Delete a single notification
+  async deleteNotification(notificationId: string): Promise<void> {
+    try {
+      await deleteDoc(doc(this.db, 'notifications', notificationId));
+      console.log(`Deleted notification ${notificationId}`);
+    } catch (error) {
+      console.error('Error deleting notification:', error);
       throw error;
     }
   }
@@ -305,6 +317,7 @@ export const useNotificationService = () => {
     getUserNotifications: (userId: string) => new NotificationService(db).getUserNotifications(userId),
     markAsRead: (notificationId: string) => new NotificationService(db).markAsRead(notificationId),
     markAllAsRead: (userId: string) => new NotificationService(db).markAllAsRead(userId),
+    deleteNotification: (notificationId: string) => new NotificationService(db).deleteNotification(notificationId),
     getUnreadCount: (userId: string) => new NotificationService(db).getUnreadCount(userId),
     deleteExpiredNotifications: () => new NotificationService(db).deleteExpiredNotifications(),
     removeDuplicateWelcomeNotifications: (userId: string) => new NotificationService(db).removeDuplicateWelcomeNotifications(userId),

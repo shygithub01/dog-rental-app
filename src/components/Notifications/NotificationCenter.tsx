@@ -88,6 +88,21 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
     }
   };
 
+  const handleDeleteNotification = async (notificationId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent marking as read when clicking delete
+    try {
+      await notificationService.deleteNotification(notificationId);
+      setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
+      // Update unread count if the deleted notification was unread
+      const deletedNotification = notifications.find(n => n.id === notificationId);
+      if (deletedNotification && !deletedNotification.read) {
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  };
+
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'rental_request': return '🐕';
@@ -315,6 +330,25 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                           }}>
                             {formatDate(notification.createdAt)}
                           </span>
+                          <button
+                            onClick={(e) => handleDeleteNotification(notification.id, e)}
+                            style={{
+                              padding: '4px 8px',
+                              backgroundColor: '#f56565',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.7rem',
+                              fontWeight: 'bold',
+                              transition: 'background-color 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f56565'}
+                            title="Delete notification"
+                          >
+                            🗑️
+                          </button>
                         </div>
                       </div>
                       <p style={{
