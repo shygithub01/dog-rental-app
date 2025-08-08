@@ -33,6 +33,7 @@ function AppContent() {
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | 'hybrid' | null>(null)
 
   const { auth, db } = useFirebase()
   const notificationService = useNotificationService()
@@ -99,15 +100,16 @@ function AppContent() {
       console.log('Existing user found:', existingUser);
       
       if (!existingUser) {
-        // Create new user profile
-        console.log('Creating new user profile...');
+        // Create new user profile with selected role
+        console.log('Creating new user profile with role:', selectedRole);
         await userService.createUser(user.uid, {
           email: user.email,
           displayName: user.displayName || user.email,
           photoURL: user.photoURL,
           phoneNumber: user.phoneNumber,
           location: '',
-          bio: ''
+          bio: '',
+          role: selectedRole
         });
         console.log('New user profile created successfully!');
       } else {
@@ -300,6 +302,11 @@ function AppContent() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!selectedRole) {
+      alert('Please select a role before signing in.');
+      return;
+    }
+    
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
@@ -713,27 +720,7 @@ function AppContent() {
                   )}
                 </div>
               </>
-            ) : (
-              <button
-                onClick={handleGoogleSignIn}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#4299e1',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <span>🔐</span>
-                Sign In with Google
-              </button>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
@@ -911,21 +898,135 @@ function AppContent() {
                 </h3>
                 <p style={{
                   color: '#4a5568',
-                  margin: '0 0 30px 0',
+                  margin: '0 0 20px 0',
                   lineHeight: '1.6'
                 }}>
                   Sign in to start renting dogs or list your dogs for rent
                 </p>
+                
+                {/* Role Selection */}
+                <div style={{
+                  marginBottom: '25px'
+                }}>
+                  <p style={{
+                    color: '#2d3748',
+                    margin: '0 0 15px 0',
+                    fontWeight: 'bold',
+                    fontSize: '1rem'
+                  }}>
+                    I want to:
+                  </p>
+                  
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px'
+                  }}>
+                    <button
+                      onClick={() => setSelectedRole('renter')}
+                      style={{
+                        padding: '12px 15px',
+                        backgroundColor: selectedRole === 'renter' ? '#48bb78' : '#f7fafc',
+                        color: selectedRole === 'renter' ? 'white' : '#4a5568',
+                        border: selectedRole === 'renter' ? 'none' : '2px solid #e2e8f0',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem',
+                        transition: 'all 0.2s',
+                        textAlign: 'left',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'renter') {
+                          e.currentTarget.style.backgroundColor = '#edf2f7';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'renter') {
+                          e.currentTarget.style.backgroundColor = '#f7fafc';
+                        }
+                      }}
+                    >
+                      🐾 Rent dogs from others
+                    </button>
+                    
+                    <button
+                      onClick={() => setSelectedRole('owner')}
+                      style={{
+                        padding: '12px 15px',
+                        backgroundColor: selectedRole === 'owner' ? '#48bb78' : '#f7fafc',
+                        color: selectedRole === 'owner' ? 'white' : '#4a5568',
+                        border: selectedRole === 'owner' ? 'none' : '2px solid #e2e8f0',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem',
+                        transition: 'all 0.2s',
+                        textAlign: 'left',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'owner') {
+                          e.currentTarget.style.backgroundColor = '#edf2f7';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'owner') {
+                          e.currentTarget.style.backgroundColor = '#f7fafc';
+                        }
+                      }}
+                    >
+                      🏠 List my dogs for rent
+                    </button>
+                    
+                    <button
+                      onClick={() => setSelectedRole('hybrid')}
+                      style={{
+                        padding: '12px 15px',
+                        backgroundColor: selectedRole === 'hybrid' ? '#48bb78' : '#f7fafc',
+                        color: selectedRole === 'hybrid' ? 'white' : '#4a5568',
+                        border: selectedRole === 'hybrid' ? 'none' : '2px solid #e2e8f0',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem',
+                        transition: 'all 0.2s',
+                        textAlign: 'left',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'hybrid') {
+                          e.currentTarget.style.backgroundColor = '#edf2f7';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'hybrid') {
+                          e.currentTarget.style.backgroundColor = '#f7fafc';
+                        }
+                      }}
+                    >
+                      🔄 Do both
+                    </button>
+                  </div>
+                </div>
                 <button
                   onClick={handleGoogleSignIn}
+                  disabled={!selectedRole}
                   style={{
                     width: '100%',
                     padding: '15px 20px',
-                    backgroundColor: '#4285f4',
+                    backgroundColor: selectedRole ? '#4285f4' : '#cbd5e0',
                     color: 'white',
                     border: 'none',
                     borderRadius: '10px',
-                    cursor: 'pointer',
+                    cursor: selectedRole ? 'pointer' : 'not-allowed',
                     fontWeight: 'bold',
                     fontSize: '1rem',
                     transition: 'all 0.2s',
@@ -935,8 +1036,16 @@ function AppContent() {
                     gap: '10px'
                   }}
                   className="mobile-signin-btn"
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3367d6'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4285f4'}
+                  onMouseOver={(e) => {
+                    if (selectedRole) {
+                      e.currentTarget.style.backgroundColor = '#3367d6';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (selectedRole) {
+                      e.currentTarget.style.backgroundColor = '#4285f4';
+                    }
+                  }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

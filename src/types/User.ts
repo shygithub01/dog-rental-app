@@ -6,6 +6,7 @@ export interface User {
   phoneNumber?: string;
   location?: string;
   bio?: string;
+  role: UserRole;
   joinDate: Date;
   lastActive: Date;
   isVerified: boolean;
@@ -84,6 +85,7 @@ export interface CreateUserData {
   phoneNumber?: string;
   location?: string;
   bio?: string;
+  role?: UserRole;
 }
 
 export interface UpdateUserData extends Partial<CreateUserData> {
