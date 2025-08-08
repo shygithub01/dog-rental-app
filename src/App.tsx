@@ -503,27 +503,6 @@ function AppContent() {
             }} className="mobile-logo">
               🐕 DogRental
             </h1>
-            <div style={{ 
-              display: 'flex', 
-              gap: '20px', 
-              marginLeft: '40px'
-            }} className="mobile-nav-links">
-              <a href="#" style={{ 
-                color: '#4a5568', 
-                textDecoration: 'none', 
-                fontWeight: '500'
-              }}>Browse Dogs</a>
-              <a href="#" style={{ 
-                color: '#4a5568', 
-                textDecoration: 'none', 
-                fontWeight: '500'
-              }}>Add Your Dog</a>
-              <a href="#" style={{ 
-                color: '#4a5568', 
-                textDecoration: 'none', 
-                fontWeight: '500'
-              }}>My Rentals</a>
-            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
             {user ? (
