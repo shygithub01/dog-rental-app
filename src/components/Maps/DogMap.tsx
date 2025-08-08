@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useMapsService } from '../../services/mapsService';
 import type { DogLocation, Location, MapFilters } from '../../types/Location';
 import type { Dog } from '../../types/Dog';
@@ -28,9 +28,13 @@ const DogMap: React.FC<DogMapProps> = ({
   const [error, setError] = useState('');
   const mapsService = useMapsService();
 
-  // Get current location on component mount
+  // Get current location on component mount - only run once
   useEffect(() => {
+    let isMounted = true;
+    
     const getLocation = async () => {
+      if (!isMounted) return;
+      
       try {
         setLoading(true);
         let location: Location;
@@ -46,27 +50,35 @@ const DogMap: React.FC<DogMapProps> = ({
           }
         }
         
-        setCurrentLocation(location);
+        if (isMounted) {
+          setCurrentLocation(location);
+          setLoading(false);
+        }
       } catch (error) {
         console.error('Error getting location:', error);
-        setError('Could not get your current location. Using default location.');
-        setCurrentLocation({ lat: 40.7128, lng: -74.0060 });
-      } finally {
-        setLoading(false);
+        if (isMounted) {
+          setError('Could not get your current location. Using default location.');
+          setCurrentLocation({ lat: 40.7128, lng: -74.0060 });
+          setLoading(false);
+        }
       }
     };
 
     getLocation();
-  }, [userLocation, mapsService]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Empty dependency array - only run once
 
-  const handleFilterChange = (key: keyof MapFilters, value: any) => {
+  const handleFilterChange = useCallback((key: keyof MapFilters, value: any) => {
     setFilters(prev => ({
       ...prev,
       [key]: value
     }));
-  };
+  }, []);
 
-  const handleUseMyLocation = async () => {
+  const handleUseMyLocation = useCallback(async () => {
     try {
       setLoading(true);
       const location = await mapsService.getCurrentLocation();
@@ -78,10 +90,10 @@ const DogMap: React.FC<DogMapProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [mapsService]);
 
   // Filter dogs for display
-  const getFilteredDogs = () => {
+  const getFilteredDogs = useCallback(() => {
     if (!currentLocation) return dogs;
 
     return dogs.filter(dog => {
@@ -99,7 +111,7 @@ const DogMap: React.FC<DogMapProps> = ({
       
       return true;
     });
-  };
+  }, [dogs, currentLocation, filters, mapsService]);
 
   const filteredDogs = getFilteredDogs();
 
@@ -246,13 +258,16 @@ const DogMap: React.FC<DogMapProps> = ({
               >
                 <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <img
-                    src={dog.imageUrl || 'https://via.placeholder.com/60x60?text=Dog'}
+                    src={dog.imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNSAxNUg0NVY0NUgxNVYxNVoiIGZpbGw9IiNFRUVFRUUiLz4KPHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSIyMCIgeT0iMjAiPgo8cGF0aCBkPSJNMTAgMTVMMTUgMTBMMTAgNVYxNVoiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+Cg=='}
                     alt={dog.name}
                     style={{
                       width: '60px',
                       height: '60px',
                       borderRadius: '8px',
                       objectFit: 'cover'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNSAxNUg0NVY0NUgxNVYxNVoiIGZpbGw9IiNFRUVFRUUiLz4KPHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSIyMCIgeT0iMjAiPgo8cGF0aCBkPSJNMTAgMTVMMTUgMTBMMTAgNVYxNVoiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+Cg==';
                     }}
                   />
                   <div style={{ flex: 1 }}>
