@@ -251,12 +251,29 @@ function AppContent() {
           {
             receiverId: dog.ownerId,
             receiverName: dog.ownerName,
-            content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about availability and any special requirements?`,
+            content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about availability and special requirements?`,
             dogId: dog.id,
             rentalId: undefined
           }
         );
         console.log('Initial message sent successfully');
+        
+        // Create notification for the dog owner
+        await notificationService.createNotification(
+          dog.ownerId,
+          'rental_request',
+          {
+            title: '💬 New Message',
+            message: `${user.displayName || user.email} sent you a message about ${dog.name}`,
+            data: {
+              dogId: dog.id,
+              dogName: dog.name,
+              senderId: user.uid,
+              senderName: user.displayName || user.email
+            }
+          }
+        );
+        console.log('Notification created for dog owner');
       }
       
       setShowMessaging(true);
