@@ -40,6 +40,8 @@ const DogMap: React.FC<DogMapProps> = ({
         setLoading(true);
         setError('');
 
+        console.log('Starting map initialization...');
+
         // Get user's current location
         let center: Location;
         if (userLocation) {
@@ -47,8 +49,10 @@ const DogMap: React.FC<DogMapProps> = ({
           setCurrentLocation(userLocation);
         } else {
           try {
+            console.log('Getting current location...');
             center = await mapsService.getCurrentLocation();
             setCurrentLocation(center);
+            console.log('Current location obtained:', center);
           } catch (error) {
             console.warn('Could not get current location, using default:', error);
             center = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
@@ -56,8 +60,14 @@ const DogMap: React.FC<DogMapProps> = ({
         }
 
         // Initialize map
-        await mapsService.initializeMap('dog-map', center);
-        setMapInitialized(true);
+        console.log('Initializing map with center:', center);
+        if (mapContainerRef.current) {
+          await mapsService.initializeMap(mapContainerRef.current, center);
+          setMapInitialized(true);
+          console.log('Map initialized successfully');
+        } else {
+          throw new Error('Map container ref not available');
+        }
 
         // Add global functions for info window buttons
         (window as any).rentDog = (dogId: string) => {
@@ -76,7 +86,7 @@ const DogMap: React.FC<DogMapProps> = ({
 
       } catch (error) {
         console.error('Error initializing map:', error);
-        setError('Failed to load map. Please check your internet connection.');
+        setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
       } finally {
         setLoading(false);
       }

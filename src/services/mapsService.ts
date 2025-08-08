@@ -9,18 +9,33 @@ export class MapsService {
 
   constructor() {
     this.loader = new Loader({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU',
       version: 'weekly',
-      libraries: ['places']
+      libraries: ['places'],
+      language: 'en',
+      region: 'US'
     });
   }
 
   // Initialize Google Maps
-  async initializeMap(containerId: string, center: Location = { lat: 40.7128, lng: -74.0060 }): Promise<google.maps.Map> {
+  async initializeMap(containerId: string | HTMLElement, center: Location = { lat: 40.7128, lng: -74.0060 }): Promise<google.maps.Map> {
     try {
-      const google = await this.loader.load();
+      console.log('Initializing Google Maps with API key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU');
       
-      this.map = new google.maps.Map(document.getElementById(containerId)!, {
+      const google = await this.loader.load();
+      console.log('Google Maps loaded successfully');
+      
+      let container: HTMLElement;
+      if (typeof containerId === 'string') {
+        container = document.getElementById(containerId)!;
+        if (!container) {
+          throw new Error(`Container with id '${containerId}' not found`);
+        }
+      } else {
+        container = containerId;
+      }
+      
+      this.map = new google.maps.Map(container, {
         center: { lat: center.lat, lng: center.lng },
         zoom: 12,
         mapTypeControl: false,
@@ -28,6 +43,7 @@ export class MapsService {
         fullscreenControl: false
       });
 
+      console.log('Map initialized successfully');
       return this.map;
     } catch (error) {
       console.error('Error initializing Google Maps:', error);
