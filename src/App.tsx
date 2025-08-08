@@ -59,20 +59,28 @@ function AppContent() {
           console.error('Error creating/updating user profile:', error)
         }
         
-        // Create welcome notification for new users
+        // Create welcome notification for new users only
         try {
-          await notificationService.createNotification(
-            user.uid,
-            'welcome',
-            {
-              title: '🐕 Welcome to DogRental!',
-              message: `Welcome ${user.displayName || user.email}! You can now browse dogs, add your own dogs for rent, and start connecting with other dog lovers in your community.`,
-              data: {
-                userId: user.uid,
-                userName: user.displayName || user.email
+          const existingUser = await userService.getUser(user.uid);
+          if (!existingUser) {
+            // Only create welcome notification for new users
+            await notificationService.createNotification(
+              user.uid,
+              'welcome',
+              {
+                title: '🐕 Welcome to DogRental!',
+                message: `Welcome ${user.displayName || user.email}! You can now browse dogs, add your own dogs for rent, and start connecting with other dog lovers in your community.`,
+                data: {
+                  userId: user.uid,
+                  userName: user.displayName || user.email
+                }
               }
-            }
-          );
+            );
+            console.log('Welcome notification created for new user');
+          } else {
+            // Remove any duplicate welcome notifications for existing users
+            await notificationService.removeDuplicateWelcomeNotifications(user.uid);
+          }
         } catch (error) {
           console.error('Error creating welcome notification:', error);
         }

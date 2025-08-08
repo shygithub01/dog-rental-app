@@ -188,14 +188,42 @@ export class NotificationService {
       );
       
       const querySnapshot = await getDocs(q);
-      const deletePromises = querySnapshot.docs.map(doc => 
-        deleteDoc(doc.ref)
-      );
-      
+      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
       await Promise.all(deletePromises);
+      
+      console.log(`Deleted ${querySnapshot.size} expired notifications`);
     } catch (error) {
       console.error('Error deleting expired notifications:', error);
-      throw error;
+    }
+  }
+
+  // Remove duplicate welcome notifications for a user
+  async removeDuplicateWelcomeNotifications(userId: string): Promise<void> {
+    try {
+      const q = query(
+        collection(this.db, 'notifications'),
+        where('userId', '==', userId),
+        where('type', '==', 'welcome')
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const notifications = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      if (notifications.length > 1) {
+        // Keep the first one, delete the rest
+        const notificationsToDelete = notifications.slice(1);
+        const deletePromises = notificationsToDelete.map(notification => 
+          deleteDoc(doc(this.db, 'notifications', notification.id))
+        );
+        await Promise.all(deletePromises);
+        
+        console.log(`Removed ${notificationsToDelete.length} duplicate welcome notifications for user ${userId}`);
+      }
+    } catch (error) {
+      console.error('Error removing duplicate welcome notifications:', error);
     }
   }
 
@@ -272,5 +300,15 @@ export class NotificationService {
 // Hook to use notification service
 export const useNotificationService = () => {
   const { db } = useFirebase();
-  return new NotificationService(db);
+  return {
+    createNotification: (userId: string, type: NotificationType, customData?: any) => new NotificationService(db).createNotification(userId, type, customData),
+    getUserNotifications: (userId: string) => new NotificationService(db).getUserNotifications(userId),
+    markAsRead: (notificationId: string) => new NotificationService(db).markAsRead(notificationId),
+    markAllAsRead: (userId: string) => new NotificationService(db).markAllAsRead(userId),
+    getUnreadCount: (userId: string) => new NotificationService(db).getUnreadCount(userId),
+    deleteExpiredNotifications: () => new NotificationService(db).deleteExpiredNotifications(),
+    removeDuplicateWelcomeNotifications: (userId: string) => new NotificationService(db).removeDuplicateWelcomeNotifications(userId),
+    getNotificationPreferences: (userId: string) => new NotificationService(db).getNotificationPreferences(userId),
+    updateNotificationPreferences: (userId: string, preferences: Partial<NotificationPreferences>) => new NotificationService(db).updateNotificationPreferences(userId, preferences)
+  };
 }; 
