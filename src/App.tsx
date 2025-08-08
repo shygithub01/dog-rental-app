@@ -529,24 +529,6 @@ function AppContent() {
             {user ? (
               <>
                 <NotificationBell userId={user.uid} />
-                <button
-                  onClick={() => setShowMessaging(true)}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#38a169',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px'
-                  }}
-                >
-                  💬 Messages
-                </button>
                 
                 {/* User Dropdown */}
                 <div className="user-dropdown-container" style={{ position: 'relative' }}>
