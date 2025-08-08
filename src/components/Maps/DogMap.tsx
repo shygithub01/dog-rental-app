@@ -34,19 +34,23 @@ const DogMap: React.FC<DogMapProps> = ({
   // Initialize map when container is available
   useEffect(() => {
     const initializeMap = async () => {
-      if (mapInitialized || !mapContainer) return;
+      if (mapInitialized || !mapContainer) {
+        console.log('Map initialization skipped:', { mapInitialized, mapContainer: !!mapContainer });
+        return;
+      }
 
       try {
         setLoading(true);
         setError('');
 
-        console.log('Starting map initialization...');
+        console.log('Starting map initialization...', { mapContainer });
 
         // Get user's current location
         let center: Location;
         if (userLocation) {
           center = userLocation;
           setCurrentLocation(userLocation);
+          console.log('Using provided user location:', center);
         } else {
           try {
             console.log('Getting current location...');
@@ -56,6 +60,7 @@ const DogMap: React.FC<DogMapProps> = ({
           } catch (error) {
             console.warn('Could not get current location, using default:', error);
             center = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
+            setCurrentLocation(center);
           }
         }
 
@@ -224,6 +229,9 @@ const DogMap: React.FC<DogMapProps> = ({
             <option value={20}>20 km</option>
             <option value={50}>50 km</option>
           </select>
+          <span style={{ fontSize: '12px', color: '#666' }}>
+            (Uses GPS coordinates for precise distance calculation)
+          </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -280,9 +288,60 @@ const DogMap: React.FC<DogMapProps> = ({
         style={{
           flex: 1,
           minHeight: '400px',
-          backgroundColor: '#f8f9fa'
+          backgroundColor: '#f8f9fa',
+          position: 'relative'
         }}
-      />
+      >
+        {loading && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            zIndex: 1000
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '16px', marginBottom: '10px' }}>Loading Map...</div>
+              <div style={{ fontSize: '14px', color: '#666' }}>Please wait while we initialize the map</div>
+            </div>
+          </div>
+        )}
+        {error && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            zIndex: 1000,
+            maxWidth: '300px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '16px', marginBottom: '10px', color: '#dc3545' }}>Map Error</div>
+            <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>{error}</div>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
