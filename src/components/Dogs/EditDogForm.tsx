@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import ImageUpload from '../Common/ImageUpload';
+import type { Location } from '../../types/Location';
 
 interface Dog {
   id: string;
@@ -11,11 +12,13 @@ interface Dog {
   size: 'small' | 'medium' | 'large';
   description: string;
   pricePerDay: number;
-  imageUrl?: string;
   location: string;
+  coordinates?: Location;
+  imageUrl?: string;
   ownerId: string;
   ownerName: string;
   isAvailable: boolean;
+  status?: 'available' | 'requested' | 'rented';
   createdAt: any;
   updatedAt: any;
 }
@@ -40,8 +43,38 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [coordinates, setCoordinates] = useState<Location | null>(dog.coordinates || null);
+  const [locationLoading, setLocationLoading] = useState(false);
 
   const { db } = useFirebase();
+
+  // Get current location for coordinates
+  const getCurrentLocation = async () => {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    setLocationLoading(true);
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const location: Location = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      setCoordinates(location);
+      setError('');
+    } catch (error) {
+      console.error('Error getting location:', error);
+      setError('Could not get your current location. Please try again.');
+    } finally {
+      setLocationLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,14 +87,15 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
         throw new Error('Cannot edit dog while it has pending requests or is currently rented. Please wait until the rental period ends.');
       }
 
-      console.log('Updating dog in database:', formData);
+      console.log('Updating dog in database:', { ...formData, coordinates });
 
       await updateDoc(doc(db, 'dogs', dog.id), {
         ...formData,
+        coordinates, // Include coordinates in update
         updatedAt: Timestamp.now()
       });
 
-      console.log('Dog updated successfully!');
+      console.log('Dog updated successfully with coordinates!');
       onSuccess?.();
     } catch (error: any) {
       console.error('Error updating dog:', error);
@@ -448,6 +482,71 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* GPS Coordinates */}
+          <div style={{
+            marginBottom: '30px'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: '0 0 20px 0',
+              fontWeight: 'bold'
+            }}>
+              📍 GPS Coordinates (Required for Maps)
+            </h3>
+            
+            <div style={{ 
+              display: 'flex', 
+              gap: '15px', 
+              alignItems: 'center',
+              marginBottom: '15px'
+            }}>
+              <button
+                type="button"
+                onClick={getCurrentLocation}
+                disabled={locationLoading}
+                style={{
+                  padding: '12px 20px',
+                  backgroundColor: locationLoading ? '#cbd5e0' : '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: locationLoading ? 'not-allowed' : 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {locationLoading ? '📍 Getting Location...' : '📍 Use My Current Location'}
+              </button>
+              
+              {coordinates && (
+                <div style={{
+                  padding: '10px 15px',
+                  backgroundColor: '#f0fff4',
+                  border: '2px solid #68d391',
+                  borderRadius: '8px',
+                  color: '#22543d',
+                  fontSize: '0.9rem'
+                }}>
+                  ✅ Location set: {coordinates.lat.toFixed(6)}, {coordinates.lng.toFixed(6)}
+                </div>
+              )}
+            </div>
+            
+            <div style={{
+              padding: '15px',
+              backgroundColor: '#f7fafc',
+              border: '2px solid #e2e8f0',
+              borderRadius: '8px',
+              fontSize: '0.9rem',
+              color: '#4a5568'
+            }}>
+              <strong>Why GPS coordinates?</strong> This helps renters find dogs near them on the map. 
+              Your exact location is only used for distance calculations and won't be shared publicly.
             </div>
           </div>
 

@@ -84,13 +84,45 @@ export const useDogService = () => {
   // Update a dog
   const updateDog = async (dogId: string, updateData: UpdateDogData) => {
     try {
-      const docRef = doc(db, 'dogs', dogId);
-      await updateDoc(docRef, {
+      const dogRef = doc(db, 'dogs', dogId);
+      await updateDoc(dogRef, {
         ...updateData,
         updatedAt: Timestamp.now()
       });
     } catch (error) {
       console.error('Error updating dog:', error);
+      throw error;
+    }
+  };
+
+  // Add coordinates to existing dogs (utility function)
+  const addCoordinatesToDog = async (dogId: string, coordinates: { lat: number; lng: number }) => {
+    try {
+      const dogRef = doc(db, 'dogs', dogId);
+      await updateDoc(dogRef, {
+        coordinates,
+        updatedAt: Timestamp.now()
+      });
+      console.log(`Added coordinates to dog ${dogId}:`, coordinates);
+    } catch (error) {
+      console.error('Error adding coordinates to dog:', error);
+      throw error;
+    }
+  };
+
+  // Get dogs without coordinates (utility function)
+  const getDogsWithoutCoordinates = async (): Promise<Dog[]> => {
+    try {
+      const q = query(collection(db, 'dogs'), where('coordinates', '==', null));
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate(),
+        updatedAt: doc.data().updatedAt?.toDate()
+      })) as Dog[];
+    } catch (error) {
+      console.error('Error getting dogs without coordinates:', error);
       throw error;
     }
   };
@@ -112,6 +144,8 @@ export const useDogService = () => {
     getDogsByOwner,
     getDog,
     updateDog,
-    deleteDog
+    deleteDog,
+    addCoordinatesToDog,
+    getDogsWithoutCoordinates
   };
 }; 
