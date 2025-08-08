@@ -90,8 +90,10 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
 
   const handleDeleteNotification = async (notificationId: string, event: React.MouseEvent) => {
     event.stopPropagation(); // Prevent marking as read when clicking delete
+    console.log('handleDeleteNotification called with ID:', notificationId);
     try {
       await notificationService.deleteNotification(notificationId);
+      console.log('Notification deleted successfully');
       setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
       // Update unread count if the deleted notification was unread
       const deletedNotification = notifications.find(n => n.id === notificationId);
@@ -157,52 +159,53 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
         {/* Header */}
         <div style={{
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '20px',
-          paddingBottom: '15px',
-          borderBottom: '2px solid #f7fafc'
+          alignItems: 'center',
+          padding: '15px 20px',
+          borderBottom: '1px solid #e2e8f0'
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '10px'
           }}>
-            <div style={{ fontSize: '2rem' }}>📧</div>
-            <div>
-              <h2 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: 0,
+            <span style={{ fontSize: '1.5rem' }}>✉️</span>
+            <h3 style={{
+              fontSize: '1.3rem',
+              color: '#2d3748',
+              margin: 0,
+              fontWeight: 'bold'
+            }}>
+              Notifications
+            </h3>
+            {unreadCount > 0 && (
+              <span style={{
+                backgroundColor: '#4299e1',
+                color: 'white',
+                padding: '4px 8px',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
                 fontWeight: 'bold'
               }}>
-                Notifications
-              </h2>
-              {unreadCount > 0 && (
-                <div style={{
-                  fontSize: '0.9rem',
-                  color: '#4a5568'
-                }}>
-                  {unreadCount} unread
-                </div>
-              )}
-            </div>
+                {unreadCount} new
+              </span>
+            )}
           </div>
           <div style={{
             display: 'flex',
             gap: '10px'
           }}>
-            {unreadCount > 0 && (
+            {notifications.length > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
                 style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#4299e1',
+                  padding: '6px 12px',
+                  backgroundColor: '#38a169',
                   color: 'white',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '0.9rem',
+                  fontSize: '0.8rem',
                   fontWeight: 'bold'
                 }}
               >
@@ -226,6 +229,39 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
             </button>
           </div>
         </div>
+
+        {/* Test Delete Button */}
+        {notifications.length > 0 && (
+          <div style={{
+            padding: '10px 20px',
+            borderBottom: '1px solid #e2e8f0',
+            backgroundColor: '#f7fafc'
+          }}>
+            <button
+              onClick={() => {
+                console.log('Test delete button clicked');
+                if (notifications.length > 0) {
+                  handleDeleteNotification(notifications[0].id, {} as React.MouseEvent);
+                }
+              }}
+              style={{
+                padding: '8px 12px',
+                backgroundColor: '#dc2626',
+                color: 'white',
+                border: '2px solid #dc2626',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              🗑️ Test Delete First Notification
+            </button>
+          </div>
+        )}
 
         {/* Notifications List */}
         <div style={{
@@ -314,7 +350,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                         <div style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '8px'
+                          gap: '8px',
+                          flexWrap: 'wrap'
                         }}>
                           {!notification.read && (
                             <div style={{
@@ -331,25 +368,38 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                             {formatDate(notification.createdAt)}
                           </span>
                           <button
-                            onClick={(e) => handleDeleteNotification(notification.id, e)}
+                            onClick={(e) => {
+                              console.log('Delete button clicked for notification:', notification.id);
+                              handleDeleteNotification(notification.id, e);
+                            }}
                             style={{
-                              padding: '6px 10px',
-                              backgroundColor: '#e53e3e',
+                              padding: '8px 12px',
+                              backgroundColor: '#dc2626',
                               color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
+                              border: '2px solid #dc2626',
+                              borderRadius: '8px',
                               cursor: 'pointer',
-                              fontSize: '0.8rem',
+                              fontSize: '0.9rem',
                               fontWeight: 'bold',
                               transition: 'all 0.2s',
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '4px',
-                              minWidth: '60px',
-                              justifyContent: 'center'
+                              gap: '6px',
+                              minWidth: '80px',
+                              justifyContent: 'center',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                              zIndex: 10
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#b91c1c';
+                              e.currentTarget.style.borderColor = '#b91c1c';
+                              e.currentTarget.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#dc2626';
+                              e.currentTarget.style.borderColor = '#dc2626';
+                              e.currentTarget.style.transform = 'scale(1)';
+                            }}
                             title="Delete notification"
                           >
                             🗑️ Delete
