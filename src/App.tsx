@@ -27,6 +27,7 @@ function AppContent() {
   const [showUserProfile, setShowUserProfile] = useState(false)
   const [showMessaging, setShowMessaging] = useState(false)
   const [showMaps, setShowMaps] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [selectedDogForMessage, setSelectedDogForMessage] = useState<any>(null)
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
@@ -226,32 +227,35 @@ function AppContent() {
   }
 
   const handleMessageDogOwner = async (dog: any) => {
-    if (!user) {
-      alert('Please sign in to message dog owners');
-      return;
-    }
-
+    if (!user) return;
+    
     try {
+      console.log('Starting conversation with dog owner:', dog.ownerId);
+      
       // Check if conversation already exists
       const conversationExists = await messageService.conversationExists(user.uid, dog.ownerId);
       
       if (!conversationExists) {
-        // Only send auto message if this is a new conversation
-        await messageService.sendMessage(user.uid, user.displayName || user.email!, {
-          receiverId: dog.ownerId,
-          receiverName: dog.ownerName,
-          content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about the dog?`,
-          dogId: dog.id
-        });
+        // Send initial message
+        await messageService.sendMessage(
+          user.uid, 
+          user.displayName || user.email || 'Unknown',
+          {
+            receiverId: dog.ownerId,
+            receiverName: dog.ownerName,
+            content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about availability and any special requirements?`,
+            dogId: dog.id,
+            rentalId: undefined
+          }
+        );
+        console.log('Initial message sent successfully');
       }
-
-      // Show messaging center
+      
       setShowMessaging(true);
     } catch (error) {
       console.error('Error starting conversation:', error);
-      alert('Failed to start conversation. Please try again.');
     }
-  }
+  };
 
   const handleRentDogSuccess = () => {
     setShowRentDog(false)
@@ -280,6 +284,31 @@ function AppContent() {
     }
   };
 
+  const handleUserDropdownToggle = () => {
+    setShowUserDropdown(!showUserDropdown);
+  };
+
+  const handleUserDropdownClose = () => {
+    setShowUserDropdown(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.user-dropdown-container')) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    if (showUserDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserDropdown]);
 
 
   if (showAddDog) {
@@ -536,86 +565,209 @@ function AppContent() {
                 >
                   🗺️ Maps
                 </button>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '8px',
-                  padding: '8px 12px',
-                  backgroundColor: '#f8f9fa',
-                  borderRadius: '20px',
-                  border: '1px solid #e9ecef'
-                }}>
-                  <div style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: user.photoURL ? 'transparent' : '#4299e1',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    fontSize: '14px',
-                    overflow: 'hidden'
-                  }}>
-                    {user.photoURL ? (
-                      <img 
-                        src={user.photoURL} 
-                        alt="Profile" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                
+                {/* User Dropdown */}
+                <div className="user-dropdown-container" style={{ position: 'relative' }}>
+                  <button
+                    onClick={handleUserDropdownToggle}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 12px',
+                      backgroundColor: '#f8f9fa',
+                      border: '1px solid #e9ecef',
+                      borderRadius: '20px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e9ecef'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+                  >
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      backgroundColor: user.photoURL ? 'transparent' : '#4299e1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '14px',
+                      overflow: 'hidden'
+                    }}>
+                      {user.photoURL ? (
+                        <img 
+                          src={user.photoURL} 
+                          alt="Profile" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'
+                      )}
+                    </div>
                     <span style={{ 
                       fontSize: '14px', 
                       fontWeight: 'bold', 
-                      color: '#2d3748',
-                      lineHeight: '1.2'
+                      color: '#2d3748'
                     }}>
                       {user.displayName || user.email}
                     </span>
                     <span style={{ 
-                      fontSize: '11px', 
-                      color: '#718096',
-                      lineHeight: '1.2'
+                      fontSize: '12px',
+                      color: '#718096'
                     }}>
-                      🔥 Connected
+                      ▼
                     </span>
-                  </div>
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  {showUserDropdown && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: '0',
+                      marginTop: '8px',
+                      backgroundColor: 'white',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                      border: '1px solid #e2e8f0',
+                      minWidth: '200px',
+                      zIndex: 1000
+                    }}>
+                      <div style={{
+                        padding: '12px 16px',
+                        borderBottom: '1px solid #f1f5f9',
+                        fontSize: '12px',
+                        color: '#64748b',
+                        fontWeight: 'bold'
+                      }}>
+                        ACCOUNT
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          setShowUserProfile(true);
+                          setShowUserDropdown(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: '#374151',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        👤 Profile
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          setShowMessaging(true);
+                          setShowUserDropdown(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: '#374151',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        💬 Inbox
+                      </button>
+                      
+                      <div style={{
+                        padding: '12px 16px',
+                        borderBottom: '1px solid #f1f5f9',
+                        fontSize: '12px',
+                        color: '#64748b',
+                        fontWeight: 'bold'
+                      }}>
+                        NAVIGATION
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          setShowMaps(true);
+                          setShowUserDropdown(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: '#374151',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        🗺️ Maps
+                      </button>
+                      
+                      <div style={{
+                        padding: '12px 16px',
+                        borderBottom: '1px solid #f1f5f9',
+                        fontSize: '12px',
+                        color: '#64748b',
+                        fontWeight: 'bold'
+                      }}>
+                        ACCOUNT
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          auth.signOut();
+                          setShowUserDropdown(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: '#dc2626',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fef2f2'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        🚪 Sign Out
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <button
-                  onClick={() => setShowUserProfile(true)}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#4299e1',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '14px'
-                  }}
-                >
-                  Profile
-                </button>
-                <button
-                  onClick={() => auth.signOut()}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#e53e3e',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '14px'
-                  }}
-                >
-                  Sign Out
-                </button>
               </>
             ) : (
               <button
