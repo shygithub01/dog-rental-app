@@ -333,21 +333,26 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                           <button
                             onClick={(e) => handleDeleteNotification(notification.id, e)}
                             style={{
-                              padding: '4px 8px',
-                              backgroundColor: '#f56565',
+                              padding: '6px 10px',
+                              backgroundColor: '#e53e3e',
                               color: 'white',
                               border: 'none',
-                              borderRadius: '4px',
+                              borderRadius: '6px',
                               cursor: 'pointer',
-                              fontSize: '0.7rem',
+                              fontSize: '0.8rem',
                               fontWeight: 'bold',
-                              transition: 'background-color 0.2s'
+                              transition: 'all 0.2s',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              minWidth: '60px',
+                              justifyContent: 'center'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f56565'}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
                             title="Delete notification"
                           >
-                            🗑️
+                            🗑️ Delete
                           </button>
                         </div>
                       </div>
