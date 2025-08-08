@@ -47,7 +47,14 @@ const DogMap: React.FC<DogMapProps> = ({
       }
 
       if (mapInitialized) {
-        console.log('Map already initialized');
+        console.log('Map already initialized, but checking if it actually rendered...');
+        // Check if the map actually rendered by looking for Google Maps elements
+        const mapElements = mapContainer.querySelectorAll('.gm-style');
+        if (mapElements.length === 0) {
+          console.log('Map marked as initialized but no Google Maps elements found, reinitializing...');
+          setMapInitialized(false);
+          return;
+        }
         return;
       }
 
@@ -56,6 +63,12 @@ const DogMap: React.FC<DogMapProps> = ({
         setError('');
 
         console.log('Starting map initialization...', { mapContainer });
+
+        // Test Google Maps API first
+        const apiTest = await mapsService.testGoogleMapsAPI();
+        if (!apiTest) {
+          throw new Error('Google Maps API is not working properly. Please check your API key.');
+        }
 
         // Get user's current location
         let center: Location;
@@ -78,9 +91,24 @@ const DogMap: React.FC<DogMapProps> = ({
 
         // Initialize map
         console.log('Initializing map with center:', center);
-        await mapsService.initializeMap(mapContainer, center);
+        const map = await mapsService.initializeMap(mapContainer, center);
         setMapInitialized(true);
-        console.log('Map initialized successfully');
+        console.log('Map initialized successfully', map);
+
+        // Verify map was created
+        if (!map) {
+          throw new Error('Map was not created successfully');
+        }
+
+        // Check if map elements are present
+        setTimeout(() => {
+          const mapElements = mapContainer.querySelectorAll('.gm-style');
+          console.log('Map elements found:', mapElements.length);
+          if (mapElements.length === 0) {
+            console.warn('No Google Maps elements found after initialization');
+            setError('Map loaded but not displaying properly. Please try refreshing the page.');
+          }
+        }, 1000);
 
         // Add global functions for info window buttons
         (window as any).rentDog = (dogId: string) => {
@@ -100,6 +128,7 @@ const DogMap: React.FC<DogMapProps> = ({
       } catch (error) {
         console.error('Error initializing map:', error);
         setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        setMapInitialized(false);
       } finally {
         setLoading(false);
       }

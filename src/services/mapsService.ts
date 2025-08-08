@@ -8,13 +8,40 @@ export class MapsService {
   private infoWindows: google.maps.InfoWindow[] = [];
 
   constructor() {
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU';
+    console.log('MapsService constructor - API key:', apiKey ? 'Found' : 'Not found');
+    
     this.loader = new Loader({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU',
+      apiKey: apiKey,
       version: 'weekly',
       libraries: ['places'],
       language: 'en',
       region: 'US'
     });
+  }
+
+  // Test if Google Maps API is working
+  async testGoogleMapsAPI(): Promise<boolean> {
+    try {
+      console.log('Testing Google Maps API...');
+      const google = await this.loader.load();
+      
+      if (!google || !google.maps) {
+        console.error('Google Maps API not loaded');
+        return false;
+      }
+      
+      if (!google.maps.Map) {
+        console.error('Google Maps Map constructor not available');
+        return false;
+      }
+      
+      console.log('Google Maps API test passed');
+      return true;
+    } catch (error) {
+      console.error('Google Maps API test failed:', error);
+      return false;
+    }
   }
 
   // Initialize Google Maps
@@ -26,6 +53,16 @@ export class MapsService {
       console.log('Loading Google Maps API...');
       const google = await this.loader.load();
       console.log('Google Maps loaded successfully');
+      
+      // Test if Google Maps is actually loaded
+      if (!google || !google.maps) {
+        throw new Error('Google Maps failed to load properly');
+      }
+      
+      // Test if the API is working
+      if (!google.maps.Map) {
+        throw new Error('Google Maps Map constructor not available');
+      }
       
       let container: HTMLElement;
       if (typeof containerId === 'string') {
