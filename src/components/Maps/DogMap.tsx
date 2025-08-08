@@ -20,7 +20,6 @@ const DogMap: React.FC<DogMapProps> = ({
 }) => {
   const [mapInitialized, setMapInitialized] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
-  const [containerReady, setContainerReady] = useState(false);
   const [filters, setFilters] = useState<MapFilters>({
     maxDistance: 10,
     maxPrice: 100,
@@ -32,17 +31,22 @@ const DogMap: React.FC<DogMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapsService = useMapsService();
 
-  // Check if container is ready
-  useEffect(() => {
-    if (mapContainerRef.current && !containerReady) {
-      setContainerReady(true);
-    }
-  }, [containerReady]);
-
   // Initialize map
   useEffect(() => {
     const initializeMap = async () => {
-      if (!containerReady || mapInitialized) return;
+      if (mapInitialized) return;
+
+      // Wait for the ref to be available
+      let attempts = 0;
+      while (!mapContainerRef.current && attempts < 50) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+        attempts++;
+      }
+
+      if (!mapContainerRef.current) {
+        console.error('Map container ref not available after waiting');
+        return;
+      }
 
       try {
         setLoading(true);
@@ -69,13 +73,9 @@ const DogMap: React.FC<DogMapProps> = ({
 
         // Initialize map
         console.log('Initializing map with center:', center);
-        if (mapContainerRef.current) {
-          await mapsService.initializeMap(mapContainerRef.current, center);
-          setMapInitialized(true);
-          console.log('Map initialized successfully');
-        } else {
-          throw new Error('Map container ref not available');
-        }
+        await mapsService.initializeMap(mapContainerRef.current, center);
+        setMapInitialized(true);
+        console.log('Map initialized successfully');
 
         // Add global functions for info window buttons
         (window as any).rentDog = (dogId: string) => {
@@ -101,11 +101,11 @@ const DogMap: React.FC<DogMapProps> = ({
     };
 
     initializeMap();
-  }, [containerReady, mapInitialized, userLocation]);
+  }, [mapInitialized, userLocation]);
 
   // Update markers when dogs or filters change
   useEffect(() => {
-    if (!mapInitialized || !currentLocation || !containerReady) return;
+    if (!mapInitialized || !currentLocation) return;
 
     try {
       // Convert dogs to DogLocation format
@@ -137,7 +137,7 @@ const DogMap: React.FC<DogMapProps> = ({
     } catch (error) {
       console.error('Error updating markers:', error);
     }
-  }, [dogs, filters, mapInitialized, currentLocation, containerReady]);
+  }, [dogs, filters, mapInitialized, currentLocation]);
 
   const handleFilterChange = (key: keyof MapFilters, value: any) => {
     setFilters(prev => ({
