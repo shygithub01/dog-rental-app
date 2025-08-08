@@ -66,6 +66,11 @@ export class MapsService {
       
       console.log('Creating map with container:', container);
       
+      // Check if Google Maps API is properly loaded
+      if (!google || !google.maps || !google.maps.Map) {
+        throw new Error('Google Maps API not properly loaded. Please check your API key and enable the Maps JavaScript API.');
+      }
+      
       this.map = new google.maps.Map(container, {
         center: { lat: center.lat, lng: center.lng },
         zoom: 12,
@@ -78,6 +83,16 @@ export class MapsService {
       return this.map;
     } catch (error) {
       console.error('Error initializing Google Maps:', error);
+      
+      // Check for specific API errors
+      if (error instanceof Error) {
+        if (error.message.includes('ApiNotActivatedMapError') || 
+            error.message.includes('api-not-activated-map-error') ||
+            error.message.includes('Google Maps API not properly loaded')) {
+          throw new Error('Google Maps API not available. Please enable the Maps JavaScript API in your Google Cloud Console.');
+        }
+      }
+      
       throw error;
     }
   }
