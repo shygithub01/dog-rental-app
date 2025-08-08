@@ -228,6 +228,17 @@ export class MapsService {
     return R * c;
   }
 
+  // Convert kilometers to miles
+  kilometersToMiles(kilometers: number): number {
+    return kilometers * 0.621371;
+  }
+
+  // Calculate distance in miles
+  calculateDistanceInMiles(point1: Location, point2: Location): number {
+    const kilometers = this.calculateDistance(point1, point2);
+    return this.kilometersToMiles(kilometers);
+  }
+
   private toRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
   }

@@ -26,6 +26,7 @@ const DogMap: React.FC<DogMapProps> = ({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [useMiles, setUseMiles] = useState(true); // Default to miles
   const mapsService = useMapsService();
 
   // Get current location on component mount - only run once
@@ -105,13 +106,15 @@ const DogMap: React.FC<DogMapProps> = ({
       
       // Check distance (simplified calculation)
       if (filters.maxDistance && dog.coordinates) {
-        const distance = mapsService.calculateDistance(currentLocation, dog.coordinates);
+        const distance = useMiles 
+          ? mapsService.calculateDistanceInMiles(currentLocation, dog.coordinates)
+          : mapsService.calculateDistance(currentLocation, dog.coordinates);
         if (distance > filters.maxDistance) return false;
       }
       
       return true;
     });
-  }, [dogs, currentLocation, filters, mapsService]);
+  }, [dogs, currentLocation, filters, mapsService, useMiles]);
 
   const filteredDogs = getFilteredDogs();
 
@@ -156,10 +159,10 @@ const DogMap: React.FC<DogMapProps> = ({
               fontSize: '14px'
             }}
           >
-            <option value={5}>5 km</option>
-            <option value={10}>10 km</option>
-            <option value={20}>20 km</option>
-            <option value={50}>50 km</option>
+            <option value={5}>{useMiles ? '5 miles' : '5 km'}</option>
+            <option value={10}>{useMiles ? '10 miles' : '10 km'}</option>
+            <option value={20}>{useMiles ? '20 miles' : '20 km'}</option>
+            <option value={50}>{useMiles ? '50 miles' : '50 km'}</option>
           </select>
           <span style={{ fontSize: '12px', color: '#666' }}>
             (Uses GPS coordinates for precise distance calculation)
@@ -196,6 +199,21 @@ const DogMap: React.FC<DogMapProps> = ({
             Available Only
           </label>
         </div>
+
+        <button
+          onClick={() => setUseMiles(!useMiles)}
+          style={{
+            padding: '6px 12px',
+            backgroundColor: '#6c757d',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          {useMiles ? '📏 Miles' : '📏 KM'}
+        </button>
 
         <button
           onClick={handleUseMyLocation}
@@ -283,7 +301,7 @@ const DogMap: React.FC<DogMapProps> = ({
                     </p>
                     {dog.coordinates && currentLocation && (
                       <p style={{ margin: '5px 0 0 0', color: '#888', fontSize: '12px' }}>
-                        📍 {mapsService.calculateDistance(currentLocation, dog.coordinates).toFixed(1)} km away
+                        📍 {useMiles ? mapsService.calculateDistanceInMiles(currentLocation, dog.coordinates).toFixed(1) : mapsService.calculateDistance(currentLocation, dog.coordinates).toFixed(1)} {useMiles ? 'miles' : 'km'} away
                       </p>
                     )}
                   </div>
