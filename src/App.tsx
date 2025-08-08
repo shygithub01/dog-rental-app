@@ -547,24 +547,6 @@ function AppContent() {
                 >
                   💬 Messages
                 </button>
-                <button
-                  onClick={() => setShowMaps(true)}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#805ad5',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px'
-                  }}
-                >
-                  🗺️ Maps
-                </button>
                 
                 {/* User Dropdown */}
                 <div className="user-dropdown-container" style={{ position: 'relative' }}>
@@ -636,16 +618,6 @@ function AppContent() {
                       minWidth: '200px',
                       zIndex: 1000
                     }}>
-                      <div style={{
-                        padding: '12px 16px',
-                        borderBottom: '1px solid #f1f5f9',
-                        fontSize: '12px',
-                        color: '#64748b',
-                        fontWeight: 'bold'
-                      }}>
-                        ACCOUNT
-                      </div>
-                      
                       <button
                         onClick={() => {
                           setShowUserProfile(true);
@@ -696,16 +668,6 @@ function AppContent() {
                         💬 Inbox
                       </button>
                       
-                      <div style={{
-                        padding: '12px 16px',
-                        borderBottom: '1px solid #f1f5f9',
-                        fontSize: '12px',
-                        color: '#64748b',
-                        fontWeight: 'bold'
-                      }}>
-                        NAVIGATION
-                      </div>
-                      
                       <button
                         onClick={() => {
                           setShowMaps(true);
@@ -732,14 +694,10 @@ function AppContent() {
                       </button>
                       
                       <div style={{
-                        padding: '12px 16px',
-                        borderBottom: '1px solid #f1f5f9',
-                        fontSize: '12px',
-                        color: '#64748b',
-                        fontWeight: 'bold'
-                      }}>
-                        ACCOUNT
-                      </div>
+                        height: '1px',
+                        backgroundColor: '#e5e7eb',
+                        margin: '8px 0'
+                      }} />
                       
                       <button
                         onClick={() => {
