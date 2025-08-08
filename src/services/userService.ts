@@ -40,7 +40,7 @@ export class UserService {
 
       const user: Omit<User, 'id'> = {
         ...userData,
-        role: userData.role || 'hybrid', // Default to hybrid if no role specified
+        role: userData.role || 'owner', // Default to owner if no role specified
         joinDate: new Date(),
         lastActive: new Date(),
         isVerified: false,
@@ -87,7 +87,7 @@ export class UserService {
         phoneNumber: data.phoneNumber,
         location: data.location,
         bio: data.bio,
-        role: data.role || 'hybrid', // Default to hybrid if no role exists
+        role: data.role || 'owner', // Default to owner if no role exists
         joinDate: data.joinDate.toDate(),
         lastActive: data.lastActive.toDate(),
         isVerified: data.isVerified,
@@ -353,7 +353,7 @@ export class UserService {
           phoneNumber: data.phoneNumber,
           location: data.location,
           bio: data.bio,
-          role: data.role || 'hybrid', // Default to hybrid if no role exists
+          role: data.role || 'owner', // Default to owner if no role exists
           joinDate: data.joinDate.toDate(),
           lastActive: data.lastActive.toDate(),
           isVerified: data.isVerified,

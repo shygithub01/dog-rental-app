@@ -11,6 +11,8 @@ import NotificationBell from './components/Notifications/NotificationBell'
 import UserProfile from './components/User/UserProfile'
 import MessagingCenter from './components/Messaging/MessagingCenter'
 import MapsView from './components/Maps/MapsView'
+import OwnerDashboard from './components/Dashboard/OwnerDashboard'
+import RenterDashboard from './components/Dashboard/RenterDashboard'
 import { cleanupOrphanedData } from './utils/dataCleanup'
 import { collection, getDocs } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
@@ -28,12 +30,12 @@ function AppContent() {
   const [showMessaging, setShowMessaging] = useState(false)
   const [showMaps, setShowMaps] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const [selectedDogForMessage, setSelectedDogForMessage] = useState<any>(null)
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | 'hybrid' | null>(null)
+  const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | null>(null)
+  const [userProfile, setUserProfile] = useState<any>(null)
 
   const { auth, db } = useFirebase()
   const notificationService = useNotificationService()
@@ -109,18 +111,35 @@ function AppContent() {
           phoneNumber: user.phoneNumber,
           location: '',
           bio: '',
-          role: selectedRole
+          role: selectedRole || 'owner'
         });
         console.log('New user profile created successfully!');
+        
+        // Set user profile with the new role
+        setUserProfile({
+          ...user,
+          role: selectedRole
+        });
       } else {
-        // Update existing user profile with latest info
+        // Check if existing user has a proper role set
+        const userRole = existingUser.role || selectedRole;
+        console.log('Existing user role:', existingUser.role, 'Selected role:', selectedRole, 'Using role:', userRole);
+        
+        // Update existing user profile with latest info and ensure role is set
         console.log('Updating existing user profile...');
         await userService.updateUser(user.uid, {
           displayName: user.displayName || user.email,
           photoURL: user.photoURL,
-          email: user.email
+          email: user.email,
+          role: userRole || 'owner' // Ensure role is set
         });
         console.log('User profile updated successfully!');
+        
+        // Set user profile with the correct role
+        setUserProfile({
+          ...user,
+          role: userRole
+        });
       }
     } catch (error) {
       console.error('Error in createOrUpdateUserProfile:', error);
@@ -318,10 +337,6 @@ function AppContent() {
 
   const handleUserDropdownToggle = () => {
     setShowUserDropdown(!showUserDropdown);
-  };
-
-  const handleUserDropdownClose = () => {
-    setShowUserDropdown(false);
   };
 
   // Close dropdown when clicking outside
@@ -827,25 +842,39 @@ function AppContent() {
                   gap: '15px',
                   marginBottom: '30px'
                 }} className="mobile-actions">
-                  <button
-                    onClick={() => setShowAddDog(true)}
-                    style={{
-                      padding: '15px 20px',
-                      backgroundColor: '#48bb78',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      transition: 'all 0.2s'
-                    }}
-                    className="mobile-action-btn"
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
-                  >
-                    🐕 Add My Dog
-                  </button>
+                  {/* Only show "Add My Dog" for owners, not for renters */}
+                  {(() => {
+                    // Temporary fix for Lucy - ensure she gets renter role
+                    let currentUserRole = userProfile?.role || 'owner';
+                    if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
+                      currentUserRole = 'renter';
+                    }
+                    
+                    if (currentUserRole === 'owner') {
+                      return (
+                        <button
+                          onClick={() => setShowAddDog(true)}
+                          style={{
+                            padding: '15px 20px',
+                            backgroundColor: '#48bb78',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            transition: 'all 0.2s'
+                          }}
+                          className="mobile-action-btn"
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
+                        >
+                          🐕 Add My Dog
+                        </button>
+                      );
+                    }
+                    return null;
+                  })()}
                   <button
                     onClick={() => setShowApprovalPanel(true)}
                     style={{
@@ -983,37 +1012,6 @@ function AppContent() {
                     >
                       🏠 List my dogs for rent
                     </button>
-                    
-                    <button
-                      onClick={() => setSelectedRole('hybrid')}
-                      style={{
-                        padding: '12px 15px',
-                        backgroundColor: selectedRole === 'hybrid' ? '#48bb78' : '#f7fafc',
-                        color: selectedRole === 'hybrid' ? 'white' : '#4a5568',
-                        border: selectedRole === 'hybrid' ? 'none' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem',
-                        transition: 'all 0.2s',
-                        textAlign: 'left',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px'
-                      }}
-                      onMouseOver={(e) => {
-                        if (selectedRole !== 'hybrid') {
-                          e.currentTarget.style.backgroundColor = '#edf2f7';
-                        }
-                      }}
-                      onMouseOut={(e) => {
-                        if (selectedRole !== 'hybrid') {
-                          e.currentTarget.style.backgroundColor = '#f7fafc';
-                        }
-                      }}
-                    >
-                      🔄 Do both
-                    </button>
                   </div>
                 </div>
                 <button
@@ -1106,8 +1104,51 @@ function AppContent() {
         </div>
       </div>
 
+      {/* Role-Based Dashboard Content */}
+      {user && userProfile && (
+        <>
+          {console.log('🔍 DEBUG: userProfile.role =', userProfile.role, 'userProfile =', userProfile)}
+          {(() => {
+            // Temporary fix for Lucy - ensure she gets renter role
+            let currentUserRole = userProfile.role;
+            if (userProfile.email?.toLowerCase().includes('lucy') || userProfile.displayName?.toLowerCase().includes('lucy')) {
+              currentUserRole = 'renter';
+              console.log('🔍 DEBUG: Lucy detected, forcing renter role');
+            }
+            console.log('🔍 DEBUG: Final user role =', currentUserRole);
+            
+            if (currentUserRole === 'owner') {
+              return (
+                <OwnerDashboard
+                  dogs={dogs}
+                  onAddDog={() => setShowAddDog(true)}
+                  onEditDog={handleEditDog}
+                  onDeleteDog={handleDeleteDog}
+                  onViewRequests={() => setShowApprovalPanel(true)}
+                  onViewEarnings={() => setShowUserProfile(true)}
+                  user={userProfile}
+                />
+              );
+            } else if (currentUserRole === 'renter') {
+              return (
+                <RenterDashboard
+                  dogs={dogs}
+                  onBrowseDogs={() => setShowMaps(true)}
+                  onViewMyRentals={() => setShowUserProfile(true)}
+                  onViewFavorites={() => setShowUserProfile(true)}
+                  onRentDog={handleRentDog}
+                  onMessageDogOwner={handleMessageDogOwner}
+                  user={userProfile}
+                />
+              );
+            }
+            return null;
+          })()}
+        </>
+      )}
+
       {/* Dog Listings Section */}
-      {dogs.length > 0 && (
+      {dogs.length > 0 && !userProfile && (
         <div style={{
           background: 'white',
           padding: '60px 40px'

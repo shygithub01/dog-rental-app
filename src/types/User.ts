@@ -1,3 +1,5 @@
+export type UserRole = 'owner' | 'renter';
+
 export interface User {
   id: string;
   email: string;
