@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMessageService } from '../../services/messageService';
+import { useNotificationService } from '../../services/notificationService';
 import type { Message, ConversationSummary } from '../../types/Message';
 
 interface ChatWindowProps {
@@ -22,6 +23,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const messageService = useMessageService();
+  const notificationService = useNotificationService();
 
   useEffect(() => {
     if (!conversation) return;
@@ -111,6 +113,20 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         receiverName: conversation.otherUserName,
         content: messageContent
       });
+
+      // Create notification for the receiver
+      await notificationService.createNotification(
+        conversation.otherUserId,
+        'rental_request',
+        {
+          title: '💬 New Message',
+          message: `${currentUserName} sent you a message`,
+          data: {
+            senderId: currentUserId,
+            senderName: currentUserName
+          }
+        }
+      );
 
       console.log('Message sent successfully');
     } catch (error) {

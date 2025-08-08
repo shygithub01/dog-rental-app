@@ -257,24 +257,24 @@ function AppContent() {
           }
         );
         console.log('Initial message sent successfully');
-        
-        // Create notification for the dog owner
-        await notificationService.createNotification(
-          dog.ownerId,
-          'rental_request',
-          {
-            title: '💬 New Message',
-            message: `${user.displayName || user.email} sent you a message about ${dog.name}`,
-            data: {
-              dogId: dog.id,
-              dogName: dog.name,
-              senderId: user.uid,
-              senderName: user.displayName || user.email
-            }
-          }
-        );
-        console.log('Notification created for dog owner');
       }
+      
+      // Create notification for the dog owner (for all messages, not just new conversations)
+      await notificationService.createNotification(
+        dog.ownerId,
+        'rental_request',
+        {
+          title: '💬 New Message',
+          message: `${user.displayName || user.email} sent you a message about ${dog.name}`,
+          data: {
+            dogId: dog.id,
+            dogName: dog.name,
+            senderId: user.uid,
+            senderName: user.displayName || user.email
+          }
+        }
+      );
+      console.log('Notification created for dog owner');
       
       setShowMessaging(true);
     } catch (error) {
