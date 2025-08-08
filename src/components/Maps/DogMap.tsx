@@ -27,6 +27,7 @@ const DogMap: React.FC<DogMapProps> = ({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [useFallback, setUseFallback] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapsService = useMapsService();
 
@@ -73,7 +74,8 @@ const DogMap: React.FC<DogMapProps> = ({
       } catch (error) {
         console.error('Error initializing map:', error);
         if (isMounted) {
-          setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          setError(`Google Maps API not available. Showing dogs in list format.`);
+          setUseFallback(true);
         }
       } finally {
         if (isMounted) {
@@ -93,7 +95,7 @@ const DogMap: React.FC<DogMapProps> = ({
 
   // Update markers when dogs or filters change
   useEffect(() => {
-    if (!mapInitialized || !currentLocation) return;
+    if (!mapInitialized || !currentLocation || useFallback) return;
 
     try {
       const dogLocations: DogLocation[] = dogs.map(dog => ({
@@ -119,7 +121,7 @@ const DogMap: React.FC<DogMapProps> = ({
     } catch (error) {
       console.error('Error updating markers:', error);
     }
-  }, [dogs, filters, mapInitialized, currentLocation, mapsService, onDogClick]);
+  }, [dogs, filters, mapInitialized, currentLocation, mapsService, onDogClick, useFallback]);
 
   const handleFilterChange = (key: keyof MapFilters, value: any) => {
     setFilters(prev => ({
@@ -140,6 +142,29 @@ const DogMap: React.FC<DogMapProps> = ({
       setLoading(false);
     }
   };
+
+  // Filter dogs for fallback display
+  const getFilteredDogs = () => {
+    if (!currentLocation) return dogs;
+
+    return dogs.filter(dog => {
+      // Check availability
+      if (filters.availableOnly && !dog.isAvailable) return false;
+      
+      // Check price
+      if (filters.maxPrice && dog.pricePerDay > filters.maxPrice) return false;
+      
+      // Check distance (simplified calculation)
+      if (filters.maxDistance && dog.coordinates) {
+        const distance = mapsService.calculateDistance(currentLocation, dog.coordinates);
+        if (distance > filters.maxDistance) return false;
+      }
+      
+      return true;
+    });
+  };
+
+  const filteredDogs = getFilteredDogs();
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -222,89 +247,192 @@ const DogMap: React.FC<DogMapProps> = ({
         </button>
       </div>
 
-      {/* Map Container */}
-      <div
-        id="dog-map"
-        ref={mapContainerRef}
-        style={{
-          flex: 1,
-          minHeight: '400px',
-          backgroundColor: '#f8f9fa',
-          position: 'relative',
-          border: '1px solid #ddd'
-        }}
-      >
-        {loading && (
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            zIndex: 1000
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '16px', marginBottom: '10px' }}>Loading Map...</div>
-              <div style={{ fontSize: '14px', color: '#666' }}>Please wait while we initialize the map</div>
+      {/* Map Container or Fallback */}
+      {useFallback ? (
+        <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa' }}>
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Dogs Near You</h3>
+            <p style={{ margin: '0', color: '#666', fontSize: '14px' }}>
+              {error} Showing {filteredDogs.length} dog{filteredDogs.length !== 1 ? 's' : ''} found.
+            </p>
+          </div>
+          
+          {filteredDogs.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+              <div style={{ fontSize: '18px', marginBottom: '10px' }}>No dogs found</div>
+              <div style={{ fontSize: '14px' }}>Try adjusting your filters or location</div>
             </div>
-          </div>
-        )}
-        {error && (
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            zIndex: 1000,
-            maxWidth: '300px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '16px', marginBottom: '10px', color: '#dc3545' }}>Map Error</div>
-            <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>{error}</div>
-            <button
-              onClick={() => {
-                setError('');
-                setMapInitialized(false);
-                setLoading(false);
-              }}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              Retry
-            </button>
-          </div>
-        )}
-        {!loading && !error && !mapInitialized && (
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            zIndex: 1000,
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '16px', marginBottom: '10px' }}>Initializing Map...</div>
-            <div style={{ fontSize: '14px', color: '#666' }}>Setting up Google Maps</div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
+              {filteredDogs.map((dog) => (
+                <div
+                  key={dog.id}
+                  style={{
+                    backgroundColor: 'white',
+                    borderRadius: '8px',
+                    padding: '15px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    cursor: 'pointer',
+                    border: '1px solid #eee'
+                  }}
+                  onClick={() => onDogClick?.(dog)}
+                >
+                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <img
+                      src={dog.imageUrl || 'https://via.placeholder.com/60x60?text=Dog'}
+                      alt={dog.name}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '8px',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ margin: '0 0 5px 0', color: '#333' }}>{dog.name}</h4>
+                      <p style={{ margin: '0 0 5px 0', color: '#666', fontSize: '14px' }}>
+                        Breed: {dog.breed}
+                      </p>
+                      <p style={{ margin: '0 0 5px 0', color: '#666', fontSize: '14px' }}>
+                        Owner: {dog.ownerName}
+                      </p>
+                      <p style={{ margin: '0', color: '#28a745', fontWeight: 'bold' }}>
+                        ${dog.pricePerDay}/day
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                    {onRentDog && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRentDog(dog);
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          backgroundColor: '#007bff',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        Rent
+                      </button>
+                    )}
+                    {onMessageOwner && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onMessageOwner(dog);
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          backgroundColor: '#28a745',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        Message
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          id="dog-map"
+          ref={mapContainerRef}
+          style={{
+            flex: 1,
+            minHeight: '400px',
+            backgroundColor: '#f8f9fa',
+            position: 'relative',
+            border: '1px solid #ddd'
+          }}
+        >
+          {loading && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              zIndex: 1000
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '16px', marginBottom: '10px' }}>Loading Map...</div>
+                <div style={{ fontSize: '14px', color: '#666' }}>Please wait while we initialize the map</div>
+              </div>
+            </div>
+          )}
+          {error && !useFallback && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              zIndex: 1000,
+              maxWidth: '300px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '16px', marginBottom: '10px', color: '#dc3545' }}>Map Error</div>
+              <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>{error}</div>
+              <button
+                onClick={() => {
+                  setError('');
+                  setMapInitialized(false);
+                  setLoading(false);
+                  setUseFallback(false);
+                }}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+          {!loading && !error && !mapInitialized && !useFallback && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              zIndex: 1000,
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '16px', marginBottom: '10px' }}>Initializing Map...</div>
+              <div style={{ fontSize: '14px', color: '#666' }}>Setting up Google Maps</div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
