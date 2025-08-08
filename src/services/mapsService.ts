@@ -20,8 +20,10 @@ export class MapsService {
   // Initialize Google Maps
   async initializeMap(containerId: string | HTMLElement, center: Location = { lat: 40.7128, lng: -74.0060 }): Promise<google.maps.Map> {
     try {
-      console.log('Initializing Google Maps with API key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU');
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU';
+      console.log('Initializing Google Maps with API key:', apiKey ? 'API key found' : 'No API key found');
       
+      console.log('Loading Google Maps API...');
       const google = await this.loader.load();
       console.log('Google Maps loaded successfully');
       
@@ -33,7 +35,12 @@ export class MapsService {
         }
       } else {
         container = containerId;
+        if (!container) {
+          throw new Error('Container element is null or undefined');
+        }
       }
+      
+      console.log('Creating map with container:', container);
       
       this.map = new google.maps.Map(container, {
         center: { lat: center.lat, lng: center.lng },

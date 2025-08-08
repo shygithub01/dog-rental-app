@@ -31,11 +31,23 @@ const DogMap: React.FC<DogMapProps> = ({
   
   const mapsService = useMapsService();
 
+  // Reset map initialization when container changes
+  useEffect(() => {
+    if (mapContainer && !mapInitialized) {
+      console.log('Map container available, ready to initialize');
+    }
+  }, [mapContainer]);
+
   // Initialize map when container is available
   useEffect(() => {
     const initializeMap = async () => {
-      if (mapInitialized || !mapContainer) {
-        console.log('Map initialization skipped:', { mapInitialized, mapContainer: !!mapContainer });
+      if (!mapContainer) {
+        console.log('Map container not available yet');
+        return;
+      }
+
+      if (mapInitialized) {
+        console.log('Map already initialized');
         return;
       }
 
@@ -94,7 +106,7 @@ const DogMap: React.FC<DogMapProps> = ({
     };
 
     initializeMap();
-  }, [mapContainer, mapInitialized, userLocation]);
+  }, [mapContainer, userLocation]); // Removed mapInitialized from dependencies
 
   // Update markers when dogs or filters change
   useEffect(() => {
@@ -284,12 +296,16 @@ const DogMap: React.FC<DogMapProps> = ({
       {/* Map Container */}
       <div
         id="dog-map"
-        ref={(el) => setMapContainer(el)}
+        ref={(el) => {
+          console.log('Map container ref set:', el);
+          setMapContainer(el);
+        }}
         style={{
           flex: 1,
           minHeight: '400px',
           backgroundColor: '#f8f9fa',
-          position: 'relative'
+          position: 'relative',
+          border: '1px solid #ddd' // Added border to make container visible
         }}
       >
         {loading && (
@@ -327,7 +343,11 @@ const DogMap: React.FC<DogMapProps> = ({
             <div style={{ fontSize: '16px', marginBottom: '10px', color: '#dc3545' }}>Map Error</div>
             <div style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>{error}</div>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                setError('');
+                setMapInitialized(false);
+                setLoading(false);
+              }}
               style={{
                 padding: '8px 16px',
                 backgroundColor: '#007bff',
@@ -339,6 +359,23 @@ const DogMap: React.FC<DogMapProps> = ({
             >
               Retry
             </button>
+          </div>
+        )}
+        {!loading && !error && !mapInitialized && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            zIndex: 1000,
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '16px', marginBottom: '10px' }}>Initializing Map...</div>
+            <div style={{ fontSize: '14px', color: '#666' }}>Setting up Google Maps</div>
           </div>
         )}
       </div>
