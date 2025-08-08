@@ -23,7 +23,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
       query(
         collection(db, 'notifications'),
         where('userId', '==', userId),
-        where('isRead', '==', false)
+        where('read', '==', false)
       ),
       (snapshot) => {
         const unreadCount = snapshot.size;
@@ -104,6 +104,18 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
       setUnreadCount(0);
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
+    }
+  };
+
+  const handleDeleteNotification = async (notificationId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent marking as read when clicking delete
+    try {
+      await notificationService.deleteNotification(notificationId);
+      setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+      console.log('Notification deleted successfully');
+    } catch (error) {
+      console.error('Error deleting notification:', error);
     }
   };
 
@@ -387,6 +399,92 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                           }}>
                             {notification.message}
                           </p>
+                          {/* Delete Button */}
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: '10px'
+                          }}>
+                            <button
+                              onClick={(e) => {
+                                console.log('Delete button clicked for notification:', notification.id);
+                                handleDeleteNotification(notification.id, e);
+                              }}
+                              style={{
+                                padding: '8px 16px',
+                                backgroundColor: '#dc2626',
+                                color: 'white',
+                                border: '2px solid #dc2626',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem',
+                                fontWeight: 'bold',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                minWidth: '100px',
+                                justifyContent: 'center',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#b91c1c';
+                                e.currentTarget.style.borderColor = '#b91c1c';
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = '#dc2626';
+                                e.currentTarget.style.borderColor = '#dc2626';
+                                e.currentTarget.style.transform = 'scale(1)';
+                              }}
+                              title="Delete notification"
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                          {/* Delete Button */}
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: '10px'
+                          }}>
+                            <button
+                              onClick={(e) => {
+                                console.log('Delete button clicked for notification:', notification.id);
+                                handleDeleteNotification(notification.id, e);
+                              }}
+                              style={{
+                                padding: '8px 16px',
+                                backgroundColor: '#dc2626',
+                                color: 'white',
+                                border: '2px solid #dc2626',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem',
+                                fontWeight: 'bold',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                minWidth: '100px',
+                                justifyContent: 'center',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#b91c1c';
+                                e.currentTarget.style.borderColor = '#b91c1c';
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = '#dc2626';
+                                e.currentTarget.style.borderColor = '#dc2626';
+                                e.currentTarget.style.transform = 'scale(1)';
+                              }}
+                              title="Delete notification"
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
