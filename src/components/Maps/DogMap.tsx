@@ -27,14 +27,22 @@ const DogMap: React.FC<DogMapProps> = ({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [containerReady, setContainerReady] = useState(false);
   
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapsService = useMapsService();
 
+  // Check if container is ready
+  useEffect(() => {
+    if (mapContainerRef.current && !containerReady) {
+      setContainerReady(true);
+    }
+  }, [containerReady]);
+
   // Initialize map when container is available
   useEffect(() => {
     const initializeMap = async () => {
-      if (mapInitialized || !mapContainerRef.current) return;
+      if (mapInitialized || !containerReady || !mapContainerRef.current) return;
 
       try {
         setLoading(true);
@@ -88,13 +96,8 @@ const DogMap: React.FC<DogMapProps> = ({
       }
     };
 
-    // Use a small delay to ensure the ref is properly set
-    const timer = setTimeout(() => {
-      initializeMap();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [mapInitialized, userLocation]);
+    initializeMap();
+  }, [containerReady, mapInitialized, userLocation]);
 
   // Update markers when dogs or filters change
   useEffect(() => {
