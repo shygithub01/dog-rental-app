@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMapsService } from '../../services/mapsService';
 import type { DogLocation, Location, MapFilters } from '../../types/Location';
 import type { Dog } from '../../types/Dog';
@@ -27,115 +27,123 @@ const DogMap: React.FC<DogMapProps> = ({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [mapContainer, setMapContainer] = useState<HTMLDivElement | null>(null);
-  
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapsService = useMapsService();
 
-  // Reset map initialization when container changes
-  useEffect(() => {
-    if (mapContainer && !mapInitialized) {
-      console.log('Map container available, ready to initialize');
-    }
-  }, [mapContainer]);
-
   // Initialize map when container is available
-  useEffect(() => {
-    const initializeMap = async () => {
-      if (!mapContainer) {
-        console.log('Map container not available yet');
+  const initializeMap = useCallback(async () => {
+    if (!mapContainerRef.current) {
+      console.log('Map container ref not available yet');
+      return;
+    }
+
+    if (mapInitialized) {
+      console.log('Map already initialized, checking if it actually rendered...');
+      // Check if the map actually rendered by looking for Google Maps elements
+      const mapElements = mapContainerRef.current.querySelectorAll('.gm-style');
+      if (mapElements.length === 0) {
+        console.log('Map marked as initialized but no Google Maps elements found, reinitializing...');
+        setMapInitialized(false);
         return;
       }
+      return;
+    }
 
-      if (mapInitialized) {
-        console.log('Map already initialized, but checking if it actually rendered...');
-        // Check if the map actually rendered by looking for Google Maps elements
-        const mapElements = mapContainer.querySelectorAll('.gm-style');
-        if (mapElements.length === 0) {
-          console.log('Map marked as initialized but no Google Maps elements found, reinitializing...');
-          setMapInitialized(false);
-          return;
-        }
-        return;
+    try {
+      setLoading(true);
+      setError('');
+
+      console.log('Starting map initialization...', { mapContainer: mapContainerRef.current });
+
+      // Test Google Maps API first
+      const apiTest = await mapsService.testGoogleMapsAPI();
+      if (!apiTest) {
+        throw new Error('Google Maps API is not working properly. Please check your API key.');
       }
 
-      try {
-        setLoading(true);
-        setError('');
-
-        console.log('Starting map initialization...', { mapContainer });
-
-        // Test Google Maps API first
-        const apiTest = await mapsService.testGoogleMapsAPI();
-        if (!apiTest) {
-          throw new Error('Google Maps API is not working properly. Please check your API key.');
+      // Get user's current location
+      let center: Location;
+      if (userLocation) {
+        center = userLocation;
+        setCurrentLocation(userLocation);
+        console.log('Using provided user location:', center);
+      } else {
+        try {
+          console.log('Getting current location...');
+          center = await mapsService.getCurrentLocation();
+          setCurrentLocation(center);
+          console.log('Current location obtained:', center);
+        } catch (error) {
+          console.warn('Could not get current location, using default:', error);
+          center = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
+          setCurrentLocation(center);
         }
+      }
 
-        // Get user's current location
-        let center: Location;
-        if (userLocation) {
-          center = userLocation;
-          setCurrentLocation(userLocation);
-          console.log('Using provided user location:', center);
-        } else {
-          try {
-            console.log('Getting current location...');
-            center = await mapsService.getCurrentLocation();
-            setCurrentLocation(center);
-            console.log('Current location obtained:', center);
-          } catch (error) {
-            console.warn('Could not get current location, using default:', error);
-            center = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
-            setCurrentLocation(center);
-          }
-        }
+      // Initialize map
+      console.log('Initializing map with center:', center);
+      const map = await mapsService.initializeMap(mapContainerRef.current, center);
+      setMapInitialized(true);
+      console.log('Map initialized successfully', map);
 
-        // Initialize map
-        console.log('Initializing map with center:', center);
-        const map = await mapsService.initializeMap(mapContainer, center);
-        setMapInitialized(true);
-        console.log('Map initialized successfully', map);
+      // Verify map was created
+      if (!map) {
+        throw new Error('Map was not created successfully');
+      }
 
-        // Verify map was created
-        if (!map) {
-          throw new Error('Map was not created successfully');
-        }
-
-        // Check if map elements are present
-        setTimeout(() => {
-          const mapElements = mapContainer.querySelectorAll('.gm-style');
+      // Check if map elements are present
+      setTimeout(() => {
+        if (mapContainerRef.current) {
+          const mapElements = mapContainerRef.current.querySelectorAll('.gm-style');
           console.log('Map elements found:', mapElements.length);
           if (mapElements.length === 0) {
             console.warn('No Google Maps elements found after initialization');
             setError('Map loaded but not displaying properly. Please try refreshing the page.');
           }
-        }, 1000);
+        }
+      }, 1000);
 
-        // Add global functions for info window buttons
-        (window as any).rentDog = (dogId: string) => {
-          const dog = dogs.find(d => d.id === dogId);
-          if (dog && onRentDog) {
-            onRentDog(dog);
-          }
-        };
+      // Add global functions for info window buttons
+      (window as any).rentDog = (dogId: string) => {
+        const dog = dogs.find(d => d.id === dogId);
+        if (dog && onRentDog) {
+          onRentDog(dog);
+        }
+      };
 
-        (window as any).messageOwner = (dogId: string) => {
-          const dog = dogs.find(d => d.id === dogId);
-          if (dog && onMessageOwner) {
-            onMessageOwner(dog);
-          }
-        };
+      (window as any).messageOwner = (dogId: string) => {
+        const dog = dogs.find(d => d.id === dogId);
+        if (dog && onMessageOwner) {
+          onMessageOwner(dog);
+        }
+      };
 
-      } catch (error) {
-        console.error('Error initializing map:', error);
-        setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        setMapInitialized(false);
-      } finally {
-        setLoading(false);
+    } catch (error) {
+      console.error('Error initializing map:', error);
+      setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setMapInitialized(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [mapInitialized, userLocation, mapsService, dogs, onRentDog, onMessageOwner]);
+
+  // Initialize map when component mounts or dependencies change
+  useEffect(() => {
+    const checkAndInitialize = () => {
+      if (mapContainerRef.current && !mapInitialized) {
+        console.log('Map container available, initializing...');
+        initializeMap();
       }
     };
 
-    initializeMap();
-  }, [mapContainer, userLocation]); // Removed mapInitialized from dependencies
+    // Check immediately
+    checkAndInitialize();
+
+    // Also check after a short delay to ensure DOM is ready
+    const timeoutId = setTimeout(checkAndInitialize, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [mapInitialized, initializeMap]);
 
   // Update markers when dogs or filters change
   useEffect(() => {
@@ -325,10 +333,7 @@ const DogMap: React.FC<DogMapProps> = ({
       {/* Map Container */}
       <div
         id="dog-map"
-        ref={(el) => {
-          console.log('Map container ref set:', el);
-          setMapContainer(el);
-        }}
+        ref={mapContainerRef}
         style={{
           flex: 1,
           minHeight: '400px',
