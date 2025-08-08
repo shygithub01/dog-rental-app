@@ -47,22 +47,9 @@ export class MapsService {
   // Initialize Google Maps
   async initializeMap(containerId: string | HTMLElement, center: Location = { lat: 40.7128, lng: -74.0060 }): Promise<google.maps.Map> {
     try {
-      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU';
-      console.log('Initializing Google Maps with API key:', apiKey ? 'API key found' : 'No API key found');
-      
       console.log('Loading Google Maps API...');
       const google = await this.loader.load();
       console.log('Google Maps loaded successfully');
-      
-      // Test if Google Maps is actually loaded
-      if (!google || !google.maps) {
-        throw new Error('Google Maps failed to load properly');
-      }
-      
-      // Test if the API is working
-      if (!google.maps.Map) {
-        throw new Error('Google Maps Map constructor not available');
-      }
       
       let container: HTMLElement;
       if (typeof containerId === 'string') {

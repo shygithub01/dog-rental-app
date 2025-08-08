@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useMapsService } from '../../services/mapsService';
 import type { DogLocation, Location, MapFilters } from '../../types/Location';
 import type { Dog } from '../../types/Dog';
@@ -30,127 +30,72 @@ const DogMap: React.FC<DogMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapsService = useMapsService();
 
-  // Initialize map when container is available
-  const initializeMap = useCallback(async () => {
-    if (!mapContainerRef.current) {
-      console.log('Map container ref not available yet');
-      return;
-    }
+  // Simple map initialization
+  useEffect(() => {
+    let isMounted = true;
 
-    if (mapInitialized) {
-      console.log('Map already initialized, checking if it actually rendered...');
-      // Check if the map actually rendered by looking for Google Maps elements
-      const mapElements = mapContainerRef.current.querySelectorAll('.gm-style');
-      if (mapElements.length === 0) {
-        console.log('Map marked as initialized but no Google Maps elements found, reinitializing...');
-        setMapInitialized(false);
+    const initMap = async () => {
+      if (!mapContainerRef.current || mapInitialized) {
         return;
       }
-      return;
-    }
 
-    try {
-      setLoading(true);
-      setError('');
+      try {
+        setLoading(true);
+        setError('');
 
-      console.log('Starting map initialization...', { mapContainer: mapContainerRef.current });
+        console.log('Starting simple map initialization...');
 
-      // Test Google Maps API first
-      const apiTest = await mapsService.testGoogleMapsAPI();
-      if (!apiTest) {
-        throw new Error('Google Maps API is not working properly. Please check your API key.');
-      }
-
-      // Get user's current location
-      let center: Location;
-      if (userLocation) {
-        center = userLocation;
-        setCurrentLocation(userLocation);
-        console.log('Using provided user location:', center);
-      } else {
-        try {
-          console.log('Getting current location...');
-          center = await mapsService.getCurrentLocation();
-          setCurrentLocation(center);
-          console.log('Current location obtained:', center);
-        } catch (error) {
-          console.warn('Could not get current location, using default:', error);
-          center = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
-          setCurrentLocation(center);
-        }
-      }
-
-      // Initialize map
-      console.log('Initializing map with center:', center);
-      const map = await mapsService.initializeMap(mapContainerRef.current, center);
-      setMapInitialized(true);
-      console.log('Map initialized successfully', map);
-
-      // Verify map was created
-      if (!map) {
-        throw new Error('Map was not created successfully');
-      }
-
-      // Check if map elements are present
-      setTimeout(() => {
-        if (mapContainerRef.current) {
-          const mapElements = mapContainerRef.current.querySelectorAll('.gm-style');
-          console.log('Map elements found:', mapElements.length);
-          if (mapElements.length === 0) {
-            console.warn('No Google Maps elements found after initialization');
-            setError('Map loaded but not displaying properly. Please try refreshing the page.');
+        // Get center location
+        let center: Location;
+        if (userLocation) {
+          center = userLocation;
+          setCurrentLocation(userLocation);
+        } else {
+          try {
+            center = await mapsService.getCurrentLocation();
+            setCurrentLocation(center);
+          } catch (error) {
+            console.warn('Using default location');
+            center = { lat: 40.7128, lng: -74.0060 }; // NYC
+            setCurrentLocation(center);
           }
         }
-      }, 1000);
 
-      // Add global functions for info window buttons
-      (window as any).rentDog = (dogId: string) => {
-        const dog = dogs.find(d => d.id === dogId);
-        if (dog && onRentDog) {
-          onRentDog(dog);
+        // Initialize map
+        console.log('Initializing map with center:', center);
+        await mapsService.initializeMap(mapContainerRef.current, center);
+        
+        if (isMounted) {
+          setMapInitialized(true);
+          console.log('Map initialized successfully');
         }
-      };
 
-      (window as any).messageOwner = (dogId: string) => {
-        const dog = dogs.find(d => d.id === dogId);
-        if (dog && onMessageOwner) {
-          onMessageOwner(dog);
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        if (isMounted) {
+          setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
-      };
-
-    } catch (error) {
-      console.error('Error initializing map:', error);
-      setError(`Failed to load map: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      setMapInitialized(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [mapInitialized, userLocation, mapsService, dogs, onRentDog, onMessageOwner]);
-
-  // Initialize map when component mounts or dependencies change
-  useEffect(() => {
-    const checkAndInitialize = () => {
-      if (mapContainerRef.current && !mapInitialized) {
-        console.log('Map container available, initializing...');
-        initializeMap();
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
-    // Check immediately
-    checkAndInitialize();
+    // Add a small delay to ensure DOM is ready
+    const timeoutId = setTimeout(initMap, 100);
 
-    // Also check after a short delay to ensure DOM is ready
-    const timeoutId = setTimeout(checkAndInitialize, 100);
-
-    return () => clearTimeout(timeoutId);
-  }, [mapInitialized, initializeMap]);
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [mapContainerRef.current, mapInitialized, userLocation, mapsService]);
 
   // Update markers when dogs or filters change
   useEffect(() => {
     if (!mapInitialized || !currentLocation) return;
 
     try {
-      // Convert dogs to DogLocation format
       const dogLocations: DogLocation[] = dogs.map(dog => ({
         dogId: dog.id,
         dogName: dog.name,
@@ -162,10 +107,7 @@ const DogMap: React.FC<DogMapProps> = ({
         available: dog.isAvailable
       }));
 
-      // Filter dogs based on current filters
       const filteredDogs = mapsService.filterDogsByLocation(dogLocations, currentLocation, filters);
-
-      // Add markers to map
       mapsService.addDogMarkers(filteredDogs, (dog) => {
         const originalDog = dogs.find(d => d.id === dog.dogId);
         if (originalDog && onDogClick) {
@@ -173,13 +115,11 @@ const DogMap: React.FC<DogMapProps> = ({
         }
       });
 
-      // Fit map to show all markers
       mapsService.fitBounds();
-
     } catch (error) {
       console.error('Error updating markers:', error);
     }
-  }, [dogs, filters, mapInitialized, currentLocation]);
+  }, [dogs, filters, mapInitialized, currentLocation, mapsService, onDogClick]);
 
   const handleFilterChange = (key: keyof MapFilters, value: any) => {
     setFilters(prev => ({
@@ -200,54 +140,6 @@ const DogMap: React.FC<DogMapProps> = ({
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '400px',
-        backgroundColor: '#f8f9fa'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '18px', marginBottom: '10px' }}>Loading map...</div>
-          <div style={{ fontSize: '14px', color: '#666' }}>Please wait while we initialize the map</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '400px',
-        backgroundColor: '#f8f9fa'
-      }}>
-        <div style={{ textAlign: 'center', color: '#dc3545' }}>
-          <div style={{ fontSize: '18px', marginBottom: '10px' }}>Map Error</div>
-          <div style={{ fontSize: '14px' }}>{error}</div>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              marginTop: '15px',
-              padding: '8px 16px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -339,7 +231,7 @@ const DogMap: React.FC<DogMapProps> = ({
           minHeight: '400px',
           backgroundColor: '#f8f9fa',
           position: 'relative',
-          border: '1px solid #ddd' // Added border to make container visible
+          border: '1px solid #ddd'
         }}
       >
         {loading && (
