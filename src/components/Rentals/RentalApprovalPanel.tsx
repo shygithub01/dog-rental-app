@@ -130,7 +130,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
         request.renterId,
         'rental_approved',
         {
-          title: `✅ Rental Approved for ${request.dogName}`,
+          title: `Rental Approved for ${request.dogName}`,
           message: `Your rental request for ${request.dogName} has been approved! The rental starts on ${formatDate(request.startDate)}.`,
           data: {
             requestId: request.id,
@@ -176,7 +176,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
         request.renterId,
         'rental_rejected',
         {
-          title: `❌ Rental Request Rejected`,
+          title: `Rental Request Rejected`,
           message: `Your rental request for ${request.dogName} was not approved. You can try requesting other dogs.`,
           data: {
             requestId: request.id,

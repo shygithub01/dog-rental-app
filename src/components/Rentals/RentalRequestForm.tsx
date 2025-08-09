@@ -106,7 +106,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         dog.ownerId,
         'rental_request',
         {
-          title: `🐕 New Rental Request for ${dog.name}`,
+          title: `New Rental Request for ${dog.name}`,
           message: `${auth.currentUser.displayName || auth.currentUser.email} wants to rent ${dog.name} from ${formData.startDate} to ${formData.endDate}. Check your requests to approve or reject.`,
           data: {
             requestId: requestRef.id,

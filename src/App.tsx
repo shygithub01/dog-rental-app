@@ -263,10 +263,10 @@ function AppContent() {
     if (!user) return;
     
     try {
-      console.log('Starting conversation with dog owner:', dog.ownerId);
+      console.log('Starting conversation with dog owner:', dog.ownerId, 'about dog:', dog.id);
       
-      // Check if conversation already exists
-      const conversationExists = await messageService.conversationExists(user.uid, dog.ownerId);
+      // Check if conversation already exists for this specific dog
+      const conversationExists = await messageService.conversationExists(user.uid, dog.ownerId, dog.id);
       
       if (!conversationExists) {
         // Send initial message
@@ -278,6 +278,7 @@ function AppContent() {
             receiverName: dog.ownerName,
             content: `Hi! I'm interested in renting ${dog.name}. Can you tell me more about availability and special requirements?`,
             dogId: dog.id,
+            dogName: dog.name,
             rentalId: undefined
           }
         );
@@ -289,18 +290,18 @@ function AppContent() {
         dog.ownerId,
         'rental_request',
         {
-          title: '💬 New Message',
-          message: `${user.displayName || user.email} sent you a message about ${dog.name}`,
+          title: `💬 New Message about ${dog.name}`,
+          message: `${user.displayName || user.email || 'Unknown'} sent you a message about ${dog.name}`,
           data: {
-            dogId: dog.id,
-            dogName: dog.name,
             senderId: user.uid,
-            senderName: user.displayName || user.email
+            senderName: user.displayName || user.email || 'Unknown',
+            dogId: dog.id,
+            dogName: dog.name
           }
         }
       );
-      console.log('Notification created for dog owner');
       
+      // Open messaging center
       setShowMessaging(true);
     } catch (error) {
       console.error('Error starting conversation:', error);

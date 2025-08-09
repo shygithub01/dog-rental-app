@@ -22,12 +22,34 @@ const ChatList: React.FC<ChatListProps> = ({
   const messageService = useMessageService();
 
   useEffect(() => {
+    if (!currentUserId) {
+      setLoading(false);
+      return;
+    }
+
+    console.log('ChatList: Starting to load conversations for user:', currentUserId);
+    
+    // Add a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        console.log('ChatList: Loading timeout reached, showing no conversations');
+        setLoading(false);
+        setError('Loading timeout - please refresh the page');
+      }
+    }, 10000); // 10 second timeout
+
     const unsubscribe = messageService.subscribeToConversations(currentUserId, (conversations) => {
+      console.log('ChatList: Received conversations:', conversations);
+      clearTimeout(timeoutId);
       setConversations(conversations);
       setLoading(false);
+      setError('');
     });
 
-    return () => unsubscribe();
+    return () => {
+      clearTimeout(timeoutId);
+      unsubscribe();
+    };
   }, [currentUserId]);
 
   const formatTime = (date: Date) => {
@@ -51,6 +73,9 @@ const ChatList: React.FC<ChatListProps> = ({
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
         <div style={{ fontSize: '16px', color: '#666' }}>Loading conversations...</div>
+        <div style={{ fontSize: '12px', color: '#999', marginTop: '10px' }}>
+          This may take a moment for new users
+        </div>
       </div>
     );
   }
@@ -58,7 +83,20 @@ const ChatList: React.FC<ChatListProps> = ({
   if (error) {
     return (
       <div style={{ padding: '20px', textAlign: 'center', color: '#e74c3c' }}>
-        Error: {error}
+        <div style={{ fontSize: '16px', marginBottom: '10px' }}>Error: {error}</div>
+        <button 
+          onClick={() => window.location.reload()}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3498db',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Refresh Page
+        </button>
       </div>
     );
   }
@@ -69,8 +107,11 @@ const ChatList: React.FC<ChatListProps> = ({
         <div style={{ fontSize: '16px', color: '#666', marginBottom: '10px' }}>
           No conversations yet
         </div>
-        <div style={{ fontSize: '14px', color: '#999' }}>
+        <div style={{ fontSize: '14px', color: '#999', marginBottom: '20px' }}>
           Start a conversation by messaging a dog owner or renter
+        </div>
+        <div style={{ fontSize: '12px', color: '#ccc' }}>
+          💡 Tip: Browse dogs and click "Message Owner" to start chatting
         </div>
       </div>
     );
@@ -87,49 +128,73 @@ const ChatList: React.FC<ChatListProps> = ({
             borderBottom: '1px solid #eee',
             cursor: 'pointer',
             backgroundColor: selectedConversationId === conversation.conversationId ? '#f0f8ff' : 'white',
-            transition: 'background-color 0.2s'
+            transition: 'background-color 0.2s',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px'
+          }}
+          onMouseOver={(e) => {
+            if (selectedConversationId !== conversation.conversationId) {
+              e.currentTarget.style.backgroundColor = '#f8f9fa';
+            }
+          }}
+          onMouseOut={(e) => {
+            if (selectedConversationId !== conversation.conversationId) {
+              e.currentTarget.style.backgroundColor = 'white';
+            }
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ flex: 1 }}>
               <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                marginBottom: '5px',
-                fontWeight: conversation.unreadCount > 0 ? 'bold' : 'normal'
+                fontSize: '16px', 
+                fontWeight: 'bold', 
+                color: '#333',
+                marginBottom: '2px'
               }}>
-                <span style={{ fontSize: '16px', marginRight: '8px' }}>👤</span>
-                <span style={{ fontSize: '16px' }}>
-                  {conversation.otherUserName}
-                </span>
-                {conversation.unreadCount > 0 && (
-                  <span style={{
-                    backgroundColor: '#e74c3c',
-                    color: 'white',
-                    borderRadius: '50%',
-                    width: '20px',
-                    height: '20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    marginLeft: '8px'
-                  }}>
-                    {conversation.unreadCount}
-                  </span>
-                )}
+                {conversation.otherUserName}
               </div>
               <div style={{ 
                 fontSize: '14px', 
                 color: '#666',
                 marginBottom: '5px',
-                fontWeight: conversation.unreadCount > 0 ? 'bold' : 'normal'
+                fontStyle: 'italic'
+              }}>
+                🐕 {conversation.dogName}
+              </div>
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#888',
+                lineHeight: '1.3'
               }}>
                 {truncateMessage(conversation.lastMessage)}
               </div>
             </div>
-            <div style={{ fontSize: '12px', color: '#999', marginLeft: '10px' }}>
-              {formatTime(conversation.lastMessageTime)}
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'flex-end',
+              gap: '5px'
+            }}>
+              <div style={{ fontSize: '12px', color: '#999' }}>
+                {formatTime(conversation.lastMessageTime)}
+              </div>
+              {conversation.unreadCount > 0 && (
+                <div style={{
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  fontWeight: 'bold'
+                }}>
+                  {conversation.unreadCount}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -35,12 +35,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       try {
         const conversationMessages = await messageService.getConversationMessages(
           currentUserId, 
-          conversation.otherUserId
+          conversation.otherUserId,
+          conversation.dogId
         );
         setMessages(conversationMessages);
         
         // Mark messages as read
-        await messageService.markMessagesAsRead(conversation.otherUserId, currentUserId);
+        await messageService.markMessagesAsRead(conversation.otherUserId, currentUserId, conversation.dogId);
       } catch (error) {
         console.error('Error loading messages:', error);
         setError('Failed to load messages');
@@ -51,8 +52,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
     loadMessages();
 
-    // Set up real-time listener for new messages
-    const unsubscribe = messageService.subscribeToMessages(currentUserId, (newMessages) => {
+    // Set up real-time listener for new messages for this specific dog
+    const unsubscribe = messageService.subscribeToMessages(currentUserId, conversation.dogId, (newMessages) => {
       // Filter messages for this conversation
       const conversationMessages = newMessages.filter(msg => 
         (msg.senderId === currentUserId && msg.receiverId === conversation.otherUserId) ||
@@ -101,17 +102,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         receiverName: conversation.otherUserName,
         content: messageContent,
         timestamp: new Date(),
-        isRead: false
+        isRead: false,
+        dogId: conversation.dogId,
+        dogName: conversation.dogName
       };
 
       // Add message to local state immediately
       setMessages(prev => [...prev, tempMessage]);
 
-      // Send message to Firebase
+      // Send message to Firebase with dog context
       await messageService.sendMessage(currentUserId, currentUserName, {
         receiverId: conversation.otherUserId,
         receiverName: conversation.otherUserName,
-        content: messageContent
+        content: messageContent,
+        dogId: conversation.dogId,
+        dogName: conversation.dogName
       });
 
       // Create notification for the receiver
@@ -119,11 +124,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         conversation.otherUserId,
         'rental_request',
         {
-          title: '💬 New Message',
-          message: `${currentUserName} sent you a message`,
+          title: `💬 New Message about ${conversation.dogName}`,
+          message: `${currentUserName} sent you a message about ${conversation.dogName}`,
           data: {
             senderId: currentUserId,
-            senderName: currentUserName
+            senderName: currentUserName,
+            dogId: conversation.dogId,
+            dogName: conversation.dogName
           }
         }
       );
