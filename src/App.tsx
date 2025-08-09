@@ -7,6 +7,7 @@ import DogCard from './components/Dogs/DogCard'
 import EditDogForm from './components/Dogs/EditDogForm'
 import RentalRequestForm from './components/Rentals/RentalRequestForm'
 import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
+import RenterPendingRequests from './components/Rentals/RenterPendingRequests'
 import NotificationBell from './components/Notifications/NotificationBell'
 import UserProfile from './components/User/UserProfile'
 import MessagingCenter from './components/Messaging/MessagingCenter'
@@ -26,6 +27,7 @@ function AppContent() {
   const [showEditDog, setShowEditDog] = useState(false)
   const [showRentDog, setShowRentDog] = useState(false)
   const [showApprovalPanel, setShowApprovalPanel] = useState(false)
+  const [showRenterPendingRequests, setShowRenterPendingRequests] = useState(false)
   const [showUserProfile, setShowUserProfile] = useState(false)
   const [showMessaging, setShowMessaging] = useState(false)
   const [showMaps, setShowMaps] = useState(false)
@@ -252,7 +254,9 @@ function AppContent() {
   }
 
   const handleRentDog = (dog: any) => {
+    console.log('handleRentDog called with dog:', dog);
     setRentingDog(dog)
+    setShowRentDog(true)
   }
 
   const handleMessageDogOwner = async (dog: any) => {
@@ -472,6 +476,95 @@ function AppContent() {
           </div>
 
           <RentalApprovalPanel
+            currentUserId={user.uid}
+            onRequestUpdate={() => {
+              loadDogsWithUser(user)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  if (showRenterPendingRequests) {
+    return (
+      <div style={{
+        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '20px',
+          padding: '40px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+          maxWidth: '1000px',
+          width: '100%',
+          margin: '0 auto'
+        }}>
+          {/* Form Header */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '40px',
+            paddingBottom: '20px',
+            borderBottom: '2px solid #f7fafc'
+          }}>
+            <div style={{
+              fontSize: '3rem',
+              marginBottom: '15px'
+            }}>
+              📋
+            </div>
+            <h2 style={{
+              fontSize: '2.5rem',
+              color: '#2d3748',
+              margin: '0 0 10px 0',
+              fontWeight: 'bold'
+            }}>
+              Your Pending Requests
+            </h2>
+            <p style={{
+              color: '#4a5568',
+              fontSize: '1.1rem',
+              margin: 0,
+              lineHeight: '1.6'
+            }}>
+              Review and manage your pending rental requests
+            </p>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '30px'
+          }}>
+            <button
+              onClick={() => setShowRenterPendingRequests(false)}
+              style={{
+                padding: '15px 30px',
+                backgroundColor: '#718096',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                transition: 'all 0.2s',
+                minWidth: '120px'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+
+          <RenterPendingRequests
             currentUserId={user.uid}
             onRequestUpdate={() => {
               loadDogsWithUser(user)
@@ -1138,6 +1231,7 @@ function AppContent() {
                   onViewFavorites={() => setShowUserProfile(true)}
                   onRentDog={handleRentDog}
                   onMessageDogOwner={handleMessageDogOwner}
+                  onViewPendingRequests={() => setShowRenterPendingRequests(true)}
                   user={userProfile}
                 />
               );

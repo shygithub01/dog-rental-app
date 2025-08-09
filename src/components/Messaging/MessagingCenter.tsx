@@ -117,7 +117,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
               currentUserId={currentUserId}
               currentUserName={currentUserName}
               onSelectConversation={handleSelectConversation}
-              selectedConversationId={selectedConversation?.conversationId}
+              selectedConversationId={selectedConversation ? (selectedConversation as ConversationSummary).conversationId : undefined}
             />
           )}
         </div>

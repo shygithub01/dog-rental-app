@@ -95,7 +95,7 @@ const MapsView: React.FC<MapsViewProps> = ({
               onDogClick={handleDogClick}
               onRentDog={handleRentFromMap}
               onMessageOwner={handleMessageFromMap}
-              userLocation={userLocation}
+              userLocation={userLocation || undefined}
             />
           </div>
 
