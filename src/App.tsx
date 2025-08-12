@@ -15,7 +15,7 @@ import MapsView from './components/Maps/MapsView'
 import OwnerDashboard from './components/Dashboard/OwnerDashboard'
 import RenterDashboard from './components/Dashboard/RenterDashboard'
 import { cleanupOrphanedData } from './utils/dataCleanup'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { useNotificationService } from './services/notificationService'
 import { useUserService } from './services/userService'
@@ -34,6 +34,7 @@ function AppContent() {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showEarningsReport, setShowEarningsReport] = useState(false);
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
+  const [userRentals, setUserRentals] = useState<any[]>([]);
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
@@ -96,6 +97,30 @@ function AppContent() {
 
     return () => unsubscribe()
   }, [auth])
+
+  // Fetch user rentals when Payment History modal is opened
+  useEffect(() => {
+    if (showPaymentHistory && user?.uid) {
+      const fetchUserRentals = async () => {
+        try {
+          const rentalsQuery = query(
+            collection(db, 'rentals'),
+            where('renterId', '==', user.uid)
+          );
+          const rentalsSnapshot = await getDocs(rentalsQuery);
+          const rentals = rentalsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setUserRentals(rentals);
+        } catch (error) {
+          console.error('Error fetching user rentals:', error);
+        }
+      };
+      
+      fetchUserRentals();
+    }
+  }, [showPaymentHistory, user?.uid, db]);
 
   const createOrUpdateUserProfile = async (user: any) => {
     try {
@@ -589,17 +614,187 @@ function AppContent() {
               </button>
             </div>
 
-            {/* This will render the rental history content from RenterDashboard */}
-            <RenterDashboard
-              dogs={dogs}
-              onBrowseDogs={() => setShowMaps(true)}
-              onViewMyRentals={() => setShowUserProfile(true)}
-              onViewFavorites={() => setShowUserProfile(true)}
-              onRentDog={handleRentDog}
-              onMessageDogOwner={handleMessageDogOwner}
-              onViewPendingRequests={() => setShowRenterPendingRequests(true)}
-              user={userProfile}
-            />
+            {/* Payment History Summary Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '20px',
+              marginBottom: '30px'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${(() => {
+                    // Calculate total paid from rentals
+                    const totalPaid = userRentals.reduce((sum: number, rental: any) => 
+                      sum + (rental.totalCost || 0), 0);
+                    return totalPaid;
+                  })()}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Paid</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  {userRentals.length}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Rentals</div>
+              </div>
+            </div>
+
+            {/* Rental History Details */}
+            <div>
+              <h3 style={{
+                fontSize: '1.5rem',
+                color: '#2d3748',
+                margin: '0 0 20px 0',
+                fontWeight: 'bold'
+              }}>
+                📋 Rental Details
+              </h3>
+              
+              {/* Fetch and display actual rental history */}
+              {(() => {
+                if (userRentals.length > 0) {
+                  return (
+                    <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
+                      {userRentals.map((rental: any, index: number) => (
+                        <div key={rental.id || index} style={{
+                          background: 'white',
+                          padding: '20px',
+                          borderRadius: '10px',
+                          marginBottom: index < userRentals.length - 1 ? '15px' : '0',
+                          border: '1px solid #e2e8f0',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            marginBottom: '15px'
+                          }}>
+                            <div style={{ flex: 1 }}>
+                              <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginBottom: '8px'
+                              }}>
+                                <span style={{
+                                  padding: '4px 8px',
+                                  backgroundColor: rental.status === 'active' ? '#c6f6d5' : '#c6f6d5',
+                                  color: rental.status === 'active' ? '#22543d' : '#22543d',
+                                  borderRadius: '20px',
+                                  fontSize: '0.8rem',
+                                  fontWeight: 'bold'
+                                }}>
+                                  {rental.status === 'active' ? '🟢 Active' : '✅ Completed'}
+                                </span>
+                                <span style={{
+                                  fontSize: '0.9rem',
+                                  color: '#4a5568'
+                                }}>
+                                  {rental.startDate?.toDate ? rental.startDate.toDate().toLocaleDateString() : 'N/A'} - {rental.endDate?.toDate ? rental.endDate.toDate().toLocaleDateString() : 'N/A'}
+                                </span>
+                              </div>
+                              <h4 style={{
+                                fontSize: '1.2rem',
+                                color: '#2d3748',
+                                margin: '0 0 5px 0',
+                                fontWeight: 'bold'
+                              }}>
+                                {rental.dogName || 'Unknown Dog'} ({rental.dogBreed || 'Unknown Breed'})
+                              </h4>
+                              <p style={{
+                                color: '#4a5568',
+                                margin: '0 0 5px 0',
+                                fontSize: '0.9rem'
+                              }}>
+                                Owner: {rental.dogOwnerName || 'Unknown Owner'}
+                              </p>
+                            </div>
+                            <div style={{
+                              textAlign: 'right',
+                              minWidth: '100px'
+                            }}>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#667eea',
+                                marginBottom: '5px'
+                              }}>
+                                ${rental.totalCost || 0}
+                              </div>
+                              <div style={{
+                                fontSize: '0.8rem',
+                                color: '#4a5568'
+                              }}>
+                                Total Cost
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {rental.status === 'active' && (
+                            <div style={{
+                              background: '#fef5e7',
+                              padding: '10px',
+                              borderRadius: '8px',
+                              border: '1px solid #fed7aa'
+                            }}>
+                              <p style={{
+                                color: '#c05621',
+                                margin: 0,
+                                fontSize: '0.9rem',
+                                fontStyle: 'italic'
+                              }}>
+                                ⏳ This rental is currently active
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div style={{ 
+                      background: '#f7fafc', 
+                      padding: '40px', 
+                      borderRadius: '15px',
+                      textAlign: 'center',
+                      border: '2px dashed #cbd5e0'
+                    }}>
+                      <div style={{ fontSize: '3rem', marginBottom: '20px' }}>💳</div>
+                      <h4 style={{
+                        fontSize: '1.3rem',
+                        color: '#2d3748',
+                        margin: '0 0 10px 0',
+                        fontWeight: 'bold'
+                      }}>
+                        No payment history yet
+                      </h4>
+                      <p style={{
+                        color: '#4a5568',
+                        margin: 0,
+                        fontSize: '1rem'
+                      }}>
+                        Start exploring and rent your first dog companion
+                      </p>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
           </div>
         </div>
       </div>
