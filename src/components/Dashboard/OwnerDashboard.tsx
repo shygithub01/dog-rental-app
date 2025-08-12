@@ -39,6 +39,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
   const { db } = useFirebase();
   const [myRentals, setMyRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showEarningsModal, setShowEarningsModal] = useState(false);
 
   const myDogs = dogs.filter(dog => dog.ownerId === user?.uid);
   const availableDogs = myDogs.filter(dog => dog.isAvailable && dog.status === 'available');
@@ -138,25 +139,51 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
               </div>
               <div style={{ fontSize: '1rem', opacity: 0.9 }}>Dogs Listed</div>
             </div>
-            <div style={{
-              background: 'rgba(255,255,255,0.1)',
-              padding: '20px 30px',
-              borderRadius: '15px',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>
+            <div 
+              onClick={() => setShowEarningsModal(true)}
+              style={{
+                background: 'rgba(255,255,255,0.1)',
+                padding: '20px 30px',
+                borderRadius: '15px',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '5px' }}>
                 ${pastEarnings}
               </div>
               <div style={{ fontSize: '1rem', opacity: 0.9 }}>Past Earnings</div>
             </div>
-            <div style={{
-              background: 'rgba(255,255,255,0.1)',
-              padding: '20px 30px',
-              borderRadius: '15px',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>
+            <div 
+              onClick={() => setShowEarningsModal(true)}
+              style={{
+                background: 'rgba(255,255,255,0.1)',
+                padding: '20px 30px',
+                borderRadius: '15px',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '5px' }}>
                 ${pendingEarnings}
               </div>
@@ -449,6 +476,242 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Earnings Modal */}
+      {showEarningsModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '40px',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            position: 'relative'
+          }}>
+            {/* Close Button */}
+            <button
+              onClick={() => setShowEarningsModal(false)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'none',
+                border: 'none',
+                fontSize: '24px',
+                cursor: 'pointer',
+                color: '#666'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* Modal Header */}
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+              <h2 style={{
+                fontSize: '2.5rem',
+                color: '#2d3748',
+                margin: '0 0 10px 0',
+                fontWeight: 'bold'
+              }}>
+                💰 Earnings Report
+              </h2>
+              <p style={{
+                color: '#4a5568',
+                fontSize: '1.1rem',
+                margin: 0
+              }}>
+                Your complete earnings breakdown
+              </p>
+            </div>
+
+            {/* Earnings Summary Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '20px',
+              marginBottom: '30px'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${pastEarnings}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Past Earnings</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${pendingEarnings}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Pending Earnings</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${pastEarnings + pendingEarnings}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Earnings</div>
+              </div>
+            </div>
+
+            {/* Detailed Breakdown */}
+            <div style={{ marginBottom: '30px' }}>
+              <h3 style={{
+                fontSize: '1.5rem',
+                color: '#2d3748',
+                margin: '0 0 20px 0',
+                fontWeight: 'bold'
+              }}>
+                📊 Detailed Breakdown
+              </h3>
+              
+              {/* Past Earnings Details */}
+              <div style={{ marginBottom: '20px' }}>
+                <h4 style={{
+                  fontSize: '1.2rem',
+                  color: '#48bb78',
+                  margin: '0 0 15px 0',
+                  fontWeight: 'bold'
+                }}>
+                  ✅ Completed Rentals
+                </h4>
+                {myRentals.filter(rental => rental.status === 'completed').length > 0 ? (
+                  <div style={{ background: '#f7fafc', padding: '15px', borderRadius: '10px' }}>
+                    {myRentals.filter(rental => rental.status === 'completed').map((rental, index) => (
+                      <div key={rental.id} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '10px 0',
+                        borderBottom: index < myRentals.filter(rental => rental.status === 'completed').length - 1 ? '1px solid #e2e8f0' : 'none'
+                      }}>
+                        <div>
+                          <div style={{ fontWeight: 'bold', color: '#2d3748' }}>
+                            {rental.dogName} ({rental.dogBreed})
+                          </div>
+                          <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>
+                            Rented by {rental.renterName}
+                          </div>
+                        </div>
+                        <div style={{ fontWeight: 'bold', color: '#48bb78', fontSize: '1.1rem' }}>
+                          ${rental.totalCost}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ 
+                    background: '#f7fafc', 
+                    padding: '20px', 
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    color: '#4a5568'
+                  }}>
+                    No completed rentals yet
+                  </div>
+                )}
+              </div>
+
+              {/* Pending Earnings Details */}
+              <div>
+                <h4 style={{
+                  fontSize: '1.2rem',
+                  color: '#ed8936',
+                  margin: '0 0 15px 0',
+                  fontWeight: 'bold'
+                }}>
+                  ⏳ Active Rentals
+                </h4>
+                {myRentals.filter(rental => rental.status === 'active').length > 0 ? (
+                  <div style={{ background: '#f7fafc', padding: '15px', borderRadius: '10px' }}>
+                    {myRentals.filter(rental => rental.status === 'active').map((rental, index) => (
+                      <div key={rental.id} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '10px 0',
+                        borderBottom: index < myRentals.filter(rental => rental.status === 'active').length - 1 ? '1px solid #e2e8f0' : 'none'
+                      }}>
+                        <div>
+                          <div style={{ fontWeight: 'bold', color: '#2d3748' }}>
+                            {rental.dogName} ({rental.dogBreed})
+                          </div>
+                          <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>
+                            Currently rented by {rental.renterName}
+                          </div>
+                        </div>
+                        <div style={{ fontWeight: 'bold', color: '#ed8936', fontSize: '1.1rem' }}>
+                          ${rental.totalCost}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ 
+                    background: '#f7fafc', 
+                    padding: '20px', 
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    color: '#4a5568'
+                  }}>
+                    No active rentals at the moment
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <div style={{ textAlign: 'center' }}>
+              <button
+                onClick={() => setShowEarningsModal(false)}
+                style={{
+                  padding: '15px 30px',
+                  backgroundColor: '#667eea',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a67d8'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#667eea'}
+              >
+                Close Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
