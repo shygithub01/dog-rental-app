@@ -1,267 +1,221 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* ============ Rover Inspired Theme ============ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #14a96d;
+  --primary-dark: #0f8c5c;
+  --secondary: #f8f9fa;
+  --accent: #ffb347;
+  --text-dark: #2d3748;
+  --text-light: #4a5568;
+  --bg-light: #f7fafc;
+  --card-radius: 18px;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* HEADER */
+.header {
+  background: white;
+  padding: 15px 40px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+}
+.header-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* HERO SECTION */
+.hero {
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.4)),
+    url("https://images.unsplash.com/photo-1620012253291-6d8fb7a74263?auto=format&fit=crop&w=2000&q=80") center/cover no-repeat;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-content {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 60px;
+  align-items: center;
+  color: white;
+}
+.hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+.hero-subtitle {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+.hero-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-top: 25px;
+}
+.hero-widget {
+  background: white;
+  padding: 35px;
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  color: var(--text-dark);
+}
+
+/* TRUST BAR */
+.trust-bar {
+  background: white;
+  padding: 20px 40px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.trust-items {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.trust-item {
+  font-size: 1rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-light);
+  padding: 10px 15px;
+  border-radius: 999px;
+}
+
+/* BUTTONS */
+.primary-btn {
+  background-color: var(--primary);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.primary-btn:hover { background-color: var(--primary-dark); }
+.secondary-btn {
+  background-color: white;
+  border: 2px solid var(--primary);
+  color: var(--primary-dark);
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.secondary-btn:hover { background-color: var(--primary); color: white; }
+
+/* DOGS SECTION */
+.dogs-section {
+  background: white;
+  padding: 60px 40px;
+}
+.dogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+.section-title {
+  font-size: 2.4rem;
+  color: var(--text-dark);
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+/* SERVICES SECTION */
+.services {
+  background: var(--bg-light);
+  padding: 80px 40px;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+.service-card {
+  background: white;
+  padding: 30px;
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  transition: transform .2s ease;
+}
+.service-card:hover { transform: translateY(-4px); }
+.service-card h3 {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  margin: 15px 0;
+}
+
+/* FOOTER */
+.footer {
+  background: var(--primary-dark);
+  color: white;
+  padding: 40px;
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer-links span {
+  opacity: 0.8;
+  cursor: pointer;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Mobile Responsive Styles */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .mobile-header {
-    padding: 10px 15px !important;
-  }
-  
-  .mobile-header-content {
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-  
-  .mobile-nav {
-    flex-direction: column !important;
-    gap: 10px !important;
-    width: 100% !important;
-  }
-  
-  .mobile-nav-links {
-    margin-left: 0 !important;
-    gap: 15px !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-  
-  .mobile-nav-links a {
-    font-size: 0.9rem !important;
-  }
-  
-  .mobile-logo {
-    font-size: 1.5rem !important;
-  }
-  
-  .mobile-auth {
-    width: 100% !important;
-    justify-content: center !important;
-  }
-  
-  .mobile-signin-btn {
-    padding: 10px 20px !important;
-    font-size: 1rem !important;
-    width: 100% !important;
-    justify-content: center !important;
-  }
-  
-  .mobile-hero {
-    min-height: 300px !important;
-    padding: 20px 15px !important;
-  }
-  
-  .mobile-hero-content {
-    grid-template-columns: 1fr !important;
-    gap: 30px !important;
-    padding: 0 15px !important;
-  }
-  
-  .mobile-hero-text h2 {
-    font-size: 1.8rem !important;
-  }
-  
-  .mobile-hero-text p {
-    font-size: 1rem !important;
-  }
-  
-  .mobile-stats {
-    flex-direction: column !important;
-    gap: 10px !important;
-    text-align: center !important;
-  }
-  
-  .mobile-actions {
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-  
-  .mobile-action-btn {
-    width: 100% !important;
-    padding: 12px 16px !important;
-    font-size: 1rem !important;
-  }
-  
-  .mobile-dogs-section {
-    padding: 40px 15px !important;
-  }
-  
-  .mobile-dogs-grid {
-    grid-template-columns: 1fr !important;
-    gap: 15px !important;
-  }
-  
-  .mobile-dogs-title {
-    font-size: 2rem !important;
-    margin-bottom: 20px !important;
-  }
-  
-  .mobile-services-section {
-    padding: 60px 15px !important;
-  }
-  
-  .mobile-services-grid {
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
-  }
-  
-  .mobile-services-title {
-    font-size: 2rem !important;
-    margin-bottom: 15px !important;
-  }
-  
-  .mobile-services-subtitle {
-    font-size: 1rem !important;
-    margin-bottom: 40px !important;
-  }
-  
-  .mobile-service-card {
-    padding: 20px !important;
-  }
-  
-  .mobile-footer {
-    padding: 40px 15px !important;
-  }
-  
-  .mobile-footer-content {
-    flex-direction: column !important;
-    gap: 20px !important;
-    text-align: center !important;
-  }
-  
-  /* DogCard Mobile Styles */
-  .mobile-dog-card {
-    margin: 0 10px !important;
-  }
-  
-  .mobile-status-badge {
-    font-size: 0.7rem !important;
-    padding: 3px 8px !important;
-  }
-  
-  .mobile-dog-image {
-    height: 200px !important;
-  }
-  
-  .mobile-dog-info {
-    padding: 15px !important;
-  }
-  
-  .mobile-dog-details {
-    margin-bottom: 15px !important;
-  }
-  
-  .mobile-dog-name {
-    font-size: 1.3rem !important;
-  }
-  
-  .mobile-dog-breed {
-    font-size: 1rem !important;
-  }
-  
-  .mobile-dog-meta {
-    font-size: 0.8rem !important;
-  }
-  
-  .mobile-dog-description {
-    font-size: 0.9rem !important;
-    margin: 0 0 10px 0 !important;
-  }
-  
-  .mobile-dog-price {
-    padding: 10px !important;
-    margin-bottom: 15px !important;
-  }
-  
-  .mobile-dog-price p {
-    font-size: 0.8rem !important;
-  }
-  
-  .mobile-dog-price div:first-child p:last-child {
-    font-size: 1.3rem !important;
-  }
-  
-  .mobile-dog-actions {
-    flex-direction: column !important;
-    gap: 8px !important;
-  }
-  
-  .mobile-dog-actions .mobile-action-btn {
-    width: 100% !important;
-    padding: 10px 16px !important;
-    font-size: 1rem !important;
-  }
-  
-  .mobile-dog-actions button:last-child {
-    width: 100% !important;
-    padding: 12px 20px !important;
-    font-size: 1.1rem !important;
-  }
-  
-  /* Form Mobile Styles */
-  .mobile-form-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .mobile-hero {
-    min-height: 250px !important;
-    padding: 15px 10px !important;
-  }
-  
-  .mobile-hero-text h2 {
-    font-size: 1.5rem !important;
-  }
-  
-  .mobile-hero-text p {
-    font-size: 0.9rem !important;
-  }
-  
-  .mobile-dogs-title {
-    font-size: 1.8rem !important;
-  }
-  
-  .mobile-services-title {
-    font-size: 1.8rem !important;
-  }
+  .hero-content { grid-template-columns: 1fr; gap: 30px; }
+  .hero-title { font-size: 2rem; }
+  .hero-widget { padding: 25px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .dogs-grid { grid-template-columns: 1fr; }
+  .trust-items { flex-direction: column; align-items: center; }
 }

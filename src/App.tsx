@@ -401,76 +401,96 @@ function AppContent() {
   if (showApprovalPanel) {
     return (
       <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        background: 'linear-gradient(135deg, #f6f8fc 0%, #e8f2ff 100%)',
         minHeight: '100vh',
-        padding: '20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        padding: '20px'
       }}>
         <div style={{
-          background: 'white',
-          borderRadius: '20px',
-          padding: '40px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-          maxWidth: '1000px',
+          background: '#ffffff',
+          borderRadius: '24px',
+          padding: '48px',
+          boxShadow: '0 24px 48px rgba(16, 24, 64, 0.08), 0 8px 16px rgba(16, 24, 64, 0.04)',
+          maxWidth: '1200px',
           width: '100%',
-          margin: '0 auto'
+          margin: '0 auto',
+          border: '1px solid #e6effb'
         }}>
-          {/* Form Header */}
+          {/* Enhanced Header */}
           <div style={{
             textAlign: 'center',
-            marginBottom: '40px',
-            paddingBottom: '20px',
-            borderBottom: '2px solid #f7fafc'
+            marginBottom: '48px',
+            paddingBottom: '32px',
+            borderBottom: '2px solid #f0f7ff'
           }}>
             <div style={{
-              fontSize: '3rem',
-              marginBottom: '15px'
+              width: '72px',
+              height: '72px',
+              background: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '2rem',
+              margin: '0 auto 24px auto',
+              boxShadow: '0 8px 24px rgba(0, 124, 255, 0.2)'
             }}>
               📋
             </div>
             <h2 style={{
-              fontSize: '2.5rem',
-              color: '#2d3748',
-              margin: '0 0 10px 0',
-              fontWeight: 'bold'
+              fontSize: '2.75rem',
+              background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              margin: '0 0 16px 0',
+              fontWeight: '700',
+              letterSpacing: '-0.02em'
             }}>
               Rental Request Management
             </h2>
             <p style={{
-              color: '#4a5568',
-              fontSize: '1.1rem',
+              color: '#64748b',
+              fontSize: '1.2rem',
               margin: 0,
-              lineHeight: '1.6'
+              lineHeight: '1.6',
+              maxWidth: '600px',
+              margin: '0 auto'
             }}>
-              Review and manage pending rental requests for your dogs
+              Review and manage pending rental requests for your dogs with ease
             </p>
           </div>
 
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            marginBottom: '30px'
+            marginBottom: '40px'
           }}>
             <button
               onClick={() => setShowApprovalPanel(false)}
               style={{
-                padding: '15px 30px',
-                backgroundColor: '#718096',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '10px',
+                borderRadius: '16px',
                 cursor: 'pointer',
-                fontWeight: 'bold',
+                fontWeight: '600',
                 fontSize: '1rem',
-                transition: 'all 0.2s',
-                minWidth: '120px'
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                minWidth: '140px',
+                boxShadow: '0 4px 12px rgba(100, 116, 139, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(100, 116, 139, 0.4)'
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(100, 116, 139, 0.3)'
+              }}
             >
               ← Back to Dashboard
             </button>
@@ -490,76 +510,96 @@ function AppContent() {
   if (showRenterPendingRequests) {
     return (
       <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        background: 'linear-gradient(135deg, #f6f8fc 0%, #e8f2ff 100%)',
         minHeight: '100vh',
-        padding: '20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        padding: '20px'
       }}>
         <div style={{
-          background: 'white',
-          borderRadius: '20px',
-          padding: '40px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-          maxWidth: '1000px',
+          background: '#ffffff',
+          borderRadius: '24px',
+          padding: '48px',
+          boxShadow: '0 24px 48px rgba(16, 24, 64, 0.08), 0 8px 16px rgba(16, 24, 64, 0.04)',
+          maxWidth: '1200px',
           width: '100%',
-          margin: '0 auto'
+          margin: '0 auto',
+          border: '1px solid #e6effb'
         }}>
-          {/* Form Header */}
+          {/* Enhanced Header */}
           <div style={{
             textAlign: 'center',
-            marginBottom: '40px',
-            paddingBottom: '20px',
-            borderBottom: '2px solid #f7fafc'
+            marginBottom: '48px',
+            paddingBottom: '32px',
+            borderBottom: '2px solid #f0f7ff'
           }}>
             <div style={{
-              fontSize: '3rem',
-              marginBottom: '15px'
+              width: '72px',
+              height: '72px',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '2rem',
+              margin: '0 auto 24px auto',
+              boxShadow: '0 8px 24px rgba(16, 185, 129, 0.2)'
             }}>
               📋
             </div>
             <h2 style={{
-              fontSize: '2.5rem',
-              color: '#2d3748',
-              margin: '0 0 10px 0',
-              fontWeight: 'bold'
+              fontSize: '2.75rem',
+              background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              margin: '0 0 16px 0',
+              fontWeight: '700',
+              letterSpacing: '-0.02em'
             }}>
               Your Pending Requests
             </h2>
             <p style={{
-              color: '#4a5568',
-              fontSize: '1.1rem',
+              color: '#64748b',
+              fontSize: '1.2rem',
               margin: 0,
-              lineHeight: '1.6'
+              lineHeight: '1.6',
+              maxWidth: '600px',
+              margin: '0 auto'
             }}>
-              Review and manage your pending rental requests
+              Track and manage all your rental requests in one place
             </p>
           </div>
 
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            marginBottom: '30px'
+            marginBottom: '40px'
           }}>
             <button
               onClick={() => setShowRenterPendingRequests(false)}
               style={{
-                padding: '15px 30px',
-                backgroundColor: '#718096',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '10px',
+                borderRadius: '16px',
                 cursor: 'pointer',
-                fontWeight: 'bold',
+                fontWeight: '600',
                 fontSize: '1rem',
-                transition: 'all 0.2s',
-                minWidth: '120px'
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                minWidth: '140px',
+                boxShadow: '0 4px 12px rgba(100, 116, 139, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(100, 116, 139, 0.4)'
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(100, 116, 139, 0.3)'
+              }}
             >
               ← Back to Dashboard
             </button>
@@ -606,599 +646,594 @@ function AppContent() {
     )
   }
 
-    return (
+  return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '0'
+      background: '#ffffff'
     }}>
-      {/* Header */}
-      <div style={{
-        background: 'white',
-        padding: '15px 40px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      {/* Enhanced Header */}
+      <header style={{
+        background: '#ffffff',
+        padding: '16px 0',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
         position: 'sticky',
         top: 0,
-        zIndex: 100
-      }} className="mobile-header">
+        zIndex: 1000,
+        borderBottom: '1px solid #e2e8f0'
+      }}>
         <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 24px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }} className="mobile-header-content">
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '20px'
-          }} className="mobile-nav">
-            <h1 style={{
-              fontSize: '2rem',
-              color: '#2d3748',
-              margin: 0,
-              fontWeight: 'bold',
+          justifyContent: 'space-between'
+        }}>
+          {/* Logo */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              background: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+              borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px'
-            }} className="mobile-logo">
-              🐕 DogRental
+              justifyContent: 'center',
+              fontSize: '1.5rem',
+              boxShadow: '0 4px 12px rgba(0, 124, 255, 0.2)'
+            }}>
+              🐕
+            </div>
+            <h1 style={{
+              fontSize: '1.75rem',
+              background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              margin: 0,
+              fontWeight: '800',
+              letterSpacing: '-0.02em'
+            }}>
+              DogRental
             </h1>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            {user ? (
-              <>
-                <NotificationBell userId={user.uid} />
-                
-                {/* User Dropdown */}
-                <div className="user-dropdown-container" style={{ position: 'relative' }}>
-                  <button
-                    onClick={handleUserDropdownToggle}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '8px 12px',
-                      backgroundColor: '#f8f9fa',
-                      border: '1px solid #e9ecef',
-                      borderRadius: '20px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e9ecef'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                  >
-                    <div style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      backgroundColor: user.photoURL ? 'transparent' : '#4299e1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '14px',
-                      overflow: 'hidden'
-                    }}>
-                      {user.photoURL ? (
-                        <img 
-                          src={user.photoURL} 
-                          alt="Profile" 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      ) : (
-                        user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'
-                      )}
-                    </div>
-                    <span style={{ 
-                      fontSize: '14px', 
-                      fontWeight: 'bold', 
-                      color: '#2d3748'
-                    }}>
-                      {user.displayName || user.email}
-                    </span>
-                    <span style={{ 
-                      fontSize: '12px',
-                      color: '#718096'
-                    }}>
-                      ▼
-                    </span>
-                  </button>
-                  
-                  {/* Dropdown Menu */}
-                  {showUserDropdown && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '100%',
-                      right: '0',
-                      marginTop: '8px',
-                      backgroundColor: 'white',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                      border: '1px solid #e2e8f0',
-                      minWidth: '200px',
-                      zIndex: 1000
-                    }}>
-                      <button
-                        onClick={() => {
-                          setShowUserProfile(true);
-                          setShowUserDropdown(false);
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '12px 16px',
-                          border: 'none',
-                          backgroundColor: 'transparent',
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          color: '#374151',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          transition: 'background-color 0.2s'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                      >
-                        👤 Profile
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          setShowMessaging(true);
-                          setShowUserDropdown(false);
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '12px 16px',
-                          border: 'none',
-                          backgroundColor: 'transparent',
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          color: '#374151',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          transition: 'background-color 0.2s'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                      >
-                        💬 Inbox
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          setShowMaps(true);
-                          setShowUserDropdown(false);
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '12px 16px',
-                          border: 'none',
-                          backgroundColor: 'transparent',
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          color: '#374151',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          transition: 'background-color 0.2s'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                      >
-                        🗺️ Maps
-                      </button>
-                      
-                      <div style={{
-                        height: '1px',
-                        backgroundColor: '#e5e7eb',
-                        margin: '8px 0'
-                      }} />
-                      
-                      <button
-                        onClick={() => {
-                          auth.signOut();
-                          setShowUserDropdown(false);
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '12px 16px',
-                          border: 'none',
-                          backgroundColor: 'transparent',
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          color: '#dc2626',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          transition: 'background-color 0.2s'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fef2f2'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                      >
-                        🚪 Sign Out
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : null}
-          </div>
-        </div>
-      </div>
 
-      {/* Hero Section */}
-      <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '500px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative'
-      }} className="mobile-hero">
-        <div style={{
-          maxWidth: '1200px',
-          width: '100%',
-          padding: '0 40px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 400px',
-          gap: '60px',
-          alignItems: 'center'
-        }} className="mobile-hero-content">
-          {/* Hero Text */}
-          <div style={{ color: 'white' }} className="mobile-hero-text">
-            <h2 style={{
-              fontSize: '3rem',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold',
-              lineHeight: '1.2'
+          {/* Navigation */}
+          {user && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px'
             }}>
-              Loving dog companions for every moment
-            </h2>
-            <p style={{
-              fontSize: '1.3rem',
-              margin: '0 0 30px 0',
-              lineHeight: '1.6',
-              opacity: 0.9
-            }}>
-              Book trusted dogs for walks, companionship, and adventures. Perfect for busy days or when you need a furry friend.
-            </p>
-            {user ? (
-              <div style={{
-                display: 'flex',
-                gap: '20px',
-                alignItems: 'center'
-              }} className="mobile-stats">
-                <span style={{
-                  fontSize: '1.1rem',
-                  opacity: 0.9
-                }}>
-                  📊 <strong>{loading ? '...' : dogs.filter(dog => dog.isAvailable).length}</strong> dogs available
-                </span>
-                <span style={{
-                  fontSize: '1.1rem',
-                  opacity: 0.9
-                }}>
-                  👥 Trusted by <strong>100+</strong> pet lovers
-                </span>
-              </div>
-            ) : (
-              <div style={{
-                display: 'flex',
-                gap: '20px',
-                alignItems: 'center'
-              }} className="mobile-stats">
-                <span style={{
-                  fontSize: '1.1rem',
-                  opacity: 0.9
-                }}>
-                  🔐 Sign in to start renting dogs
-                </span>
-                <span style={{
-                  fontSize: '1.1rem',
-                  opacity: 0.9
-                }}>
-                  👥 Join <strong>100+</strong> pet lovers
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Search Form / Quick Actions */}
-          <div style={{
-            background: 'white',
-            padding: '40px',
-            borderRadius: '20px',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-          }}>
-            {user ? (
-              <>
-                <h3 style={{
-                  fontSize: '1.8rem',
-                  color: '#2d3748',
-                  margin: '0 0 20px 0',
-                  fontWeight: 'bold'
-                }}>
-                  Find your perfect companion
-                </h3>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '15px',
-                  marginBottom: '30px'
-                }} className="mobile-actions">
-                  {/* Only show "Add My Dog" for owners, not for renters */}
-                  {(() => {
-                    // Temporary fix for Lucy - ensure she gets renter role
-                    let currentUserRole = userProfile?.role || 'owner';
-                    if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
-                      currentUserRole = 'renter';
-                    }
-                    
-                    if (currentUserRole === 'owner') {
-                      return (
-                        <button
-                          onClick={() => setShowAddDog(true)}
-                          style={{
-                            padding: '15px 20px',
-                            backgroundColor: '#48bb78',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '10px',
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            fontSize: '1rem',
-                            transition: 'all 0.2s'
-                          }}
-                          className="mobile-action-btn"
-                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
-                        >
-                          🐕 Add My Dog
-                        </button>
-                      );
-                    }
-                    return null;
-                  })()}
-                  <button
-                    onClick={() => setShowApprovalPanel(true)}
-                    style={{
-                      padding: '15px 20px',
-                      backgroundColor: '#4299e1',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      transition: 'all 0.2s'
-                    }}
-                    className="mobile-action-btn"
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3182ce'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4299e1'}
-                  >
-                    📋 My Requests
-                  </button>
-                  <button
-                    onClick={handleDataCleanup}
-                    style={{
-                      padding: '15px 20px',
-                      backgroundColor: '#e53e3e',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      transition: 'all 0.2s'
-                    }}
-                    className="mobile-action-btn"
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
-                  >
-                    🧹 Clean Data
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <h3 style={{
-                  fontSize: '1.8rem',
-                  color: '#2d3748',
-                  margin: '0 0 20px 0',
-                  fontWeight: 'bold'
-                }}>
-                  Join DogRental today
-                </h3>
-                <p style={{
-                  color: '#4a5568',
-                  margin: '0 0 20px 0',
-                  lineHeight: '1.6'
-                }}>
-                  Sign in to start renting dogs or list your dogs for rent
-                </p>
-                
-                {/* Role Selection */}
-                <div style={{
-                  marginBottom: '25px'
-                }}>
-                  <p style={{
-                    color: '#2d3748',
-                    margin: '0 0 15px 0',
-                    fontWeight: 'bold',
-                    fontSize: '1rem'
-                  }}>
-                    I want to:
-                  </p>
-                  
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px'
-                  }}>
-                    <button
-                      onClick={() => setSelectedRole('renter')}
-                      style={{
-                        padding: '12px 15px',
-                        backgroundColor: selectedRole === 'renter' ? '#48bb78' : '#f7fafc',
-                        color: selectedRole === 'renter' ? 'white' : '#4a5568',
-                        border: selectedRole === 'renter' ? 'none' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem',
-                        transition: 'all 0.2s',
-                        textAlign: 'left',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px'
-                      }}
-                      onMouseOver={(e) => {
-                        if (selectedRole !== 'renter') {
-                          e.currentTarget.style.backgroundColor = '#edf2f7';
-                        }
-                      }}
-                      onMouseOut={(e) => {
-                        if (selectedRole !== 'renter') {
-                          e.currentTarget.style.backgroundColor = '#f7fafc';
-                        }
-                      }}
-                    >
-                      🐾 Rent dogs from others
-                    </button>
-                    
-                    <button
-                      onClick={() => setSelectedRole('owner')}
-                      style={{
-                        padding: '12px 15px',
-                        backgroundColor: selectedRole === 'owner' ? '#48bb78' : '#f7fafc',
-                        color: selectedRole === 'owner' ? 'white' : '#4a5568',
-                        border: selectedRole === 'owner' ? 'none' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '0.9rem',
-                        transition: 'all 0.2s',
-                        textAlign: 'left',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px'
-                      }}
-                      onMouseOver={(e) => {
-                        if (selectedRole !== 'owner') {
-                          e.currentTarget.style.backgroundColor = '#edf2f7';
-                        }
-                      }}
-                      onMouseOut={(e) => {
-                        if (selectedRole !== 'owner') {
-                          e.currentTarget.style.backgroundColor = '#f7fafc';
-                        }
-                      }}
-                    >
-                      🏠 List my dogs for rent
-                    </button>
-                  </div>
-                </div>
+              <NotificationBell userId={user.uid} />
+              
+              {/* Enhanced User Dropdown */}
+              <div className="user-dropdown-container" style={{ position: 'relative' }}>
                 <button
-                  onClick={handleGoogleSignIn}
-                  disabled={!selectedRole}
+                  onClick={handleUserDropdownToggle}
                   style={{
-                    width: '100%',
-                    padding: '15px 20px',
-                    backgroundColor: selectedRole ? '#4285f4' : '#cbd5e0',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: selectedRole ? 'pointer' : 'not-allowed',
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '12px 16px',
+                    background: '#f8fafc',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '24px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    fontWeight: '500'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#f1f5f9'
+                    e.currentTarget.style.borderColor = '#cbd5e1'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#f8fafc'
+                    e.currentTarget.style.borderColor = '#e2e8f0'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                  }}
+                >
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: user.photoURL ? 'transparent' : 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px'
-                  }}
-                  className="mobile-signin-btn"
-                  onMouseOver={(e) => {
-                    if (selectedRole) {
-                      e.currentTarget.style.backgroundColor = '#3367d6';
-                    }
-                  }}
-                  onMouseOut={(e) => {
-                    if (selectedRole) {
-                      e.currentTarget.style.backgroundColor = '#4285f4';
-                    }
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
-                  Sign in with Google
+                    color: 'white',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                  }}>
+                    {user.photoURL ? (
+                      <img 
+                        src={user.photoURL} 
+                        alt="Profile" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'
+                    )}
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start'
+                  }}>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#1e293b',
+                      lineHeight: '1.2'
+                    }}>
+                      {user.displayName || user.email}
+                    </span>
+                    <span style={{
+                      fontSize: '12px',
+                      color: '#64748b',
+                      lineHeight: '1.2'
+                    }}>
+                      {userProfile?.role || 'User'}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#64748b',
+                    transition: 'transform 0.2s',
+                    transform: showUserDropdown ? 'rotate(180deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </div>
                 </button>
-              </>
-            )}
+                
+                {/* Enhanced Dropdown Menu */}
+                {showUserDropdown && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    right: '0',
+                    marginTop: '8px',
+                    background: '#ffffff',
+                    borderRadius: '16px',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    border: '1px solid #e2e8f0',
+                    minWidth: '220px',
+                    zIndex: 1000,
+                    padding: '8px',
+                    backdropFilter: 'blur(8px)'
+                  }}>
+                    {/* Dropdown Items */}
+                    {[
+                      { icon: '👤', label: 'Profile', action: () => { setShowUserProfile(true); setShowUserDropdown(false); } },
+                      { icon: '💬', label: 'Inbox', action: () => { setShowMessaging(true); setShowUserDropdown(false); } },
+                      { icon: '🗺️', label: 'Maps', action: () => { setShowMaps(true); setShowUserDropdown(false); } }
+                    ].map((item, index) => (
+                      <button
+                        key={index}
+                        onClick={item.action}
+                        style={{
+                          width: '100%',
+                          padding: '14px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: '#374151',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          borderRadius: '12px',
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                          fontWeight: '500'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#f8fafc'
+                          e.currentTarget.style.transform = 'translateX(4px)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent'
+                          e.currentTarget.style.transform = 'translateX(0)'
+                        }}
+                      >
+                        <span style={{ fontSize: '16px' }}>{item.icon}</span>
+                        {item.label}
+                      </button>
+                    ))}
+                    
+                    <div style={{
+                      height: '1px',
+                      background: 'linear-gradient(90deg, transparent, #e2e8f0, transparent)',
+                      margin: '8px 0'
+                    }} />
+                    
+                    <button
+                      onClick={() => {
+                        auth.signOut();
+                        setShowUserDropdown(false);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        border: 'none',
+                        background: 'transparent',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: '#dc2626',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        borderRadius: '12px',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        fontWeight: '500'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#fef2f2'
+                        e.currentTarget.style.transform = 'translateX(4px)'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent'
+                        e.currentTarget.style.transform = 'translateX(0)'
+                      }}
+                    >
+                      <span style={{ fontSize: '16px' }}>🚪</span>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
 
-            {/* Quick Stats */}
+{/* Enhanced Hero Section - CSS Responsive Version */}
+      <section className="hero">
+        <div className="hero-content">
+          {/* Hero Content */}
+          <div>
             <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginTop: '30px',
-              padding: '20px',
-              backgroundColor: '#f7fafc',
-              borderRadius: '10px',
-              gap: '15px',
-              textAlign: 'center'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '8px 16px',
+              borderRadius: '50px',
+              marginBottom: '32px',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
             }}>
-              <div>
+              <span style={{ fontSize: '16px' }}>✨</span>
+              <span style={{ fontSize: '14px', fontWeight: '600' }}>Trusted by 1000+ pet lovers</span>
+            </div>
+            
+            <h1 className="hero-title">
+              Find the perfect
+              <br />
+              <span style={{ color: '#fbbf24' }}>dog companion</span>
+            </h1>
+            
+            <p className="hero-subtitle">
+              Book trusted, loving dogs for walks, companionship, and adventures. 
+              Perfect for busy days or when you need a furry friend by your side.
+            </p>
+
+            {user ? (
+              <div className="hero-stats">
                 <div style={{
-                  fontSize: '2rem',
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  marginBottom: '5px'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  padding: '12px 20px',
+                  borderRadius: '16px',
+                  backdropFilter: 'blur(10px)',
+                  marginRight: '20px'
                 }}>
-                  {loading ? '...' : dogs.filter(dog => dog.isAvailable).length}
+                  <span style={{ fontSize: '24px' }}>📊</span>
+                  <div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>
+                      {loading ? '...' : dogs.filter(dog => dog.isAvailable).length}
+                    </div>
+                    <div style={{ fontSize: '14px', opacity: 0.8 }}>Available Dogs</div>
+                  </div>
                 </div>
                 <div style={{
-                  fontSize: '0.8rem',
-                  color: '#4a5568'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  padding: '12px 20px',
+                  borderRadius: '16px',
+                  backdropFilter: 'blur(10px)'
                 }}>
-                  Available Dogs
+                  <span style={{ fontSize: '24px' }}>⭐</span>
+                  <div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>4.9</div>
+                    <div style={{ fontSize: '14px', opacity: 0.8 }}>Average Rating</div>
+                  </div>
                 </div>
               </div>
-              <div>
+            ) : (
+              <div style={{
+                display: 'flex',
+                gap: '20px',
+                alignItems: 'center',
+                flexWrap: 'wrap'
+              }}>
+                <button
+                  className="primary-btn"
+                  onClick={() => document.querySelector('.hero-widget')?.scrollIntoView({ behavior: 'smooth' })}
+                  style={{
+                    padding: '16px 32px',
+                    background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                    color: '#1a202c',
+                    border: 'none',
+                    borderRadius: '16px',
+                    cursor: 'pointer',
+                    fontWeight: '700',
+                    fontSize: '1.1rem',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: '0 8px 24px rgba(251, 191, 36, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  Get Started Free
+                  <span>→</span>
+                </button>
+                
                 <div style={{
-                  fontSize: '2rem',
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  marginBottom: '5px'
+                  display: 'flex',
+                  gap: '20px',
+                  alignItems: 'center'
                 }}>
-                  {dogs.length}
+                  <span style={{ opacity: 0.9 }}>✓ No setup fees</span>
+                  <span style={{ opacity: 0.9 }}>✓ Instant booking</span>
                 </div>
-                <div style={{
-                  fontSize: '0.8rem',
-                  color: '#4a5568'
+              </div>
+            )}
+          </div>
+
+          {/* Signup Form - only for non-authenticated users */}
+          {!user && (
+            <div className="hero-widget">
+              <div style={{
+                textAlign: 'center',
+                marginBottom: '32px'
+              }}>
+                <h3 style={{
+                  fontSize: '2rem',
+                  background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                  margin: '0 0 12px 0',
+                  fontWeight: '700'
                 }}>
-                  Total Dogs
+                  Join DogRental
+                </h3>
+                <p style={{
+                  color: '#64748b',
+                  margin: 0,
+                  fontSize: '1.1rem',
+                  lineHeight: '1.5'
+                }}>
+                  Start your journey with loving dog companions
+                </p>
+              </div>
+              
+              {/* Role Selection */}
+              <div style={{ marginBottom: '32px' }}>
+                <p style={{
+                  color: '#1e293b',
+                  margin: '0 0 20px 0',
+                  fontWeight: '600',
+                  fontSize: '1.1rem'
+                }}>
+                  What brings you here?
+                </p>
+                
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px'
+                }}>
+                  {[
+                    {
+                      role: 'renter',
+                      icon: '🐾',
+                      title: 'Find dog companions',
+                      desc: 'Rent dogs for walks and adventures'
+                    },
+                    {
+                      role: 'owner',
+                      icon: '🏠',
+                      title: 'Share your dogs',
+                      desc: 'List your dogs and earn money'
+                    }
+                  ].map((option) => (
+                    <button
+                      key={option.role}
+                      onClick={() => setSelectedRole(option.role as 'renter' | 'owner')}
+                      style={{
+                        padding: '20px 24px',
+                        background: selectedRole === option.role 
+                          ? 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)' 
+                          : '#f8fafc',
+                        color: selectedRole === option.role ? 'white' : '#334155',
+                        border: selectedRole === option.role 
+                          ? 'none' 
+                          : '2px solid #e2e8f0',
+                        borderRadius: '16px',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        textAlign: 'left',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        boxShadow: selectedRole === option.role 
+                          ? '0 8px 24px rgba(0, 124, 255, 0.2)' 
+                          : '0 1px 3px rgba(0, 0, 0, 0.1)'
+                      }}
+                    >
+                      <div style={{
+                        width: '48px',
+                        height: '48px',
+                        background: selectedRole === option.role 
+                          ? 'rgba(255, 255, 255, 0.2)' 
+                          : '#e2e8f0',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.5rem',
+                        transition: 'all 0.3s'
+                      }}>
+                        {option.icon}
+                      </div>
+                      <div>
+                        <div style={{
+                          fontSize: '1.1rem',
+                          fontWeight: '700',
+                          marginBottom: '4px'
+                        }}>
+                          {option.title}
+                        </div>
+                        <div style={{
+                          fontSize: '0.9rem',
+                          opacity: selectedRole === option.role ? 0.9 : 0.7
+                        }}>
+                          {option.desc}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={handleGoogleSignIn}
+                disabled={!selectedRole}
+                className="primary-btn"
+                style={{
+                  width: '100%',
+                  padding: '18px 24px',
+                  background: selectedRole 
+                    ? 'linear-gradient(135deg, #4285f4 0%, #3367d6 100%)' 
+                    : '#e2e8f0',
+                  color: selectedRole ? 'white' : '#94a3b8',
+                  border: 'none',
+                  borderRadius: '16px',
+                  cursor: selectedRole ? 'pointer' : 'not-allowed',
+                  fontWeight: '700',
+                  fontSize: '1.1rem',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px',
+                  boxShadow: selectedRole 
+                    ? '0 8px 24px rgba(66, 133, 244, 0.3)' 
+                    : 'none'
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                {selectedRole ? 'Continue with Google' : 'Select an option above'}
+              </button>
+
+              {/* Trust Indicators */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginTop: '32px',
+                padding: '24px',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                borderRadius: '16px',
+                gap: '20px',
+                textAlign: 'center'
+              }}>
+                <div>
+                  <div style={{
+                    fontSize: '1.8rem',
+                    fontWeight: '800',
+                    background: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    color: 'transparent',
+                    marginBottom: '4px'
+                  }}>
+                    {loading ? '...' : dogs.filter(dog => dog.isAvailable).length}
+                  </div>
+                  <div style={{
+                    fontSize: '0.85rem',
+                    color: '#64748b',
+                    fontWeight: '600'
+                  }}>
+                    Available Dogs
+                  </div>
+                </div>
+                <div>
+                  <div style={{
+                    fontSize: '1.8rem',
+                    fontWeight: '800',
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    color: 'transparent',
+                    marginBottom: '4px'
+                  }}>
+                    {dogs.length}
+                  </div>
+                  <div style={{
+                    fontSize: '0.85rem',
+                    color: '#64748b',
+                    fontWeight: '600'
+                  }}>
+                    Total Dogs
+                  </div>
+                </div>
+                <div>
+                  <div style={{
+                    fontSize: '1.8rem',
+                    fontWeight: '800',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    color: 'transparent',
+                    marginBottom: '4px'
+                  }}>
+                    4.9
+                  </div>
+                  <div style={{
+                    fontSize: '0.85rem',
+                    color: '#64748b',
+                    fontWeight: '600'
+                  }}>
+                    Rating
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      </div>
-
-      {/* Role-Based Dashboard Content */}
+      </section>
+      {/* Dashboard Content */}
       {user && userProfile && (
         <>
           {console.log('🔍 DEBUG: userProfile.role =', userProfile.role, 'userProfile =', userProfile)}
@@ -1242,30 +1277,183 @@ function AppContent() {
         </>
       )}
 
+      {/* Quick Actions Section (for authenticated users) */}
+      {user && (
+        <section style={{
+          background: 'linear-gradient(135deg, #f6f8fc 0%, #e8f2ff 100%)',
+          padding: '80px 24px'
+        }}>
+          <div style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            textAlign: 'center'
+          }}>
+            <h2 style={{
+              fontSize: '2.5rem',
+              background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              margin: '0 0 16px 0',
+              fontWeight: '700'
+            }}>
+              Quick Actions
+            </h2>
+            <p style={{
+              fontSize: '1.2rem',
+              color: '#64748b',
+              margin: '0 0 60px 0',
+              maxWidth: '600px',
+              margin: '0 auto 60px auto'
+            }}>
+              Manage your experience with these convenient shortcuts
+            </p>
+            
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '24px',
+              maxWidth: '900px',
+              margin: '0 auto'
+            }}>
+              {/* Only show "Add My Dog" for owners */}
+              {(() => {
+                let currentUserRole = userProfile?.role || 'owner';
+                if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
+                  currentUserRole = 'renter';
+                }
+                
+                const actions = [
+                  {
+                    icon: '📋',
+                    title: 'My Requests',
+                    desc: 'View and manage rental requests',
+                    color: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+                    action: () => setShowApprovalPanel(true)
+                  },
+                  {
+                    icon: '🧹',
+                    title: 'Clean Data',
+                    desc: 'Remove orphaned data entries',
+                    color: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                    action: handleDataCleanup
+                  }
+                ];
+
+                if (currentUserRole === 'owner') {
+                  actions.unshift({
+                    icon: '🐕',
+                    title: 'Add My Dog',
+                    desc: 'List a new dog for rent',
+                    color: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    action: () => setShowAddDog(true)
+                  });
+                }
+
+                return actions.map((action, index) => (
+                  <button
+                    key={index}
+                    onClick={action.action}
+                    style={{
+                      padding: '32px',
+                      background: '#ffffff',
+                      border: '2px solid #e2e8f0',
+                      borderRadius: '20px',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      textAlign: 'center',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-4px)'
+                      e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 0, 0, 0.1)'
+                      e.currentTarget.style.borderColor = '#cbd5e1'
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)'
+                      e.currentTarget.style.borderColor = '#e2e8f0'
+                    }}
+                  >
+                    <div style={{
+                      width: '64px',
+                      height: '64px',
+                      background: action.color,
+                      borderRadius: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.8rem',
+                      margin: '0 auto 20px auto',
+                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)'
+                    }}>
+                      {action.icon}
+                    </div>
+                    <h3 style={{
+                      fontSize: '1.3rem',
+                      color: '#1e293b',
+                      margin: '0 0 8px 0',
+                      fontWeight: '700'
+                    }}>
+                      {action.title}
+                    </h3>
+                    <p style={{
+                      color: '#64748b',
+                      margin: 0,
+                      fontSize: '1rem',
+                      lineHeight: '1.5'
+                    }}>
+                      {action.desc}
+                    </p>
+                  </button>
+                ));
+              })()}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Dog Listings Section */}
       {dogs.length > 0 && !userProfile && (
-        <div style={{
-          background: 'white',
-          padding: '60px 40px'
-        }} className="mobile-dogs-section">
+        <section style={{
+          background: '#ffffff',
+          padding: '100px 24px'
+        }}>
           <div style={{
             maxWidth: '1200px',
             margin: '0 auto'
           }}>
-            <h2 style={{
-              fontSize: '2.5rem',
-              color: '#2d3748',
-              margin: '0 0 40px 0',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }} className="mobile-dogs-title">
-              🐕 Available Dogs
-            </h2>
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '60px'
+            }}>
+              <h2 style={{
+                fontSize: '2.5rem',
+                background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                margin: '0 0 16px 0',
+                fontWeight: '700'
+              }}>
+                Available Dogs
+              </h2>
+              <p style={{
+                fontSize: '1.2rem',
+                color: '#64748b',
+                margin: 0,
+                maxWidth: '600px',
+                margin: '0 auto'
+              }}>
+                Discover amazing dogs ready for their next adventure with you
+              </p>
+            </div>
+            
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-              gap: '30px'
-            }} className="mobile-dogs-grid">
+              gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+              gap: '32px'
+            }}>
               {dogs.map((dog) => (
                 <DogCard
                   key={dog.id}
@@ -1274,291 +1462,475 @@ function AppContent() {
                   onDelete={handleDeleteDog}
                   onRent={handleRentDog}
                   onMessage={handleMessageDogOwner}
-                  currentUserId={user.uid}
+                  currentUserId={user?.uid}
                 />
               ))}
             </div>
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Services Section */}
-      <div style={{
-        background: '#f7fafc',
-        padding: '80px 40px'
-      }} className="mobile-services-section">
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#2d3748',
-            margin: '0 0 20px 0',
-            fontWeight: 'bold',
-            textAlign: 'center'
-          }} className="mobile-services-title">
-            Our Services
-          </h2>
-          <p style={{
-            fontSize: '1.2rem',
-            color: '#4a5568',
-            margin: '0 0 60px 0',
-            textAlign: 'center',
-            lineHeight: '1.6'
-          }} className="mobile-services-subtitle">
-            Discover the perfect way to connect with dogs in your neighborhood
-          </p>
-          
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-            gap: '30px'
-          }} className="mobile-services-grid">
-            {/* Dog Rental */}
-            <div style={{
-              background: 'white',
-              padding: '30px',
-              borderRadius: '15px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              border: '2px solid #e2e8f0'
-            }} className="mobile-service-card">
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                🐕
-              </div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 15px 0',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}>
-                Dog Rental
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                lineHeight: '1.6',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                Rent trusted dogs for walks, companionship, and adventures. Perfect for busy days or when you need a furry friend.
-              </p>
-            </div>
-
-            {/* Dog Hosting */}
-            <div style={{
-              background: 'white',
-              padding: '30px',
-              borderRadius: '15px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              border: '2px solid #e2e8f0'
-            }} className="mobile-service-card">
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                🏠
-              </div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 15px 0',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}>
-                Dog Hosting
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                lineHeight: '1.6',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                Host dogs in your home when their owners are away. Provide a loving environment and earn extra income.
-              </p>
-            </div>
-
-            {/* Dog Walking */}
-            <div style={{
-              background: 'white',
-              padding: '30px',
-              borderRadius: '15px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              border: '2px solid #e2e8f0'
-            }} className="mobile-service-card">
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                🚶
-              </div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 15px 0',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}>
-                Dog Walking
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                lineHeight: '1.6',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                Professional dog walking services for busy pet parents. Regular exercise and outdoor adventures for your furry friends.
-              </p>
-            </div>
-
-            {/* Dog Day Care */}
-            <div style={{
-              background: 'white',
-              padding: '30px',
-              borderRadius: '15px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              border: '2px solid #e2e8f0'
-            }} className="mobile-service-card">
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                🏫
-              </div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 15px 0',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}>
-                Dog Day Care
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                lineHeight: '1.6',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                Safe and fun day care for dogs while you're at work. Socialization, playtime, and supervision in a loving environment.
-              </p>
-            </div>
-
-            {/* Dog Training */}
-            <div style={{
-              background: 'white',
-              padding: '30px',
-              borderRadius: '15px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              border: '2px solid #e2e8f0'
-            }} className="mobile-service-card">
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                🎓
-              </div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 15px 0',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}>
-                Dog Training
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                lineHeight: '1.6',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                Professional training services for obedience, behavior modification, and specialized skills. Build a stronger bond with your dog.
-              </p>
-            </div>
-
-            {/* Community */}
-            <div style={{
-              background: 'white',
-              padding: '30px',
-              borderRadius: '15px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              border: '2px solid #e2e8f0'
-            }} className="mobile-service-card">
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                👥
-              </div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 15px 0',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}>
-                Community
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                lineHeight: '1.6',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                Connect with fellow dog lovers in your neighborhood. Share experiences, tips, and build lasting friendships.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div style={{
-        background: '#2d3748',
-        color: 'white',
-        padding: '40px',
-        textAlign: 'center'
+      {/* Enhanced Services Section */}
+      <section style={{
+        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+        padding: '100px 24px'
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto'
         }}>
-          <h3 style={{
-            margin: '0 0 20px 0',
-            fontSize: '1.5rem',
-            fontWeight: 'bold'
-          }}>
-            🐕 DogRental
-          </h3>
-          <p style={{
-            margin: '0 0 20px 0',
-            opacity: 0.8,
-            lineHeight: '1.6'
-          }}>
-            Connecting dog lovers with trusted companions in your neighborhood.
-          </p>
           <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '30px',
-            marginTop: '30px'
+            textAlign: 'center',
+            marginBottom: '80px'
           }}>
-            <span style={{ opacity: 0.7 }}>© 2024 DogRental</span>
-            <span style={{ opacity: 0.7 }}>Privacy Policy</span>
-            <span style={{ opacity: 0.7 }}>Terms of Service</span>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '50px',
+              marginBottom: '24px',
+              fontSize: '14px',
+              fontWeight: '600'
+            }}>
+              ✨ Our Services
+            </div>
+            <h2 style={{
+              fontSize: '3rem',
+              background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              margin: '0 0 24px 0',
+              fontWeight: '800',
+              letterSpacing: '-0.02em'
+            }}>
+              Everything your dog needs
+            </h2>
+            <p style={{
+              fontSize: '1.3rem',
+              color: '#64748b',
+              margin: 0,
+              lineHeight: '1.6',
+              maxWidth: '700px',
+              margin: '0 auto'
+            }}>
+              Comprehensive care and companionship services designed with love and expertise
+            </p>
+          </div>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
+            gap: '32px'
+          }}>
+            {[
+              {
+                icon: '🐕',
+                title: 'Dog Rental',
+                desc: 'Book trusted, loving dogs for walks, companionship, and outdoor adventures. Perfect for busy schedules or therapeutic companionship.',
+                gradient: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+                features: ['Verified dogs', 'Flexible booking', 'Insurance covered']
+              },
+              {
+                icon: '🏠',
+                title: 'Dog Hosting',
+                desc: 'Provide a safe, loving home environment for dogs when their owners travel. Earn income while giving dogs the care they deserve.',
+                gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                features: ['Background checks', 'Daily updates', 'Emergency support']
+              },
+              {
+                icon: '🚶',
+                title: 'Dog Walking',
+                desc: 'Professional walking services ensuring your dog gets proper exercise and socialization with experienced handlers.',
+                gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                features: ['GPS tracking', 'Photo updates', 'Flexible schedules']
+              },
+              {
+                icon: '🏫',
+                title: 'Dog Day Care',
+                desc: 'Supervised playtime and socialization in a safe environment while you work. Professional staff and secure facilities.',
+                gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                features: ['Supervised play', 'Climate controlled', 'Live cameras']
+              },
+              {
+                icon: '🎓',
+                title: 'Dog Training',
+                desc: 'Expert training programs for obedience, behavior modification, and specialized skills. Build stronger bonds with professional guidance.',
+                gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                features: ['Certified trainers', 'Custom programs', 'Progress tracking']
+              },
+              {
+                icon: '👥',
+                title: 'Community',
+                desc: 'Connect with fellow dog lovers, share experiences, and build lasting friendships in your neighborhood pet community.',
+                gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+                features: ['Local meetups', 'Expert advice', 'Social events']
+              }
+            ].map((service, index) => (
+              <div
+                key={index}
+                style={{
+                  background: '#ffffff',
+                  padding: '40px',
+                  borderRadius: '24px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid #e2e8f0',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)'
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                {/* Gradient accent */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '4px',
+                  background: service.gradient
+                }} />
+                
+                <div style={{
+                  width: '72px',
+                  height: '72px',
+                  background: service.gradient,
+                  borderRadius: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2rem',
+                  marginBottom: '24px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)'
+                }}>
+                  {service.icon}
+                </div>
+                
+                <h3 style={{
+                  fontSize: '1.6rem',
+                  color: '#1e293b',
+                  margin: '0 0 16px 0',
+                  fontWeight: '700'
+                }}>
+                  {service.title}
+                </h3>
+                
+                <p style={{
+                  color: '#64748b',
+                  lineHeight: '1.6',
+                  margin: '0 0 24px 0',
+                  fontSize: '1rem'
+                }}>
+                  {service.desc}
+                </p>
+                
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {service.features.map((feature, featureIndex) => (
+                    <div
+                      key={featureIndex}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.9rem',
+                        color: '#64748b'
+                      }}
+                    >
+                      <div style={{
+                        width: '16px',
+                        height: '16px',
+                        background: service.gradient,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '10px'
+                      }}>
+                        ✓
+                      </div>
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Enhanced Footer */}
+      <footer style={{
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+        color: 'white',
+        padding: '80px 24px 40px'
+      }}>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto'
+        }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '60px',
+            marginBottom: '60px'
+          }}>
+            {/* Brand Section */}
+            <div>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginBottom: '24px'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  🐕
+                </div>
+                <h3 style={{
+                  fontSize: '1.8rem',
+                  margin: 0,
+                  fontWeight: '800'
+                }}>
+                  DogRental
+                </h3>
+              </div>
+              <p style={{
+                margin: '0 0 24px 0',
+                opacity: 0.8,
+                lineHeight: '1.6',
+                fontSize: '1.1rem'
+              }}>
+                Connecting dog lovers with trusted companions. Building stronger communities through the love of pets.
+              </p>
+              <div style={{
+                display: 'flex',
+                gap: '16px'
+              }}>
+                {['📧', '📱', '🌐'].map((icon, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
+                      e.currentTarget.style.transform = 'translateY(-2px)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    {icon}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Services */}
+            <div>
+              <h4 style={{
+                fontSize: '1.2rem',
+                margin: '0 0 24px 0',
+                fontWeight: '700'
+              }}>
+                Services
+              </h4>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {['Dog Rental', 'Dog Hosting', 'Dog Walking', 'Day Care', 'Training'].map((service) => (
+                  <a
+                    key={service}
+                    href="#"
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      textDecoration: 'none',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s',
+                      padding: '4px 0'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'white'
+                      e.currentTarget.style.paddingLeft = '8px'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'
+                      e.currentTarget.style.paddingLeft = '0'
+                    }}
+                  >
+                    {service}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h4 style={{
+                fontSize: '1.2rem',
+                margin: '0 0 24px 0',
+                fontWeight: '700'
+              }}>
+                Support
+              </h4>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {['Help Center', 'Safety', 'Community Guidelines', 'Contact Us'].map((item) => (
+                  <a
+                    key={item}
+                    href="#"
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      textDecoration: 'none',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s',
+                      padding: '4px 0'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'white'
+                      e.currentTarget.style.paddingLeft = '8px'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'
+                      e.currentTarget.style.paddingLeft = '0'
+                    }}
+                  >
+                    {item}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <h4 style={{
+                fontSize: '1.2rem',
+                margin: '0 0 24px 0',
+                fontWeight: '700'
+              }}>
+                Stay Updated
+              </h4>
+              <p style={{
+                margin: '0 0 20px 0',
+                opacity: 0.8,
+                fontSize: '1rem'
+              }}>
+                Get the latest updates and tips for pet care
+              </p>
+              <div style={{
+                display: 'flex',
+                gap: '8px'
+              }}>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  style={{
+                    flex: 1,
+                    padding: '12px 16px',
+                    border: '2px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '12px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: 'white',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  style={{
+                    padding: '12px 20px',
+                    background: 'linear-gradient(135deg, #007cff 0%, #0066dd 100%)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    transition: 'all 0.3s'
+                  }}
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div style={{
+            paddingTop: '40px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '20px'
+          }}>
+            <div style={{
+              opacity: 0.8,
+              fontSize: '1rem'
+            }}>
+              © 2024 DogRental. Made with ❤️ for dog lovers everywhere.
+            </div>
+            <div style={{
+              display: 'flex',
+              gap: '32px'
+            }}>
+              {['Privacy Policy', 'Terms of Service', 'Cookies'].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    fontSize: '0.95rem',
+                    transition: 'color 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'}
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
