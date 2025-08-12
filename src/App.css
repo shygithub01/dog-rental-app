@@ -1,4 +1,4 @@
-/* Modern Rover-style App.css */
+/* Rover-Inspired Professional Design */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* Global Reset and Base Styles */
@@ -11,8 +11,10 @@
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   line-height: 1.6;
-  color: #2d3748;
+  color: #1a202c;
   background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -20,84 +22,122 @@ body {
   min-height: 100vh;
 }
 
-/* Modern Button Styles */
+/* Rover-Inspired Color Palette */
+:root {
+  --primary: #00a699;
+  --primary-dark: #008489;
+  --primary-light: #00d1c1;
+  --secondary: #484848;
+  --accent: #ff5a5f;
+  --accent-dark: #e31c5f;
+  --success: #00a699;
+  --warning: #ffb400;
+  --error: #ff5a5f;
+  --text-primary: #222222;
+  --text-secondary: #717171;
+  --text-light: #b0b0b0;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f7;
+  --bg-tertiary: #f0f0f0;
+  --border-light: #ebebeb;
+  --border-medium: #dddddd;
+  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --radius-small: 8px;
+  --radius-medium: 12px;
+  --radius-large: 16px;
+  --radius-xl: 24px;
+}
+
+/* Modern Button Styles - Rover Inspired */
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 14px 28px;
+  border-radius: var(--radius-medium);
+  padding: 14px 24px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-light);
+  font-family: inherit;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-secondary {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
-  border-radius: 12px;
-  padding: 12px 26px;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-medium);
+  padding: 13px 23px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .btn-secondary:hover {
-  background: #667eea;
+  background: var(--primary);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: var(--shadow-medium);
 }
 
 .btn-outline {
   background: transparent;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-small);
   padding: 10px 20px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .btn-outline:hover {
-  background: #f7fafc;
-  border-color: #cbd5e0;
+  background: var(--bg-secondary);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
-/* Card Components */
+/* Card Components - Professional Rover Style */
 .card {
-  background: white;
-  border-radius: 16px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-large);
   padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-light);
+  transition: all 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-medium);
   transform: translateY(-2px);
 }
 
 .card-elevated {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--border-light);
 }
 
-/* Header Styles */
+/* Header Styles - Clean Professional */
 .modern-header {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--border-light);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -116,11 +156,16 @@ body {
 .logo {
   font-size: 28px;
   font-weight: 800;
-  color: #667eea;
+  color: var(--primary);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: color 0.2s ease;
+}
+
+.logo:hover {
+  color: var(--primary-dark);
 }
 
 .nav-links {
@@ -157,9 +202,9 @@ body {
   width: 100%;
 }
 
-/* Hero Section */
+/* Hero Section - Rover Professional Style */
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   padding: 80px 0 120px;
   position: relative;
   overflow: hidden;
@@ -172,8 +217,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="25" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="75" cy="25" r="1" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  opacity: 0.4;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="25" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="25" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
 }
 
 .hero-content {
@@ -182,7 +227,7 @@ body {
   padding: 0 24px;
   display: grid;
   grid-template-columns: 1fr 400px;
-  gap: 60px;
+  gap: 80px;
   align-items: center;
   position: relative;
   z-index: 1;
@@ -197,18 +242,17 @@ body {
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hero-subtitle {
   font-size: 20px;
   line-height: 1.6;
   margin-bottom: 32px;
-  opacity: 0.9;
+  opacity: 0.95;
   font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .hero-stats {
@@ -225,12 +269,14 @@ body {
   font-size: 32px;
   font-weight: 800;
   margin-bottom: 4px;
+  color: white;
 }
 
 .hero-stat-label {
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.9;
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-actions {
@@ -239,30 +285,31 @@ body {
   flex-wrap: wrap;
 }
 
-/* Search/Action Card */
+/* Search/Action Card - Professional Rover Style */
 .search-card {
-  background: white;
-  border-radius: 20px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
   padding: 40px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-heavy);
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .search-title {
   font-size: 28px;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .search-subtitle {
-  color: #718096;
+  color: var(--text-secondary);
   margin-bottom: 32px;
   font-size: 16px;
   line-height: 1.5;
 }
 
-/* Role Selection */
+/* Role Selection - Clean Professional */
 .role-selection {
   margin-bottom: 32px;
 }
@@ -270,7 +317,7 @@ body {
 .role-selection-title {
   font-size: 16px;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
@@ -285,30 +332,33 @@ body {
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-medium);
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .role-option:hover {
-  background: #edf2f7;
-  border-color: #cbd5e0;
+  background: var(--bg-tertiary);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
 }
 
 .role-option.selected {
-  background: #667eea;
+  background: var(--primary);
   color: white;
-  border-color: #667eea;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-medium);
 }
 
 .role-option-icon {
   font-size: 20px;
 }
 
-/* Google Sign In Button */
+/* Google Sign In Button - Professional Style */
 .google-signin-btn {
   display: flex;
   align-items: center;
@@ -319,22 +369,24 @@ body {
   background: #4285f4;
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-medium);
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 24px;
+  font-family: inherit;
 }
 
 .google-signin-btn:hover:not(:disabled) {
   background: #3367d6;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  box-shadow: var(--shadow-medium);
 }
 
 .google-signin-btn:disabled {
-  background: #cbd5e0;
+  background: var(--bg-tertiary);
+  color: var(--text-light);
   cursor: not-allowed;
 }
 
@@ -343,9 +395,10 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 24px;
-  background: #f8fafc;
-  border-radius: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-medium);
   margin-top: 24px;
+  border: 1px solid var(--border-light);
 }
 
 .quick-stat {
@@ -355,17 +408,17 @@ body {
 .quick-stat-number {
   font-size: 28px;
   font-weight: 800;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .quick-stat-label {
   font-size: 12px;
-  color: #718096;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
-/* User Dropdown */
+/* User Dropdown - Professional Rover Style */
 .user-dropdown-container {
   position: relative;
 }
@@ -375,23 +428,24 @@ body {
   align-items: center;
   gap: 12px;
   padding: 8px 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .user-dropdown-trigger:hover {
-  background: #edf2f7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-light);
+  transform: translateY(-1px);
 }
 
 .user-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #667eea;
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -410,12 +464,12 @@ body {
 .user-name {
   font-size: 14px;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--text-primary);
 }
 
 .dropdown-arrow {
   font-size: 12px;
-  color: #718096;
+  color: var(--text-secondary);
   transition: transform 0.2s ease;
 }
 
@@ -428,10 +482,10 @@ body {
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e2e8f0;
+  background: var(--bg-primary);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--shadow-heavy);
+  border: 1px solid var(--border-light);
   min-width: 220px;
   z-index: 1000;
   overflow: hidden;
@@ -445,20 +499,21 @@ body {
   padding: 16px 20px;
   background: transparent;
   border: none;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
   text-align: left;
+  font-family: inherit;
 }
 
 .dropdown-item:hover {
-  background: #f8fafc;
+  background: var(--bg-secondary);
 }
 
 .dropdown-item.danger {
-  color: #dc2626;
+  color: var(--error);
 }
 
 .dropdown-item.danger:hover {
@@ -467,13 +522,13 @@ body {
 
 .dropdown-divider {
   height: 1px;
-  background: #e5e7eb;
+  background: var(--border-light);
   margin: 8px 0;
 }
 
-/* Dashboard Sections */
+/* Dashboard Sections - Professional Rover Style */
 .dashboard-section {
-  background: #f8fafc;
+  background: var(--bg-secondary);
   padding: 80px 0;
 }
 
@@ -491,20 +546,20 @@ body {
 .section-title {
   font-size: 40px;
   font-weight: 800;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 16px;
   line-height: 1.2;
 }
 
 .section-subtitle {
   font-size: 18px;
-  color: #718096;
+  color: var(--text-secondary);
   line-height: 1.6;
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* Services Grid */
+/* Services Grid - Professional Style */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -512,18 +567,19 @@ body {
 }
 
 .service-card {
-  background: white;
+  background: var(--bg-primary);
   padding: 40px;
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-light);
   transition: all 0.3s ease;
 }
 
 .service-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--primary-light);
 }
 
 .service-icon {
@@ -535,17 +591,17 @@ body {
 .service-title {
   font-size: 24px;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
 .service-description {
-  color: #718096;
+  color: var(--text-secondary);
   line-height: 1.6;
   font-size: 16px;
 }
 
-/* Dogs Grid */
+/* Dogs Grid - Professional Style */
 .dogs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -553,9 +609,9 @@ body {
   margin-top: 40px;
 }
 
-/* Footer */
+/* Footer - Professional Rover Style */
 .footer {
-  background: #2d3748;
+  background: var(--text-primary);
   color: white;
   padding: 60px 0 40px;
 }
@@ -611,14 +667,14 @@ body {
   opacity: 0.7;
 }
 
-/* Loading States */
+/* Loading States - Professional Style */
 .loading-spinner {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-light);
   border-radius: 50%;
-  border-top-color: #667eea;
+  border-top-color: var(--primary);
   animation: spin 1s ease-in-out infinite;
 }
 
@@ -628,7 +684,7 @@ body {
   }
 }
 
-/* Form Components */
+/* Form Components - Professional Rover Style */
 .form-group {
   margin-bottom: 24px;
 }
@@ -637,26 +693,163 @@ body {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .form-input {
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-small);
   font-size: 16px;
   transition: all 0.2s ease;
+  font-family: inherit;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 169, 153, 0.1);
 }
 
-/* Mobile Responsive Styles */
+.form-input::placeholder {
+  color: var(--text-light);
+}
+
+/* Modern Dashboard Cards - Professional Style */
+.dashboard-card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-large);
+  padding: 24px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.dashboard-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.dashboard-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dashboard-card-action {
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.dashboard-card-action:hover {
+  color: var(--primary-dark);
+}
+
+/* Status Badges - Professional Style */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.available {
+  background: #e6f7f4;
+  color: var(--success);
+  border: 1px solid #b3e5d9;
+}
+
+.status-badge.unavailable {
+  background: #fef2f2;
+  color: var(--error);
+  border: 1px solid #fecaca;
+}
+
+.status-badge.pending {
+  background: #fffbeb;
+  color: var(--warning);
+  border: 1px solid #fed7aa;
+}
+
+.status-badge.approved {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+/* Modern Scrollbars - Professional Style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-light);
+}
+
+/* Notification Bell Styles - Professional */
+.notification-bell {
+  position: relative;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notification-bell:hover {
+  background: var(--bg-tertiary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-light);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--error);
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile Responsive Styles - Professional */
 @media (max-width: 768px) {
   .hero-content {
     grid-template-columns: 1fr;
@@ -691,10 +884,6 @@ body {
   
   .header-content {
     padding: 12px 16px;
-  }
-  
-  .nav-links {
-    gap: 16px;
   }
   
   .section-container {
@@ -757,7 +946,7 @@ body {
   }
 }
 
-/* Animation Classes */
+/* Animation Classes - Professional */
 .fade-in {
   animation: fadeIn 0.6s ease-out;
 }
@@ -788,126 +977,24 @@ body {
   }
 }
 
-/* Notification Bell Styles */
-.notification-bell {
-  position: relative;
-  padding: 8px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* Additional Professional Touches */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.notification-bell:hover {
-  background: #edf2f7;
-  transform: translateY(-1px);
+.border-gradient {
+  border: 2px solid;
+  border-image: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) 1;
 }
 
-.notification-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  background: #e53e3e;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 10px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Modern Dashboard Cards */
-.dashboard-card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
-  transition: all 0.2s ease;
-}
-
-.dashboard-card:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.dashboard-card-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #2d3748;
-}
-
-.dashboard-card-action {
-  color: #667eea;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.dashboard-card-action:hover {
-  color: #5a67d8;
-}
-
-/* Status Badges */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-badge.available {
-  background: #c6f6d5;
-  color: #22543d;
-}
-
-.status-badge.unavailable {
-  background: #fed7d7;
-  color: #742a2a;
-}
-
-.status-badge.pending {
-  background: #feebc8;
-  color: #7b341e;
-}
-
-.status-badge.approved {
-  background: #bee3f8;
-  color: #2a4365;
-}
-
-/* Modern Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 3px;
-  transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
