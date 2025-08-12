@@ -41,6 +41,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
   const { db } = useFirebase();
   const [myRentals, setMyRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showRentalModal, setShowRentalModal] = useState(false);
 
   // Show all dogs except user's own dogs
   const allDogs = dogs.filter(dog => dog.ownerId !== user?.uid);
@@ -134,13 +135,26 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
               </div>
               <div style={{ fontSize: '1rem', opacity: 0.9 }}>Dogs Available</div>
             </div>
-            <div style={{
-              background: 'rgba(255,255,255,0.1)',
-              padding: '20px 30px',
-              borderRadius: '15px',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>
+            <div 
+              onClick={() => setShowRentalModal(true)}
+              style={{
+                background: 'rgba(255,255,255,0.1)',
+                padding: '20px 30px',
+                borderRadius: '15px',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '5px' }}>
                 ${totalPaid}
               </div>
@@ -700,6 +714,273 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Rental Details Modal */}
+      {showRentalModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '40px',
+            maxWidth: '700px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            position: 'relative'
+          }}>
+            {/* Close Button */}
+            <button
+              onClick={() => setShowRentalModal(false)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'none',
+                border: 'none',
+                fontSize: '24px',
+                cursor: 'pointer',
+                color: '#666'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* Modal Header */}
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+              <h2 style={{
+                fontSize: '2.5rem',
+                color: '#2d3748',
+                margin: '0 0 10px 0',
+                fontWeight: 'bold'
+              }}>
+                🏠 My Rental History
+              </h2>
+              <p style={{
+                color: '#4a5568',
+                fontSize: '1.1rem',
+                margin: 0
+              }}>
+                Complete breakdown of your dog rental expenses
+              </p>
+            </div>
+
+            {/* Rental Summary Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '20px',
+              marginBottom: '30px'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${totalPaid}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Paid</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  {myRentals.length}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Rentals</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  {myRentals.filter(rental => rental.status === 'active').length}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Active Rentals</div>
+              </div>
+            </div>
+
+            {/* Detailed Rental Breakdown */}
+            <div>
+              <h3 style={{
+                fontSize: '1.5rem',
+                color: '#2d3748',
+                margin: '0 0 20px 0',
+                fontWeight: 'bold'
+              }}>
+                📋 Rental Details
+              </h3>
+              
+              {myRentals.length > 0 ? (
+                <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
+                  {myRentals.map((rental, index) => (
+                    <div key={rental.id} style={{
+                      background: 'white',
+                      padding: '20px',
+                      borderRadius: '10px',
+                      marginBottom: index < myRentals.length - 1 ? '15px' : '0',
+                      border: '1px solid #e2e8f0',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        marginBottom: '15px'
+                      }}>
+                        <div style={{ flex: 1 }}>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            marginBottom: '8px'
+                          }}>
+                            <span style={{
+                              padding: '4px 8px',
+                              backgroundColor: rental.status === 'active' ? '#c6f6d5' : '#c6f6d5',
+                              color: rental.status === 'active' ? '#22543d' : '#22543d',
+                              borderRadius: '20px',
+                              fontSize: '0.8rem',
+                              fontWeight: 'bold'
+                            }}>
+                              {rental.status === 'active' ? '🟢 Active' : '✅ Completed'}
+                            </span>
+                            <span style={{
+                              fontSize: '0.9rem',
+                              color: '#4a5568'
+                            }}>
+                              {rental.startDate?.toDate ? rental.startDate.toDate().toLocaleDateString() : 'N/A'} - {rental.endDate?.toDate ? rental.endDate.toDate().toLocaleDateString() : 'N/A'}
+                            </span>
+                          </div>
+                          <h4 style={{
+                            fontSize: '1.2rem',
+                            color: '#2d3748',
+                            margin: '0 0 5px 0',
+                            fontWeight: 'bold'
+                          }}>
+                            {rental.dogName} ({rental.dogBreed})
+                          </h4>
+                          <p style={{
+                            color: '#4a5568',
+                            margin: '0 0 5px 0',
+                            fontSize: '0.9rem'
+                          }}>
+                            Owner: {rental.dogOwnerName}
+                          </p>
+                        </div>
+                        <div style={{
+                          textAlign: 'right',
+                          minWidth: '100px'
+                        }}>
+                          <div style={{
+                            fontSize: '1.5rem',
+                            fontWeight: 'bold',
+                            color: '#667eea',
+                            marginBottom: '5px'
+                          }}>
+                            ${rental.totalCost}
+                          </div>
+                          <div style={{
+                            fontSize: '0.8rem',
+                            color: '#4a5568'
+                          }}>
+                            Total Cost
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {rental.status === 'active' && (
+                        <div style={{
+                          background: '#fef5e7',
+                          padding: '10px',
+                          borderRadius: '8px',
+                          border: '1px solid #fed7aa'
+                        }}>
+                          <p style={{
+                            color: '#c05621',
+                            margin: 0,
+                            fontSize: '0.9rem',
+                            fontStyle: 'italic'
+                          }}>
+                            ⏳ This rental is currently active
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ 
+                  background: '#f7fafc', 
+                  padding: '40px', 
+                  borderRadius: '15px',
+                  textAlign: 'center',
+                  border: '2px dashed #cbd5e0'
+                }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🏠</div>
+                  <h4 style={{
+                    fontSize: '1.3rem',
+                    color: '#2d3748',
+                    margin: '0 0 10px 0',
+                    fontWeight: 'bold'
+                  }}>
+                    No rentals yet
+                  </h4>
+                  <p style={{
+                    color: '#4a5568',
+                    margin: 0,
+                    fontSize: '1rem'
+                  }}>
+                    Start exploring and rent your first dog companion
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Close Button */}
+            <div style={{ textAlign: 'center', marginTop: '30px' }}>
+              <button
+                onClick={() => setShowRentalModal(false)}
+                style={{
+                  padding: '15px 30px',
+                  backgroundColor: '#667eea',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a67d8'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#667eea'}
+              >
+                Close Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
