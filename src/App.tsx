@@ -1249,17 +1249,6 @@ function AppContent() {
                           >
                             📋 My Requests
                           </button>
-                          <button
-                            onClick={() => setShowUserProfile(true)}
-                            className="btn-primary"
-                            style={{ 
-                              width: '100%', 
-                              background: 'linear-gradient(135deg, #ff5a5f 0%, #e31c5f 100%)',
-                              border: 'none'
-                            }}
-                          >
-                            💰 View Earnings
-                          </button>
                         </>
                       );
                     } else {
@@ -1385,7 +1374,6 @@ function AppContent() {
                     onEditDog={handleEditDog}
                     onDeleteDog={handleDeleteDog}
                     onViewRequests={() => setShowApprovalPanel(true)}
-                    onViewEarnings={() => setShowUserProfile(true)}
                     user={userProfile}
                   />
                 </div>
