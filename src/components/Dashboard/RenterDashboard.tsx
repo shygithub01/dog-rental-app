@@ -115,52 +115,6 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
           }}>
             Discover amazing dogs ready to be your perfect adventure buddy
           </p>
-          
-          {/* Quick Stats in Hero */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '40px',
-            marginTop: '40px'
-          }}>
-            <div style={{
-              background: 'rgba(255,255,255,0.1)',
-              padding: '20px 30px',
-              borderRadius: '15px',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.2)'
-            }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '5px' }}>
-                {availableDogs.length}
-              </div>
-              <div style={{ fontSize: '1rem', opacity: 0.9 }}>Dogs Available</div>
-            </div>
-            <div 
-              onClick={() => setShowRentalModal(true)}
-              style={{
-                background: 'rgba(255,255,255,0.1)',
-                padding: '20px 30px',
-                borderRadius: '15px',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '5px' }}>
-                ${totalPaid}
-              </div>
-              <div style={{ fontSize: '1rem', opacity: 0.9 }}>Total Paid</div>
-            </div>
-          </div>
         </div>
       </div>
 
