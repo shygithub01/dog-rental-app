@@ -169,74 +169,6 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
       {/* Main Dashboard Content */}
       <div style={{ background: 'white', padding: '60px 40px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {/* Quick Actions */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '20px',
-            marginBottom: '50px'
-          }}>
-            <button
-              onClick={onAddDog}
-              style={{
-                padding: '25px',
-                backgroundColor: '#48bb78',
-                color: 'white',
-                border: 'none',
-                borderRadius: '15px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1.1rem',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 15px rgba(72, 187, 120, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(72, 187, 120, 0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(72, 187, 120, 0.3)';
-              }}
-            >
-              🐕 Add New Dog
-            </button>
-            
-            <button
-              onClick={onViewEarnings}
-              style={{
-                padding: '25px',
-                backgroundColor: '#ed8936',
-                color: 'white',
-                border: 'none',
-                borderRadius: '15px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1.1rem',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 15px rgba(237, 137, 54, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(237, 137, 54, 0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(237, 137, 54, 0.3)';
-              }}
-            >
-              💰 View Earnings
-            </button>
-          </div>
-
           {/* My Dogs Section */}
           <div>
             <h2 style={{
@@ -273,24 +205,6 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                 }}>
                   Start earning by adding your first dog for rent
                 </p>
-                <button
-                  onClick={onAddDog}
-                  style={{
-                    padding: '15px 30px',
-                    backgroundColor: '#48bb78',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
-                >
-                  Add Your First Dog
-                </button>
               </div>
             ) : (
               <div style={{

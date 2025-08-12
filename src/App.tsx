@@ -641,22 +641,6 @@ function AppContent() {
               </div>
             )}
 
-            {user && (
-              <div className="hero-actions">
-                <button
-                  onClick={() => setShowMaps(true)}
-                  className="btn-primary"
-                >
-                  🗺️ Browse Dogs
-                </button>
-                <button
-                  onClick={() => setShowMessaging(true)}
-                  className="btn-secondary"
-                >
-                  💬 Messages
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Search/Action Card - Consolidated */}
