@@ -655,47 +655,84 @@ function AppContent() {
                 </p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                  {/* Only show "Add New Dog" for owners, not for renters */}
+                  {/* Role-specific actions */}
                   {(() => {
-                    // Temporary fix for Lucy - ensure she gets renter role
                     let currentUserRole = userProfile?.role || 'owner';
                     if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
                       currentUserRole = 'renter';
                     }
                     
                     if (currentUserRole === 'owner') {
+                      // OWNER ACTIONS
                       return (
-                        <button
-                          onClick={() => setShowAddDog(true)}
-                          className="btn-primary"
-                          style={{ width: '100%' }}
-                        >
-                          🐕 Add New Dog
-                        </button>
+                        <>
+                          <button
+                            onClick={() => setShowAddDog(true)}
+                            className="btn-primary"
+                            style={{ width: '100%' }}
+                          >
+                            🐕 Add New Dog
+                          </button>
+                          <button
+                            onClick={() => setShowApprovalPanel(true)}
+                            className="btn-secondary"
+                            style={{ width: '100%' }}
+                          >
+                            📋 My Requests
+                          </button>
+                          <button
+                            onClick={() => setShowUserProfile(true)}
+                            className="btn-primary"
+                            style={{ 
+                              width: '100%', 
+                              background: 'linear-gradient(135deg, #ff5a5f 0%, #e31c5f 100%)',
+                              border: 'none'
+                            }}
+                          >
+                            💰 View Earnings
+                          </button>
+                        </>
+                      );
+                    } else {
+                      // RENTER ACTIONS
+                      return (
+                        <>
+                          <button
+                            onClick={() => setShowMaps(true)}
+                            className="btn-primary"
+                            style={{ width: '100%' }}
+                          >
+                            🔍 Browse All Dogs
+                          </button>
+                          <button
+                            onClick={() => setShowRenterPendingRequests(true)}
+                            className="btn-secondary"
+                            style={{ width: '100%' }}
+                          >
+                            📅 My Rentals
+                          </button>
+                          <button
+                            onClick={() => setShowUserProfile(true)}
+                            className="btn-primary"
+                            style={{ 
+                              width: '100%', 
+                              background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                              border: 'none'
+                            }}
+                          >
+                            ❤️ Favorites
+                          </button>
+                          <button
+                            onClick={() => setShowApprovalPanel(true)}
+                            className="btn-outline"
+                            style={{ width: '100%' }}
+                          >
+                            📋 Pending Requests
+                          </button>
+                        </>
                       );
                     }
-                    return null;
                   })()}
-                  
-                  <button
-                    onClick={() => setShowApprovalPanel(true)}
-                    className="btn-secondary"
-                    style={{ width: '100%' }}
-                  >
-                    📋 My Requests
-                  </button>
-                  
-                  <button
-                    onClick={() => setShowUserProfile(true)}
-                    className="btn-primary"
-                    style={{ 
-                      width: '100%', 
-                      background: 'linear-gradient(135deg, #ff5a5f 0%, #e31c5f 100%)',
-                      border: 'none'
-                    }}
-                  >
-                    💰 View Earnings
-                  </button>
                   
                   <button
                     onClick={handleDataCleanup}
