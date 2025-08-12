@@ -35,6 +35,7 @@ function AppContent() {
   const [showEarningsReport, setShowEarningsReport] = useState(false);
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
   const [userRentals, setUserRentals] = useState<any[]>([]);
+  const [ownerEarnings, setOwnerEarnings] = useState<any[]>([]);
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
@@ -121,6 +122,31 @@ function AppContent() {
       fetchUserRentals();
     }
   }, [showPaymentHistory, user?.uid, db]);
+
+  // Fetch owner earnings when Earnings Report modal is opened
+  useEffect(() => {
+    if (showEarningsReport && user?.uid) {
+      const fetchOwnerEarnings = async () => {
+        try {
+          // Fetch rentals where the current user is the owner
+          const earningsQuery = query(
+            collection(db, 'rentals'),
+            where('dogOwnerId', '==', user.uid)
+          );
+          const earningsSnapshot = await getDocs(earningsQuery);
+          const earnings = earningsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setOwnerEarnings(earnings);
+        } catch (error) {
+          console.error('Error fetching owner earnings:', error);
+        }
+      };
+      
+      fetchOwnerEarnings();
+    }
+  }, [showEarningsReport, user?.uid, db]);
 
   const createOrUpdateUserProfile = async (user: any) => {
     try {
@@ -555,7 +581,7 @@ function AppContent() {
                 Earnings Report
               </h2>
               <p className="section-subtitle" style={{ margin: 0 }}>
-                Your complete earnings breakdown and financial overview
+                Your complete earnings overview and rental income details
               </p>
             </div>
 
@@ -568,16 +594,211 @@ function AppContent() {
               </button>
             </div>
 
-            {/* This will render the earnings content from OwnerDashboard */}
-            <OwnerDashboard
-              dogs={dogs}
-              onAddDog={() => setShowAddDog(true)}
-              onEditDog={handleEditDog}
-              onDeleteDog={handleDeleteDog}
-              onViewRequests={() => setShowApprovalPanel(true)}
-              onViewEarnings={() => setShowUserProfile(true)}
-              user={userProfile}
-            />
+            {/* Earnings Summary Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '20px',
+              marginBottom: '30px'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${(() => {
+                    // Calculate past earnings from completed rentals
+                    const pastEarnings = ownerEarnings
+                      .filter(rental => rental.status === 'completed')
+                      .reduce((sum: number, rental: any) => sum + (rental.totalCost || 0), 0);
+                    return pastEarnings;
+                  })()}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Past Earnings</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${(() => {
+                    // Calculate pending earnings from active rentals
+                    const pendingEarnings = ownerEarnings
+                      .filter(rental => rental.status === 'active')
+                      .reduce((sum: number, rental: any) => sum + (rental.totalCost || 0), 0);
+                    return pendingEarnings;
+                  })()}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Pending to Earn</div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${(() => {
+                    // Calculate total earnings
+                    const totalEarnings = ownerEarnings.reduce((sum: number, rental: any) => 
+                      sum + (rental.totalCost || 0), 0);
+                    return totalEarnings;
+                  })()}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Earnings</div>
+              </div>
+            </div>
+
+            {/* Earnings Details */}
+            <div>
+              <h3 style={{
+                fontSize: '1.5rem',
+                color: '#2d3748',
+                margin: '0 0 20px 0',
+                fontWeight: 'bold'
+              }}>
+                📊 Earnings Breakdown
+              </h3>
+              
+              {/* Fetch and display actual earnings data */}
+              {(() => {
+                if (ownerEarnings.length > 0) {
+                  return (
+                    <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
+                      {ownerEarnings.map((rental: any, index: number) => (
+                        <div key={rental.id || index} style={{
+                          background: 'white',
+                          padding: '20px',
+                          borderRadius: '10px',
+                          marginBottom: index < ownerEarnings.length - 1 ? '15px' : '0',
+                          border: '1px solid #e2e8f0',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            marginBottom: '15px'
+                          }}>
+                            <div style={{ flex: 1 }}>
+                              <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                marginBottom: '8px'
+                              }}>
+                                <span style={{
+                                  padding: '4px 8px',
+                                  backgroundColor: rental.status === 'active' ? '#fef5e7' : '#c6f6d5',
+                                  color: rental.status === 'active' ? '#c05621' : '#22543d',
+                                  borderRadius: '20px',
+                                  fontSize: '0.8rem',
+                                  fontWeight: 'bold'
+                                }}>
+                                  {rental.status === 'active' ? '🟡 Active' : '✅ Completed'}
+                                </span>
+                                <span style={{
+                                  fontSize: '0.9rem',
+                                  color: '#4a5568'
+                                }}>
+                                  {rental.startDate?.toDate ? rental.startDate.toDate().toLocaleDateString() : 'N/A'} - {rental.endDate?.toDate ? rental.endDate.toDate().toLocaleDateString() : 'N/A'}
+                                </span>
+                              </div>
+                              <h4 style={{
+                                fontSize: '1.2rem',
+                                color: '#2d3748',
+                                margin: '0 0 5px 0',
+                                fontWeight: 'bold'
+                              }}>
+                                {rental.dogName || 'Unknown Dog'} ({rental.dogBreed || 'Unknown Breed'})
+                              </h4>
+                              <p style={{
+                                color: '#4a5568',
+                                margin: '0 0 5px 0',
+                                fontSize: '0.9rem'
+                              }}>
+                                Rented by: {rental.renterName || 'Unknown Renter'}
+                              </p>
+                            </div>
+                            <div style={{
+                              textAlign: 'right',
+                              minWidth: '100px'
+                            }}>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#48bb78',
+                                marginBottom: '5px'
+                              }}>
+                                ${rental.totalCost || 0}
+                              </div>
+                              <div style={{
+                                fontSize: '0.8rem',
+                                color: '#4a5568'
+                              }}>
+                                Earnings
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {rental.status === 'active' && (
+                            <div style={{
+                              background: '#fef5e7',
+                              padding: '10px',
+                              borderRadius: '8px',
+                              border: '1px solid #fed7aa'
+                            }}>
+                              <p style={{
+                                color: '#c05621',
+                                margin: 0,
+                                fontSize: '0.9rem',
+                                fontStyle: 'italic'
+                              }}>
+                                ⏳ This rental is currently active - payment pending
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div style={{ 
+                      background: '#f7fafc', 
+                      padding: '40px', 
+                      borderRadius: '15px',
+                      textAlign: 'center',
+                      border: '2px dashed #cbd5e0'
+                    }}>
+                      <div style={{ fontSize: '3rem', marginBottom: '20px' }}>💰</div>
+                      <h4 style={{
+                        fontSize: '1.3rem',
+                        color: '#2d3748',
+                        margin: '0 0 10px 0',
+                        fontWeight: 'bold'
+                      }}>
+                        No earnings yet
+                      </h4>
+                      <p style={{
+                        color: '#4a5568',
+                        margin: 0,
+                        fontSize: '1rem'
+                      }}>
+                        Start listing your dogs to earn rental income
+                      </p>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
           </div>
         </div>
       </div>
