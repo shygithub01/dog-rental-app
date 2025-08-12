@@ -339,7 +339,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   fontWeight: 'bold',
                   textAlign: 'center'
                 }}>
-                  🐕 My Dogs
+                  🐕 My Furry Entrepreneurs
                 </h2>
                 
                 {myDogs.length === 0 ? (
@@ -652,7 +652,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   fontWeight: 'bold',
                   textAlign: 'center'
                 }}>
-                  🏠 My Rented Dogs
+                  🐾 My Adventure Buddies
                 </h2>
                 
                 {loading ? (
@@ -869,7 +869,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                       margin: '0 0 25px 0',
                       fontSize: '1.1rem'
                     }}>
-                      Check back later or browse all dogs to find your perfect companion
+                      Check back later or browse all dogs to find your furry soulmate
                     </p>
                     <button
                       onClick={onBrowseDogs}

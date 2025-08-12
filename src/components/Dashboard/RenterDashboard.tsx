@@ -104,7 +104,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
             fontWeight: 'bold',
             lineHeight: '1.2'
           }}>
-            Find Your Perfect Companion
+            Find Your Furry Soulmate
           </h1>
           <p style={{
             fontSize: '1.3rem',
@@ -112,7 +112,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
             lineHeight: '1.6',
             opacity: 0.9
           }}>
-            Discover amazing dogs for walks, companionship, and adventures
+            Discover amazing dogs ready to be your perfect adventure buddy
           </p>
           
           {/* Quick Stats in Hero */}
@@ -162,7 +162,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
               fontWeight: 'bold',
               textAlign: 'center'
             }}>
-              🏠 My Rented Dogs
+              🐾 My Adventure Buddies
             </h2>
             
             {loading ? (
@@ -379,7 +379,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                   margin: '0 0 25px 0',
                   fontSize: '1.1rem'
                 }}>
-                  Check back later or browse all dogs to find your perfect companion
+                  Check back later or browse all dogs to find your furry soulmate
                 </p>
                 <button
                   onClick={onBrowseDogs}

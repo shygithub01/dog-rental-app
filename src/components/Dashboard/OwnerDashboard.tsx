@@ -178,7 +178,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
               fontWeight: 'bold',
               textAlign: 'center'
             }}>
-              🐕 My Dogs
+              🐕 My Furry Entrepreneurs
             </h2>
             
             {myDogs.length === 0 ? (

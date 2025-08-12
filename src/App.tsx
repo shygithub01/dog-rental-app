@@ -647,12 +647,36 @@ function AppContent() {
           <div className="search-card slide-up">
             {user ? (
               <>
-                <h3 className="search-title">
-                  Find your perfect companion
-                </h3>
-                <p className="search-subtitle">
-                  Discover amazing dogs in your neighborhood or manage your listings
-                </p>
+                {(() => {
+                  let currentUserRole = userProfile?.role || 'owner';
+                  if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
+                    currentUserRole = 'renter';
+                  }
+                  
+                  if (currentUserRole === 'owner') {
+                    return (
+                      <>
+                        <h3 className="search-title">
+                          Your dogs are ready to make new friends
+                        </h3>
+                        <p className="search-subtitle">
+                          Manage your listings and create happy memories for dog lovers
+                        </p>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <>
+                        <h3 className="search-title">
+                          Find Your Furry Soulmate
+                        </h3>
+                        <p className="search-subtitle">
+                          Discover amazing dogs ready to be your perfect adventure buddy
+                        </p>
+                      </>
+                    );
+                  }
+                })()}
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
                   {/* Role-specific actions */}
