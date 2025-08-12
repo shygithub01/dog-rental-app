@@ -659,7 +659,7 @@ function AppContent() {
             )}
           </div>
 
-          {/* Search/Action Card */}
+          {/* Search/Action Card - Consolidated */}
           <div className="search-card slide-up">
             {user ? (
               <>
@@ -671,7 +671,7 @@ function AppContent() {
                 </p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                  {/* Only show "Add My Dog" for owners, not for renters */}
+                  {/* Only show "Add New Dog" for owners, not for renters */}
                   {(() => {
                     // Temporary fix for Lucy - ensure she gets renter role
                     let currentUserRole = userProfile?.role || 'owner';
@@ -686,7 +686,7 @@ function AppContent() {
                           className="btn-primary"
                           style={{ width: '100%' }}
                         >
-                          🐕 Add My Dog
+                          🐕 Add New Dog
                         </button>
                       );
                     }
@@ -699,6 +699,18 @@ function AppContent() {
                     style={{ width: '100%' }}
                   >
                     📋 My Requests
+                  </button>
+                  
+                  <button
+                    onClick={() => setShowUserProfile(true)}
+                    className="btn-primary"
+                    style={{ 
+                      width: '100%', 
+                      background: 'linear-gradient(135deg, #ff5a5f 0%, #e31c5f 100%)',
+                      border: 'none'
+                    }}
+                  >
+                    💰 View Earnings
                   </button>
                   
                   <button
@@ -758,17 +770,19 @@ function AppContent() {
               </>
             )}
 
-            {/* Quick Stats */}
-            <div className="quick-stats">
-              <div className="quick-stat">
-                <div className="quick-stat-number">
-                  {loading ? <span className="loading-spinner"></span> : dogs.filter(dog => dog.isAvailable).length}
+            {/* Consolidated Stats and Actions */}
+            <div className="consolidated-stats-actions">
+              <div className="stats-section">
+                <div className="stat-item">
+                  <div className="stat-number">
+                    {loading ? <span className="loading-spinner"></span> : dogs.filter(dog => dog.isAvailable).length}
+                  </div>
+                  <div className="stat-label">Available Dogs</div>
                 </div>
-                <div className="quick-stat-label">Available Dogs</div>
-              </div>
-              <div className="quick-stat">
-                <div className="quick-stat-number">{dogs.length}</div>
-                <div className="quick-stat-label">Total Dogs</div>
+                <div className="stat-item">
+                  <div className="stat-number">{dogs.length}</div>
+                  <div className="stat-label">Total Dogs</div>
+                </div>
               </div>
             </div>
           </div>
