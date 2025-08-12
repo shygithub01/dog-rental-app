@@ -32,6 +32,8 @@ function AppContent() {
   const [showMessaging, setShowMessaging] = useState(false)
   const [showMaps, setShowMaps] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showEarningsReport, setShowEarningsReport] = useState(false);
+  const [showPaymentHistory, setShowPaymentHistory] = useState(false);
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
@@ -511,6 +513,99 @@ function AppContent() {
     )
   }
 
+  if (showEarningsReport) {
+    return (
+      <div className="dashboard-section">
+        <div className="section-container">
+          <div className="card card-elevated" style={{ maxWidth: '800px', margin: '0 auto' }}>
+            {/* Form Header */}
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '40px',
+              paddingBottom: '24px',
+              borderBottom: '1px solid #f1f5f9'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '16px' }}>💰</div>
+              <h2 className="section-title" style={{ marginBottom: '8px' }}>
+                Earnings Report
+              </h2>
+              <p className="section-subtitle" style={{ margin: 0 }}>
+                Your complete earnings breakdown and financial overview
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+              <button
+                onClick={() => setShowEarningsReport(false)}
+                className="btn-secondary"
+              >
+                ← Back to Dashboard
+              </button>
+            </div>
+
+            {/* This will render the earnings content from OwnerDashboard */}
+            <OwnerDashboard
+              dogs={dogs}
+              onAddDog={() => setShowAddDog(true)}
+              onEditDog={handleEditDog}
+              onDeleteDog={handleDeleteDog}
+              onViewRequests={() => setShowApprovalPanel(true)}
+              onViewEarnings={() => setShowUserProfile(true)}
+              user={userProfile}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (showPaymentHistory) {
+    return (
+      <div className="dashboard-section">
+        <div className="section-container">
+          <div className="card card-elevated" style={{ maxWidth: '800px', margin: '0 auto' }}>
+            {/* Form Header */}
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '40px',
+              paddingBottom: '24px',
+              borderBottom: '1px solid #f1f5f9'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '16px' }}>💳</div>
+              <h2 className="section-title" style={{ marginBottom: '8px' }}>
+                Payment History
+              </h2>
+              <p className="section-subtitle" style={{ margin: 0 }}>
+                Your complete rental payment history and expense overview
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+              <button
+                onClick={() => setShowPaymentHistory(false)}
+                className="btn-secondary"
+              >
+                ← Back to Dashboard
+              </button>
+            </div>
+
+            {/* This will render the rental history content from RenterDashboard */}
+            <RenterDashboard
+              dogs={dogs}
+              onBrowseDogs={() => setShowMaps(true)}
+              onViewMyRentals={() => setShowUserProfile(true)}
+              onViewFavorites={() => setShowUserProfile(true)}
+              onRentDog={handleRentDog}
+              onMessageDogOwner={handleMessageDogOwner}
+              onViewPendingRequests={() => setShowRenterPendingRequests(true)}
+              user={userProfile}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: 'white' }}>
       {/* Modern Header */}
@@ -558,6 +653,40 @@ function AppContent() {
                       >
                         👤 Profile
                       </button>
+                      
+                      {/* Role-specific Financial Reports */}
+                      {(() => {
+                        let currentUserRole = userProfile?.role || 'owner';
+                        if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
+                          currentUserRole = 'renter';
+                        }
+                        
+                        if (currentUserRole === 'owner') {
+                          return (
+                            <button
+                              onClick={() => {
+                                setShowEarningsReport(true);
+                                setShowUserDropdown(false);
+                              }}
+                              className="dropdown-item"
+                            >
+                              💰 Earnings Report
+                            </button>
+                          );
+                        } else {
+                          return (
+                            <button
+                              onClick={() => {
+                                setShowPaymentHistory(true);
+                                setShowUserDropdown(false);
+                              }}
+                              className="dropdown-item"
+                            >
+                              💳 Payment History
+                            </button>
+                          );
+                        }
+                      })()}
                       
                       <button
                         onClick={() => {
@@ -815,21 +944,6 @@ function AppContent() {
               </>
             )}
 
-            {/* Consolidated Stats and Actions */}
-            <div className="consolidated-stats-actions">
-              <div className="stats-section">
-                <div className="stat-item">
-                  <div className="stat-number">
-                    {loading ? <span className="loading-spinner"></span> : dogs.filter(dog => dog.isAvailable).length}
-                  </div>
-                  <div className="stat-label">Available Dogs</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">{dogs.length}</div>
-                  <div className="stat-label">Total Dogs</div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
