@@ -106,7 +106,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
             fontWeight: 'bold',
             lineHeight: '1.2'
           }}>
-            Manage Your Dogs
+            My Furry Entrepreneurs
           </h1>
           <p style={{
             fontSize: '1.3rem',
