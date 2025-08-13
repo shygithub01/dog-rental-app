@@ -376,13 +376,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
   };
 
   const updateAllUserSafetyStatus = async () => {
+    console.log('🔄 Starting safety status update for all users...');
     const safetyStatus: {[key: string]: boolean} = {};
     
     for (const user of users) {
+      console.log(`🔍 Checking safety for user: ${user.displayName || user.email} (${user.id})`);
       const isSafe = await checkUserDeletionSafety(user.id);
       safetyStatus[user.id] = isSafe;
+      console.log(`✅ User ${user.displayName || user.email}: ${isSafe ? 'SAFE' : 'UNSAFE'} to delete`);
     }
     
+    console.log('📊 Final safety status:', safetyStatus);
     setUserSafetyStatus(safetyStatus);
   };
 
@@ -820,7 +824,25 @@ If the reset button above doesn't work, use these commands in Firebase Console:
 
         {activeTab === 'users' && (
           <div>
-            <h2 style={{ marginBottom: '20px', color: '#2d3748' }}>User Management</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0, color: '#2d3748' }}>User Management</h2>
+              <button
+                onClick={updateAllUserSafetyStatus}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#4299e1',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  fontWeight: 'bold'
+                }}
+                title="Refresh safety status for all users"
+              >
+                🔄 Refresh Safety Status
+              </button>
+            </div>
             <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
               {users.map(user => (
                 <div key={user.id} style={{
@@ -843,6 +865,10 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                     <p style={{ margin: 0, color: '#718096', fontSize: '12px' }}>
                       {user.email}
                     </p>
+                    <div style={{ marginTop: '5px', fontSize: '11px', color: '#718096' }}>
+                      Safety Status: {userSafetyStatus[user.id] === undefined ? '⏳ Loading...' : 
+                                    userSafetyStatus[user.id] === true ? '✅ Safe to delete' : '❌ Unsafe to delete'}
+                    </div>
                     {userSafetyStatus[user.id] === false && (
                       <div style={{
                         marginTop: '8px',
