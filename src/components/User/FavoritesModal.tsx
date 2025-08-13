@@ -32,19 +32,28 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
 
   const loadFavoriteDogs = async () => {
     try {
+      console.log('🔍 DEBUG: Loading favorites for user:', currentUserId);
+      
       // Get user's favorite dog IDs
       const userRef = doc(db, 'users', currentUserId);
       const userDoc = await getDocs(query(collection(db, 'users'), where('id', '==', currentUserId)));
       
+      console.log('🔍 DEBUG: User query result:', userDoc.empty ? 'empty' : 'found', userDoc.size, 'documents');
+      
       if (userDoc.empty) {
+        console.log('🔍 DEBUG: No user document found');
         setLoading(false);
         return;
       }
 
       const userData = userDoc.docs[0].data();
       const favoriteDogIds = userData.favoriteDogs || [];
+      
+      console.log('🔍 DEBUG: User data:', userData);
+      console.log('🔍 DEBUG: Favorite dog IDs:', favoriteDogIds);
 
       if (favoriteDogIds.length === 0) {
+        console.log('🔍 DEBUG: No favorite dogs found');
         setFavoriteDogs([]);
         setLoading(false);
         return;
@@ -54,11 +63,14 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
       const dogsQuery = query(collection(db, 'dogs'), where('id', 'in', favoriteDogIds));
       const dogsSnapshot = await getDocs(dogsQuery);
       
+      console.log('🔍 DEBUG: Dogs query result:', dogsSnapshot.size, 'dogs found');
+      
       const dogs = dogsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as Dog[];
 
+      console.log('🔍 DEBUG: Final dogs array:', dogs);
       setFavoriteDogs(dogs);
     } catch (error) {
       console.error('Error loading favorite dogs:', error);

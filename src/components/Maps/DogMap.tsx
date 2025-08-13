@@ -103,6 +103,8 @@ const DogMap: React.FC<DogMapProps> = ({
 
   const toggleFavorite = async (dogId: string) => {
     try {
+      console.log('🔍 DEBUG: Toggling favorite for dog:', dogId, 'user:', currentUserId);
+      
       if (!currentUserId) return;
       
       setFavoritesLoading(prev => new Set(prev).add(dogId));
@@ -110,8 +112,12 @@ const DogMap: React.FC<DogMapProps> = ({
       const userRef = doc(db, 'users', currentUserId);
       const isFavorite = favorites.has(dogId);
       
+      console.log('🔍 DEBUG: Current favorites state:', Array.from(favorites));
+      console.log('🔍 DEBUG: Is favorite:', isFavorite);
+      
       if (isFavorite) {
         // Remove from favorites
+        console.log('🔍 DEBUG: Removing from favorites');
         await updateDoc(userRef, {
           favoriteDogs: arrayRemove(dogId)
         });
@@ -120,12 +126,15 @@ const DogMap: React.FC<DogMapProps> = ({
           newSet.delete(dogId);
           return newSet;
         });
+        console.log('🔍 DEBUG: Removed from favorites');
       } else {
         // Add to favorites
+        console.log('🔍 DEBUG: Adding to favorites');
         await updateDoc(userRef, {
           favoriteDogs: arrayUnion(dogId)
         });
         setFavorites(prev => new Set(prev).add(dogId));
+        console.log('🔍 DEBUG: Added to favorites');
       }
     } catch (error) {
       console.error('Error updating favorites:', error);
