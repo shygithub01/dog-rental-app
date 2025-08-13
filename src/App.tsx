@@ -254,13 +254,20 @@ function AppContent() {
 
   // Function to fix user role to owner (for development)
   const fixUserRoleToOwner = async () => {
-    if (!user?.uid) return;
+    if (!user?.uid) {
+      console.log('🔧 DEBUG: No user.uid available for role fix');
+      return;
+    }
     
     try {
+      console.log('🔧 DEBUG: Starting role fix for user:', user.uid);
       const userRef = doc(db, 'users', user.uid);
+      
+      console.log('🔧 DEBUG: About to update document with role: owner');
       await updateDoc(userRef, { 
         role: 'owner'
       });
+      console.log('🔧 DEBUG: Database update completed successfully');
       
       // Update local state
       if (userProfile) {
@@ -270,11 +277,18 @@ function AppContent() {
           role: 'owner'
         });
         console.log('🔧 DEBUG: userProfile role updated to owner');
+      } else {
+        console.log('🔧 DEBUG: No userProfile available for local state update');
       }
       
-      console.log('User role fixed to owner');
+      console.log('✅ User role fixed to owner successfully');
     } catch (error) {
-      console.error('Error fixing user role:', error);
+      console.error('❌ Error fixing user role:', error);
+      console.error('❌ Error details:', {
+        message: (error as any)?.message,
+        code: (error as any)?.code,
+        stack: (error as any)?.stack
+      });
     }
   };
 
