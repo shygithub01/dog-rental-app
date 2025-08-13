@@ -51,7 +51,8 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
     availableDogs: availableDogs.length,
     requestedDogs: requestedDogs.length,
     rentedDogs: rentedDogs.length,
-    allDogs: dogs.map(dog => ({ id: dog.id, name: dog.name, ownerId: dog.ownerId, status: dog.status }))
+    allDogs: dogs.map(dog => ({ id: dog.id, name: dog.name, ownerId: dog.ownerId, status: dog.status })),
+    myDogsDetails: myDogs.map(dog => ({ id: dog.id, name: dog.name, ownerId: dog.ownerId, status: dog.status }))
   });
 
   // Fetch user's rentals from the rentals collection

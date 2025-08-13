@@ -274,7 +274,8 @@ function AppContent() {
         id: dog.id,
         name: dog.name,
         ownerId: dog.ownerId,
-        hasOwnerId: !!dog.ownerId
+        hasOwnerId: !!dog.ownerId,
+        fullDog: dog // Show the complete dog object
       })))
       
       console.log('About to setDogs...')
