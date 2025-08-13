@@ -214,6 +214,12 @@ function AppContent() {
 
         await updateDoc(userRef, updatedProfile);
         setUserProfile(updatedProfile);
+        
+        // Fix role if it's wrong (for development)
+        if (userData.role === 'renter') {
+          console.log('🔧 Auto-fixing user role from renter to owner...');
+          await fixUserRoleToOwner();
+        }
       }
     } catch (error) {
       console.error('Error creating/updating user profile:', error);
@@ -243,6 +249,30 @@ function AppContent() {
       console.log('User role updated to admin');
     } catch (error) {
       console.error('Error updating user role:', error);
+    }
+  };
+
+  // Function to fix user role to owner (for development)
+  const fixUserRoleToOwner = async () => {
+    if (!user?.uid) return;
+    
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { 
+        role: 'owner'
+      });
+      
+      // Update local state
+      if (userProfile) {
+        setUserProfile({
+          ...userProfile,
+          role: 'owner'
+        });
+      }
+      
+      console.log('User role fixed to owner');
+    } catch (error) {
+      console.error('Error fixing user role:', error);
     }
   };
 
