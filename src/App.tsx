@@ -10,6 +10,7 @@ import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
 import RenterPendingRequests from './components/Rentals/RenterPendingRequests'
 import NotificationBell from './components/Notifications/NotificationBell'
 import UserProfile from './components/User/UserProfile'
+import FavoritesModal from './components/User/FavoritesModal'
 import MessagingCenter from './components/Messaging/MessagingCenter'
 import MapsView from './components/Maps/MapsView'
 import OwnerDashboard from './components/Dashboard/OwnerDashboard'
@@ -31,6 +32,7 @@ function AppContent() {
   const [showApprovalPanel, setShowApprovalPanel] = useState(false)
   const [showRenterPendingRequests, setShowRenterPendingRequests] = useState(false)
   const [showUserProfile, setShowUserProfile] = useState(false)
+  const [showFavorites, setShowFavorites] = useState(false)
   const [showMessaging, setShowMessaging] = useState(false)
   const [showMaps, setShowMaps] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -604,6 +606,15 @@ function AppContent() {
       <UserProfile
         userId={user.uid}
         onClose={() => setShowUserProfile(false)}
+      />
+    )
+  }
+
+  if (showFavorites) {
+    return (
+      <FavoritesModal
+        currentUserId={user?.uid || ''}
+        onClose={() => setShowFavorites(false)}
       />
     )
   }
@@ -1533,7 +1544,7 @@ function AppContent() {
                     dogs={dogs}
                     onBrowseDogs={() => setShowMaps(true)}
                     onViewMyRentals={() => setShowUserProfile(true)}
-                    onViewFavorites={() => setShowUserProfile(true)}
+                    onViewFavorites={() => setShowFavorites(true)}
                     onRentDog={handleRentDog}
                     onMessageDogOwner={handleMessageDogOwner}
                     onViewPendingRequests={() => setShowRenterPendingRequests(true)}
