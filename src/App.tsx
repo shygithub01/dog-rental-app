@@ -1610,17 +1610,73 @@ function AppContent() {
                   <div className="role-options">
                     <button
                       onClick={() => setSelectedRole('renter')}
-                      className={`role-option ${selectedRole === 'renter' ? 'selected' : ''}`}
+                      style={{
+                        width: '100%',
+                        padding: '15px 20px',
+                        backgroundColor: selectedRole === 'renter' ? '#38a169' : '#ffffff',
+                        color: selectedRole === 'renter' ? '#ffffff' : '#38a169',
+                        border: '2px solid #38a169',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
+                        transition: 'all 0.3s ease',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'renter') {
+                          e.currentTarget.style.backgroundColor = '#38a169';
+                          e.currentTarget.style.color = '#ffffff';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'renter') {
+                          e.currentTarget.style.backgroundColor = '#ffffff';
+                          e.currentTarget.style.color = '#38a169';
+                        }
+                      }}
                     >
-                      <span className="role-option-icon">🐾</span>
+                      <span style={{ fontSize: '1.2rem' }}>🐾</span>
                       Rent dogs from others
                     </button>
                     
                     <button
                       onClick={() => setSelectedRole('owner')}
-                      className={`role-option ${selectedRole === 'owner' ? 'selected' : ''}`}
+                      style={{
+                        width: '100%',
+                        padding: '15px 20px',
+                        backgroundColor: selectedRole === 'owner' ? '#38a169' : '#ffffff',
+                        color: selectedRole === 'owner' ? '#ffffff' : '#38a169',
+                        border: '2px solid #38a169',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
+                        transition: 'all 0.3s ease',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'owner') {
+                          e.currentTarget.style.backgroundColor = '#38a169';
+                          e.currentTarget.style.color = '#ffffff';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'owner') {
+                          e.currentTarget.style.backgroundColor = '#ffffff';
+                          e.currentTarget.style.color = '#38a169';
+                        }
+                      }}
                     >
-                      <span className="role-option-icon">🏠</span>
+                      <span style={{ fontSize: '1.2rem' }}>🏠</span>
                       List my dogs for rent
                     </button>
                   </div>
@@ -1629,7 +1685,33 @@ function AppContent() {
                 <button
                   onClick={handleGoogleSignIn}
                   disabled={!selectedRole}
-                  className="google-signin-btn"
+                  style={{
+                    width: '100%',
+                    padding: '15px 20px',
+                    backgroundColor: selectedRole ? '#38a169' : '#cbd5e0',
+                    color: '#ffffff',
+                    border: '2px solid #38a169',
+                    borderRadius: '10px',
+                    cursor: selectedRole ? 'pointer' : 'not-allowed',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    marginTop: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseOver={(e) => {
+                    if (selectedRole) {
+                      e.currentTarget.style.backgroundColor = '#2f855a';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (selectedRole) {
+                      e.currentTarget.style.backgroundColor = '#38a169';
+                    }
+                  }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
