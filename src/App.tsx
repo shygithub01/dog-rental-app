@@ -217,8 +217,14 @@ function AppContent() {
         
         // Fix role if it's wrong (for development)
         if (userData.role === 'renter') {
-          console.log('🔧 Auto-fixing user role from renter to owner...');
-          await fixUserRoleToOwner();
+          // Only auto-fix if this user should actually be an owner
+          // Don't auto-fix legitimate renters like Lucy
+          if (!userData.email?.toLowerCase().includes('lucy') && !userData.displayName?.toLowerCase().includes('lucy')) {
+            console.log('🔧 Auto-fixing user role from renter to owner...');
+            await fixUserRoleToOwner();
+          } else {
+            console.log('🔍 DEBUG: Lucy detected, keeping as renter (no auto-fix needed)');
+          }
         }
       }
     } catch (error) {
@@ -1334,22 +1340,7 @@ function AppContent() {
                         </button>
                       )}
 
-                      {/* Force Fix Role Button (for development) */}
-                      {userProfile?.role === 'renter' && (
-                        <button
-                          onClick={async () => {
-                            if (window.confirm('🔧 Force fix user role to owner?')) {
-                              await fixUserRoleToOwner();
-                              window.location.reload(); // Force refresh after role fix
-                            }
-                            setShowUserDropdown(false);
-                          }}
-                          className="dropdown-item"
-                          style={{ color: '#10b981' }}
-                        >
-                          🔧 Fix Role to Owner
-                        </button>
-                      )}
+
 
                       
 
