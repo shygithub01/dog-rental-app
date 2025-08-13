@@ -1429,7 +1429,7 @@ function AppContent() {
                             📅 My Rentals
                           </button>
                           <button
-                            onClick={() => setShowUserProfile(true)}
+                            onClick={() => setShowFavorites(true)}
                             className="btn-primary"
                             style={{ 
                               width: '100%', 
