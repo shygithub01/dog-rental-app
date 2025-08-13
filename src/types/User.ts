@@ -1,4 +1,4 @@
-export type UserRole = 'owner' | 'renter';
+export type UserRole = 'owner' | 'renter' | 'admin';
 
 export interface User {
   id: string;
@@ -18,6 +18,7 @@ export interface User {
   totalEarnings: number;
   preferences: UserPreferences;
   stats: UserStats;
+  isAdmin?: boolean; // Alternative admin flag
 }
 
 export interface UserPreferences {

@@ -14,8 +14,10 @@ import MessagingCenter from './components/Messaging/MessagingCenter'
 import MapsView from './components/Maps/MapsView'
 import OwnerDashboard from './components/Dashboard/OwnerDashboard'
 import RenterDashboard from './components/Dashboard/RenterDashboard'
+import HybridDashboard from './components/Dashboard/HybridDashboard'
+import AdminDashboard from './components/Admin/AdminDashboard'
 import { cleanupOrphanedData } from './utils/dataCleanup'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDocs, query, where, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { useNotificationService } from './services/notificationService'
 import { useUserService } from './services/userService'
@@ -36,6 +38,7 @@ function AppContent() {
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
   const [userRentals, setUserRentals] = useState<any[]>([]);
   const [ownerEarnings, setOwnerEarnings] = useState<any[]>([]);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [editingDog, setEditingDog] = useState<any>(null)
   const [rentingDog, setRentingDog] = useState<any>(null)
   const [dogs, setDogs] = useState<any[]>([])
@@ -150,57 +153,92 @@ function AppContent() {
 
   const createOrUpdateUserProfile = async (user: any) => {
     try {
-      console.log('Creating/updating user profile for:', user.uid);
-      
-      // Check if user profile exists
-      const existingUser = await userService.getUser(user.uid);
-      console.log('Existing user found:', existingUser);
-      
-      if (!existingUser) {
-        // Create new user profile with selected role
-        console.log('Creating new user profile with role:', selectedRole);
-        await userService.createUser(user.uid, {
+      const userRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        // Create new user profile
+        const newUserProfile = {
+          id: user.uid,
           email: user.email,
-          displayName: user.displayName || user.email,
+          displayName: user.displayName,
           photoURL: user.photoURL,
-          phoneNumber: user.phoneNumber,
-          location: '',
-          bio: '',
-          role: selectedRole || 'owner'
-        });
-        console.log('New user profile created successfully!');
-        
-        // Set user profile with the new role
-        setUserProfile({
-          ...user,
-          role: selectedRole
-        });
+          role: 'renter' as const,
+          joinDate: new Date(),
+          lastActive: new Date(),
+          isVerified: false,
+          rating: 0,
+          totalReviews: 0,
+          totalRentals: 0,
+          totalEarnings: 0,
+          preferences: {
+            emailNotifications: true,
+            pushNotifications: true,
+            rentalRequests: true,
+            rentalUpdates: true,
+            reminders: true,
+            systemUpdates: true,
+            maxRentalDistance: 25,
+            preferredDogSizes: ['small', 'medium', 'large'],
+            preferredBreeds: []
+          },
+          stats: {
+            dogsOwned: 0,
+            dogsRented: 0,
+            totalRentals: 0,
+            completedRentals: 0,
+            cancelledRentals: 0,
+            averageRating: 0,
+            totalEarnings: 0,
+            totalSpent: 0,
+            memberSince: new Date(),
+            lastRentalDate: null
+          }
+        };
+
+        await setDoc(userRef, newUserProfile);
+        setUserProfile(newUserProfile);
       } else {
-        // Check if existing user has a proper role set
-        const userRole = existingUser.role || selectedRole;
-        console.log('Existing user role:', existingUser.role, 'Selected role:', selectedRole, 'Using role:', userRole);
-        
-        // Update existing user profile with latest info and ensure role is set
-        console.log('Updating existing user profile...');
-        await userService.updateUser(user.uid, {
-          displayName: user.displayName || user.email,
-          photoURL: user.photoURL,
-          email: user.email,
-          role: userRole || 'owner' // Ensure role is set
-        });
-        console.log('User profile updated successfully!');
-        
-        // Set user profile with the correct role
-        setUserProfile({
-          ...user,
-          role: userRole
-        });
+        // Update existing user profile
+        const userData = userDoc.data();
+        const updatedProfile = {
+          ...userData,
+          lastActive: new Date()
+        };
+
+        await updateDoc(userRef, updatedProfile);
+        setUserProfile(updatedProfile);
       }
     } catch (error) {
-      console.error('Error in createOrUpdateUserProfile:', error);
-      throw error;
+      console.error('Error creating/updating user profile:', error);
     }
-  }
+  };
+
+  // Function to make current user an admin (for development)
+  const makeCurrentUserAdmin = async () => {
+    if (!user?.uid) return;
+    
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { 
+        role: 'admin',
+        isAdmin: true 
+      });
+      
+      // Update local state
+      if (userProfile) {
+        setUserProfile({
+          ...userProfile,
+          role: 'admin',
+          isAdmin: true
+        });
+      }
+      
+      console.log('User role updated to admin');
+    } catch (error) {
+      console.error('Error updating user role:', error);
+    }
+  };
 
   const loadDogsWithUser = async (currentUser: any) => {
     console.log('=== loadDogsWithUser START ===')
@@ -584,6 +622,12 @@ function AppContent() {
         />
       </div>
     )
+  }
+
+  if (showAdminPanel) {
+    return (
+      <AdminDashboard onClose={() => setShowAdminPanel(false)} />
+    );
   }
 
   if (showEarningsReport) {
@@ -1174,6 +1218,33 @@ function AppContent() {
                         🗺️ Maps
                       </button>
                       
+                      {/* Admin Panel Option */}
+                      {userProfile?.role === 'admin' && (
+                        <button
+                          onClick={() => {
+                            setShowAdminPanel(true);
+                            setShowUserDropdown(false);
+                          }}
+                          className="dropdown-item"
+                        >
+                          ⚙️ Admin Panel
+                        </button>
+                      )}
+
+                      {/* Temporary Admin Button (remove in production) */}
+                      {userProfile?.role !== 'admin' && (
+                        <button
+                          onClick={() => {
+                            makeCurrentUserAdmin();
+                            setShowUserDropdown(false);
+                          }}
+                          className="dropdown-item"
+                          style={{ color: '#ed8936' }}
+                        >
+                          🔑 Make Admin (Dev)
+                        </button>
+                      )}
+
                       <div className="dropdown-divider" />
                       
                       <button
