@@ -1318,6 +1318,25 @@ function AppContent() {
                         </button>
                       )}
 
+                      {/* Force Fix Role Button (for development) */}
+                      {userProfile?.role === 'renter' && (
+                        <button
+                          onClick={async () => {
+                            if (window.confirm('🔧 Force fix user role to owner?')) {
+                              await fixUserRoleToOwner();
+                              window.location.reload(); // Force refresh after role fix
+                            }
+                            setShowUserDropdown(false);
+                          }}
+                          className="dropdown-item"
+                          style={{ color: '#10b981' }}
+                        >
+                          🔧 Fix Role to Owner
+                        </button>
+                      )}
+
+                      
+
                       <div className="dropdown-divider" />
                       
                       <button
