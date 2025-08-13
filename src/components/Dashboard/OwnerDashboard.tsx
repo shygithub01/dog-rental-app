@@ -38,7 +38,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
   const [myRentals, setMyRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const myDogs = dogs.filter(dog => dog.ownerId === user?.uid);
+  const myDogs = dogs.filter(dog => dog.ownerId === user?.id);
   const availableDogs = myDogs.filter(dog => dog.isAvailable && dog.status === 'available');
   const requestedDogs = myDogs.filter(dog => !dog.isAvailable && dog.status === 'requested');
   const rentedDogs = myDogs.filter(dog => !dog.isAvailable && dog.status === 'rented');
@@ -46,7 +46,9 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
   // Debug logging
   console.log('🔍 DEBUG OwnerDashboard:', {
     totalDogs: dogs.length,
+    userId: user?.id,
     userUid: user?.uid,
+    user: user,
     myDogs: myDogs.length,
     availableDogs: availableDogs.length,
     requestedDogs: requestedDogs.length,

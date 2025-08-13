@@ -197,12 +197,16 @@ function AppContent() {
         };
 
         await setDoc(userRef, newUserProfile);
-        setUserProfile(newUserProfile);
+        setUserProfile({
+          ...newUserProfile,
+          id: user.uid // Ensure uid is included
+        });
       } else {
         // Update existing user profile
         const userData = userDoc.data();
         const updatedProfile = {
           ...userData,
+          id: user.uid, // Ensure uid is included
           lastActive: new Date()
         };
 
