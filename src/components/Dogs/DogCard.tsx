@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
-import { doc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, deleteDoc, collection, query, where, getDocs, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 interface Dog {
   id: string;
@@ -32,8 +32,59 @@ interface DogCardProps {
 const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMessage, currentUserId }) => {
   const [loading, setLoading] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
   const { db } = useFirebase();
   const isOwner = dog.ownerId === currentUserId;
+
+  // Check if dog is in user's favorites
+  useEffect(() => {
+    const checkIfFavorite = async () => {
+      if (!currentUserId) return;
+      
+      try {
+        const userRef = doc(db, 'users', currentUserId);
+        const userDoc = await getDocs(query(collection(db, 'users'), where('id', '==', currentUserId)));
+        
+        if (!userDoc.empty) {
+          const userData = userDoc.docs[0].data();
+          const favoriteDogIds = userData.favoriteDogs || [];
+          setIsFavorite(favoriteDogIds.includes(dog.id));
+        }
+      } catch (error) {
+        console.error('Error checking favorites:', error);
+      }
+    };
+
+    checkIfFavorite();
+  }, [currentUserId, dog.id, db]);
+
+  const toggleFavorite = async () => {
+    if (!currentUserId) return;
+    
+    setFavoritesLoading(true);
+    try {
+      const userRef = doc(db, 'users', currentUserId);
+      
+      if (isFavorite) {
+        // Remove from favorites
+        await updateDoc(userRef, {
+          favoriteDogs: arrayRemove(dog.id)
+        });
+        setIsFavorite(false);
+      } else {
+        // Add to favorites
+        await updateDoc(userRef, {
+          favoriteDogs: arrayUnion(dog.id)
+        });
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    } finally {
+      setFavoritesLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     // Check if dog has pending requests or is rented
@@ -343,6 +394,33 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 title="Message the dog owner"
               >
                 💬 Message
+              </button>
+              <button
+                onClick={toggleFavorite}
+                disabled={favoritesLoading}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: isFavorite ? '#e53e3e' : '#ed8936',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: favoritesLoading ? 'not-allowed' : 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '0.9rem',
+                  transition: 'all 0.2s'
+                }}
+                className="mobile-action-btn"
+                onMouseOver={(e) => {
+                  if (!favoritesLoading) {
+                    e.currentTarget.style.backgroundColor = isFavorite ? '#c53030' : '#dd6b20';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = isFavorite ? '#e53e3e' : '#ed8936';
+                }}
+                title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                {favoritesLoading ? '⏳' : (isFavorite ? '❤️' : '🤍')}
               </button>
               <button 
                 onClick={() => {
