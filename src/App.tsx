@@ -269,6 +269,14 @@ function AppContent() {
       console.log('Dogs loaded:', allDogs)
       console.log('Number of dogs:', allDogs.length)
       
+      // Debug: Check ownerId values
+      console.log('🔍 DEBUG Dog ownerIds:', allDogs.map((dog: any) => ({
+        id: dog.id,
+        name: dog.name,
+        ownerId: dog.ownerId,
+        hasOwnerId: !!dog.ownerId
+      })))
+      
       console.log('About to setDogs...')
       setDogs(allDogs)
       console.log('setDogs called')
