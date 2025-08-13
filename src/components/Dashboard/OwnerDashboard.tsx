@@ -106,13 +106,12 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
       {/* Hero Section */}
       <div style={{
         background: 'transparent',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
         minHeight: '400px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative'
+        position: 'relative',
+        padding: '40px 20px'
       }}>
         <div style={{
           maxWidth: '1200px',
@@ -125,7 +124,8 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
             fontSize: '3.5rem',
             margin: '0 0 20px 0',
             fontWeight: 'bold',
-            lineHeight: '1.2'
+            lineHeight: '1.2',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.7)'
           }}>
             My Furry Entrepreneurs
           </h1>
@@ -133,7 +133,8 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
             fontSize: '1.3rem',
             margin: '0 0 30px 0',
             lineHeight: '1.6',
-            opacity: 0.9
+            opacity: 0.9,
+            textShadow: '1px 1px 2px rgba(0,0,0,0.7)'
           }}>
             Share your beloved dogs with the community and earn money
           </p>
@@ -141,7 +142,14 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
       </div>
 
       {/* Main Dashboard Content */}
-      <div style={{ background: 'white', padding: '60px 40px' }}>
+      <div style={{ 
+        background: 'rgba(255, 255, 255, 0.95)', 
+        padding: '60px 40px',
+        backdropFilter: 'blur(10px)',
+        margin: '0 20px 20px 20px',
+        borderRadius: '20px',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+      }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* My Dogs Section */}
           <div>
