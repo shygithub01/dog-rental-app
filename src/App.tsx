@@ -1294,6 +1294,21 @@ function AppContent() {
                         onClick={() => {
                           auth.signOut();
                           setShowUserDropdown(false);
+                          setSelectedRole(null);
+                          setUserProfile(null);
+                          setDogs([]);
+                          setShowAddDog(false);
+                          setShowEditDog(false);
+                          setShowRentDog(false);
+                          setShowApprovalPanel(false);
+                          setShowRenterPendingRequests(false);
+                          setShowUserProfile(false);
+                          setShowFavorites(false);
+                          setShowMessaging(false);
+                          setShowMaps(false);
+                          setShowEarningsReport(false);
+                          setShowPaymentHistory(false);
+                          setShowAdminPanel(false);
                         }}
                         className="dropdown-item danger"
                       >
@@ -1688,8 +1703,8 @@ function AppContent() {
                   style={{
                     width: '100%',
                     padding: '15px 20px',
-                    backgroundColor: selectedRole ? '#38a169' : '#cbd5e0',
-                    color: '#ffffff',
+                    backgroundColor: selectedRole ? '#38a169' : '#e2e8f0',
+                    color: selectedRole ? '#ffffff' : '#a0aec0',
                     border: '2px solid #38a169',
                     borderRadius: '10px',
                     cursor: selectedRole ? 'pointer' : 'not-allowed',
