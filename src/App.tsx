@@ -1401,15 +1401,53 @@ function AppContent() {
                         <>
                           <button
                             onClick={() => setShowAddDog(true)}
-                            className="btn-primary"
-                            style={{ width: '100%' }}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#38a169',
+                              border: '2px solid #38a169',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#38a169';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#38a169';
+                            }}
                           >
                             🐕 Add New Dog
                           </button>
                           <button
                             onClick={() => setShowApprovalPanel(true)}
-                            className="btn-secondary"
-                            style={{ width: '100%' }}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#38a169',
+                              border: '2px solid #38a169',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#38a169';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#38a169';
+                            }}
                           >
                             📋 My Requests
                           </button>
@@ -1421,33 +1459,105 @@ function AppContent() {
                         <>
                           <button
                             onClick={() => setShowMaps(true)}
-                            className="btn-primary"
-                            style={{ width: '100%' }}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#38a169',
+                              border: '2px solid #38a169',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#38a169';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#38a169';
+                            }}
                           >
                             🔍 Browse All Dogs
                           </button>
                           <button
                             onClick={() => setShowRenterPendingRequests(true)}
-                            className="btn-secondary"
-                            style={{ width: '100%' }}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#38a169',
+                              border: '2px solid #38a169',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#38a169';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#38a169';
+                            }}
                           >
                             📅 My Rentals
                           </button>
                           <button
                             onClick={() => setShowFavorites(true)}
-                            className="btn-primary"
-                            style={{ 
-                              width: '100%', 
-                              background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
-                              border: 'none'
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#38a169',
+                              border: '2px solid #38a169',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#38a169';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#38a169';
                             }}
                           >
                             ❤️ Favorites
                           </button>
                           <button
                             onClick={() => setShowApprovalPanel(true)}
-                            className="btn-outline"
-                            style={{ width: '100%' }}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#38a169',
+                              border: '2px solid #38a169',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#38a169';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#38a169';
+                            }}
                           >
                             📋 Pending Requests
                           </button>
@@ -1458,8 +1568,27 @@ function AppContent() {
                   
                   <button
                     onClick={handleDataCleanup}
-                    className="btn-outline"
-                    style={{ width: '100%' }}
+                    style={{
+                      width: '100%',
+                      padding: '15px 20px',
+                      backgroundColor: '#ffffff',
+                      color: '#38a169',
+                      border: '2px solid #38a169',
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease',
+                      marginBottom: '10px'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor = '#38a169';
+                      e.currentTarget.style.color = '#ffffff';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor = '#ffffff';
+                      e.currentTarget.style.color = '#38a169';
+                    }}
                   >
                     🧹 Clean Data
                   </button>
