@@ -264,10 +264,12 @@ function AppContent() {
       
       // Update local state
       if (userProfile) {
+        console.log('🔧 DEBUG: Updating userProfile role from', userProfile.role, 'to owner');
         setUserProfile({
           ...userProfile,
           role: 'owner'
         });
+        console.log('🔧 DEBUG: userProfile role updated to owner');
       }
       
       console.log('User role fixed to owner');
@@ -1426,6 +1428,15 @@ function AppContent() {
                     currentUserRole = 'renter';
                   }
                   
+                  // Debug logging for role detection
+                  console.log('🔍 DEBUG: Role detection in Action Card:', {
+                    userProfile: userProfile,
+                    detectedRole: currentUserRole,
+                    userEmail: userProfile?.email,
+                    userDisplayName: userProfile?.displayName,
+                    timestamp: new Date().toISOString()
+                  });
+                  
                   if (currentUserRole === 'owner') {
                     return (
                       <>
@@ -1458,6 +1469,15 @@ function AppContent() {
                     if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
                       currentUserRole = 'renter';
                     }
+                    
+                    // Debug logging for role detection
+                    console.log('🔍 DEBUG: Role detection in Action Card:', {
+                      userProfile: userProfile,
+                      detectedRole: currentUserRole,
+                      userEmail: userProfile?.email,
+                      userDisplayName: userProfile?.displayName,
+                      timestamp: new Date().toISOString()
+                    });
                     
                     if (currentUserRole === 'owner') {
                       // OWNER ACTIONS
