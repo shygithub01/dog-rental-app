@@ -124,16 +124,6 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* My Dogs Section */}
           <div>
-            <h2 style={{
-              fontSize: '2.5rem',
-              color: '#2d3748',
-              margin: '0 0 30px 0',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}>
-              🐕 My Furry Entrepreneurs
-            </h2>
-            
             {myDogs.length === 0 ? (
               <div style={{
                 textAlign: 'center',
