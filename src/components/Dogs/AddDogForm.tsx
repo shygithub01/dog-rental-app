@@ -92,6 +92,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
         ownerId: auth.currentUser.uid,
         ownerName: auth.currentUser.displayName || auth.currentUser.email || 'Unknown',
         isAvailable: true,
+        status: 'available', // Add explicit status field
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now()
       });

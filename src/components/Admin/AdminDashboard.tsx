@@ -361,6 +361,49 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
     setUserSafetyStatus(safetyStatus);
   };
 
+  const fixDogStatuses = async () => {
+    if (!window.confirm('🔧 Fix all dog statuses to "available"?\n\nThis will reset any dogs with incorrect status from before the data reset.')) {
+      return;
+    }
+
+    try {
+      console.log('🔧 Starting dog status fix...');
+      const batch = writeBatch(db);
+      let fixedCount = 0;
+
+      // Get all dogs
+      const dogsSnapshot = await getDocs(collection(db, 'dogs'));
+      
+      dogsSnapshot.docs.forEach(doc => {
+        const dogData = doc.data();
+        // Fix any dogs that don't have proper status or have wrong status
+        if (dogData.status !== 'available' || !dogData.isAvailable) {
+          batch.update(doc.ref, {
+            status: 'available',
+            isAvailable: true
+          });
+          fixedCount++;
+          console.log(`🔧 Fixed dog: ${dogData.name} (${doc.id})`);
+        }
+      });
+
+      if (fixedCount > 0) {
+        await batch.commit();
+        console.log(`✅ Fixed ${fixedCount} dog statuses`);
+        alert(`🔧 Fixed ${fixedCount} dog statuses to "available"`);
+        
+        // Refresh the data
+        fetchAdminData();
+      } else {
+        console.log('ℹ️ No dog statuses needed fixing');
+        alert('ℹ️ All dog statuses are already correct');
+      }
+    } catch (error) {
+      console.error('❌ Error fixing dog statuses:', error);
+      alert(`❌ Error fixing dog statuses: ${error}`);
+    }
+  };
+
   if (loading) {
     return (
       <div style={{
@@ -564,36 +607,64 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                 <strong>⚠️ WARNING:</strong> This will permanently delete ALL data from the entire system.<br/>
                 Use only for development/testing purposes. This action cannot be undone.
               </p>
-              <button
-                onClick={resetAllData}
-                disabled={isResetting}
-                style={{
-                  padding: '15px 30px',
-                  backgroundColor: isResetting ? '#cbd5e0' : '#e53e3e',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: isResetting ? 'not-allowed' : 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isResetting) {
-                    e.currentTarget.style.backgroundColor = '#c53030';
+              <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <button
+                  onClick={resetAllData}
+                  disabled={isResetting}
+                  style={{
+                    padding: '15px 30px',
+                    backgroundColor: isResetting ? '#cbd5e0' : '#e53e3e',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '10px',
+                    cursor: isResetting ? 'not-allowed' : 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isResetting) {
+                      e.currentTarget.style.backgroundColor = '#c53030';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isResetting) {
+                      e.currentTarget.style.backgroundColor = isResetting ? '#cbd5e0' : '#e53e3e';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }
+                  }}
+                >
+                  {isResetting ? '🔄 Resetting...' : '🗑️ Reset All Data (Dev)'}
+                </button>
+                
+                <button
+                  onClick={fixDogStatuses}
+                  style={{
+                    padding: '15px 30px',
+                    backgroundColor: '#4299e1',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#3182ce';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isResetting) {
-                    e.currentTarget.style.backgroundColor = isResetting ? '#cbd5e0' : '#e53e3e';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#4299e1';
                     e.currentTarget.style.transform = 'translateY(0)';
-                  }
-                }}
-              >
-                {isResetting ? '🔄 Resetting...' : '🗑️ Reset All Data (Dev)'}
-              </button>
+                  }}
+                >
+                  🔧 Fix Dog Statuses
+                </button>
+              </div>
               {isResetting && (
                 <div style={{
                   marginTop: '15px',
