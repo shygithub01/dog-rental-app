@@ -503,41 +503,48 @@ function AppContent() {
 
   if (showApprovalPanel) {
     return (
-      <div className="dashboard-section">
-        <div className="section-container">
-          <div className="card card-elevated" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            {/* Form Header */}
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '40px',
-              paddingBottom: '24px',
-              borderBottom: '1px solid #f1f5f9'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📋</div>
-              <h2 className="section-title" style={{ marginBottom: '8px' }}>
-                Rental Request Management
-              </h2>
-              <p className="section-subtitle" style={{ margin: 0 }}>
-                Review and manage pending rental requests for your dogs
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
-              <button
-                onClick={() => setShowApprovalPanel(false)}
-                className="btn-secondary"
-              >
-                ← Back to Dashboard
-              </button>
-            </div>
-
-            <RentalApprovalPanel
-              currentUserId={user.uid}
-              onRequestUpdate={() => {
-                loadDogsWithUser(user)
-              }}
-            />
+      <div style={{
+        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '40px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div className="card card-elevated" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          {/* Form Header */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '40px',
+            paddingBottom: '24px',
+            borderBottom: '1px solid #f1f5f9'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📋</div>
+            <h2 className="section-title" style={{ marginBottom: '8px' }}>
+              Rental Request Management
+            </h2>
+            <p className="section-subtitle" style={{ margin: 0 }}>
+              Review and manage pending rental requests for your dogs
+            </p>
           </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+            <button
+              onClick={() => setShowApprovalPanel(false)}
+              className="btn-secondary"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+
+          <RentalApprovalPanel
+            currentUserId={user.uid}
+            onRequestUpdate={() => {
+              loadDogsWithUser(user)
+            }}
+          />
         </div>
       </div>
     )
@@ -545,41 +552,48 @@ function AppContent() {
 
   if (showRenterPendingRequests) {
     return (
-      <div className="dashboard-section">
-        <div className="section-container">
-          <div className="card card-elevated" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            {/* Form Header */}
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '40px',
-              paddingBottom: '24px',
-              borderBottom: '1px solid #f1f5f9'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📋</div>
-              <h2 className="section-title" style={{ marginBottom: '8px' }}>
-                Your Pending Requests
-              </h2>
-              <p className="section-subtitle" style={{ margin: 0 }}>
-                Review and manage your pending rental requests
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
-              <button
-                onClick={() => setShowRenterPendingRequests(false)}
-                className="btn-secondary"
-              >
-                ← Back to Dashboard
-              </button>
-            </div>
-
-            <RenterPendingRequests
-              currentUserId={user.uid}
-              onRequestUpdate={() => {
-                loadDogsWithUser(user)
-              }}
-            />
+      <div style={{
+        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '40px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div className="card card-elevated" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          {/* Form Header */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '40px',
+            paddingBottom: '24px',
+            borderBottom: '1px solid #f1f5f9'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📋</div>
+            <h2 className="section-title" style={{ marginBottom: '8px' }}>
+              Your Pending Requests
+            </h2>
+            <p className="section-subtitle" style={{ margin: 0 }}>
+              Review and manage your pending rental requests
+            </p>
           </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+            <button
+              onClick={() => setShowRenterPendingRequests(false)}
+              className="btn-secondary"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+
+          <RenterPendingRequests
+            currentUserId={user.uid}
+            onRequestUpdate={() => {
+              loadDogsWithUser(user)
+            }}
+          />
         </div>
       </div>
     )
