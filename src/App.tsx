@@ -552,11 +552,23 @@ function AppContent() {
         minHeight: '100vh',
         padding: '40px 20px'
       }}>
-        <MessagingCenter
-          currentUserId={user?.uid || ''}
-          currentUserName={user?.displayName || user?.email || ''}
-          onClose={() => setShowMessaging(false)}
-        />
+        <div style={{
+          maxWidth: '1000px',
+          width: '90%',
+          margin: '0 auto',
+          background: '#ffffff',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e2e8f0',
+          padding: '40px',
+          minHeight: '80vh'
+        }}>
+          <MessagingCenter
+            currentUserId={user?.uid || ''}
+            currentUserName={user?.displayName || user?.email || ''}
+            onClose={() => setShowMessaging(false)}
+          />
+        </div>
       </div>
     )
   }
@@ -570,12 +582,24 @@ function AppContent() {
         minHeight: '100vh',
         padding: '40px 20px'
       }}>
-        <MapsView
-          dogs={dogs}
-          onRentDog={handleRentDog}
-          onMessageOwner={handleMessageDogOwner}
-          onBack={() => setShowMaps(false)}
-        />
+        <div style={{
+          maxWidth: '1000px',
+          width: '90%',
+          margin: '0 auto',
+          background: '#ffffff',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e2e8f0',
+          padding: '40px',
+          minHeight: '80vh'
+        }}>
+          <MapsView
+            dogs={dogs}
+            onRentDog={handleRentDog}
+            onMessageOwner={handleMessageDogOwner}
+            onBack={() => setShowMaps(false)}
+          />
+        </div>
       </div>
     )
   }
