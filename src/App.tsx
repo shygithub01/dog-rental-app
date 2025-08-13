@@ -550,25 +550,16 @@ function AppContent() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
-        padding: '40px 20px'
+        padding: '40px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-        <div style={{
-          maxWidth: '1000px',
-          width: '90%',
-          margin: '0 auto',
-          background: '#ffffff',
-          borderRadius: '20px',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0',
-          padding: '40px',
-          minHeight: '80vh'
-        }}>
-          <MessagingCenter
-            currentUserId={user?.uid || ''}
-            currentUserName={user?.displayName || user?.email || ''}
-            onClose={() => setShowMessaging(false)}
-          />
-        </div>
+        <MessagingCenter
+          currentUserId={user?.uid || ''}
+          currentUserName={user?.displayName || user?.email || ''}
+          onClose={() => setShowMessaging(false)}
+        />
       </div>
     )
   }
@@ -580,26 +571,17 @@ function AppContent() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
-        padding: '40px 20px'
+        padding: '40px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-        <div style={{
-          maxWidth: '1000px',
-          width: '90%',
-          margin: '0 auto',
-          background: '#ffffff',
-          borderRadius: '20px',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0',
-          padding: '40px',
-          minHeight: '80vh'
-        }}>
-          <MapsView
-            dogs={dogs}
-            onRentDog={handleRentDog}
-            onMessageOwner={handleMessageDogOwner}
-            onBack={() => setShowMaps(false)}
-          />
-        </div>
+        <MapsView
+          dogs={dogs}
+          onRentDog={handleRentDog}
+          onMessageOwner={handleMessageDogOwner}
+          onBack={() => setShowMaps(false)}
+        />
       </div>
     )
   }
