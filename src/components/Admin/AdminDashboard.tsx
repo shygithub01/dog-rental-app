@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, updateDoc, doc, deleteDoc, writeBatch } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
 
 interface AdminDashboardProps {
@@ -43,6 +43,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
   const [dogs, setDogs] = useState<DogData[]>([]);
   const [rentals, setRentals] = useState<RentalData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
     fetchAdminData();
@@ -124,6 +125,138 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
       fetchAdminData();
     } catch (error) {
       console.error('Error updating dog approval:', error);
+    }
+  };
+
+  const resetAllData = async () => {
+    if (!window.confirm('⚠️ WARNING: This will DELETE ALL DATA from the entire system!\n\nThis action cannot be undone. Are you absolutely sure?')) {
+      return;
+    }
+
+    if (!window.confirm('🚨 FINAL WARNING: This will permanently delete:\n\n• All users\n• All dogs\n• All rentals\n• All rental requests\n• All messages\n• All notifications\n• All other data\n\nType "YES" to confirm:')) {
+      return;
+    }
+
+    const confirmation = prompt('Type "YES" to confirm complete data deletion:');
+    if (confirmation !== 'YES') {
+      alert('Data reset cancelled.');
+      return;
+    }
+
+    setIsResetting(true);
+    console.log('🗑️ Starting complete data reset...');
+
+    try {
+      const batch = writeBatch(db);
+      let totalDeleted = 0;
+
+      // 1. Delete all notifications
+      console.log('🗑️ Deleting notifications...');
+      const notificationsSnapshot = await getDocs(collection(db, 'notifications'));
+      notificationsSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+        totalDeleted++;
+      });
+      console.log(`✅ Deleted ${notificationsSnapshot.docs.length} notifications`);
+
+      // 2. Delete all messages
+      console.log('🗑️ Deleting messages...');
+      const messagesSnapshot = await getDocs(collection(db, 'messages'));
+      messagesSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+        totalDeleted++;
+      });
+      console.log(`✅ Deleted ${messagesSnapshot.docs.length} messages`);
+
+      // 3. Delete all rental requests
+      console.log('🗑️ Deleting rental requests...');
+      const rentalRequestsSnapshot = await getDocs(collection(db, 'rentalRequests'));
+      rentalRequestsSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+        totalDeleted++;
+      });
+      console.log(`✅ Deleted ${rentalRequestsSnapshot.docs.length} rental requests`);
+
+      // 4. Delete all rentals
+      console.log('🗑️ Deleting rentals...');
+      const rentalsSnapshot = await getDocs(collection(db, 'rentals'));
+      rentalsSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+        totalDeleted++;
+      });
+      console.log(`✅ Deleted ${rentalsSnapshot.docs.length} rentals`);
+
+      // 5. Delete all dogs
+      console.log('🗑️ Deleting dogs...');
+      const dogsSnapshot = await getDocs(collection(db, 'dogs'));
+      dogsSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+        totalDeleted++;
+      });
+      console.log(`✅ Deleted ${dogsSnapshot.docs.length} dogs`);
+
+      // 6. Delete all users (except current admin)
+      console.log('🗑️ Deleting users...');
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      usersSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+        totalDeleted++;
+      });
+      console.log(`✅ Deleted ${usersSnapshot.docs.length} users`);
+
+      // 7. Check for any other collections that might exist
+      console.log('🔍 Checking for additional collections...');
+      const additionalCollections = ['reviews', 'payments', 'bookmarks', 'favorites', 'reports'];
+      
+      for (const collectionName of additionalCollections) {
+        try {
+          const additionalSnapshot = await getDocs(collection(db, collectionName));
+          if (!additionalSnapshot.empty) {
+            console.log(`🗑️ Deleting ${collectionName}...`);
+            additionalSnapshot.docs.forEach(doc => {
+              batch.delete(doc.ref);
+              totalDeleted++;
+            });
+            console.log(`✅ Deleted ${additionalSnapshot.docs.length} ${collectionName}`);
+          }
+        } catch (error) {
+          // Collection might not exist, continue
+          console.log(`ℹ️ Collection '${collectionName}' not found or not accessible`);
+        }
+      }
+
+      // Commit all deletions
+      console.log('💾 Committing batch deletion...');
+      await batch.commit();
+      
+      console.log(`🎉 COMPLETE DATA RESET SUCCESSFUL!`);
+      console.log(`📊 Total documents deleted: ${totalDeleted}`);
+      
+      // Clear local state
+      setUsers([]);
+      setDogs([]);
+      setRentals([]);
+      setAdminStats({
+        totalUsers: 0,
+        totalDogs: 0,
+        totalRentals: 0,
+        totalEarnings: 0,
+        pendingApprovals: 0,
+        activeRentals: 0
+      });
+
+      // Show success message
+      alert(`🎉 Complete data reset successful!\n\nTotal documents deleted: ${totalDeleted}\n\nAll data has been permanently removed from the system.`);
+
+      // Force complete page refresh to clear all React state
+      console.log('🔄 Forcing complete page refresh...');
+      window.location.reload();
+
+    } catch (error) {
+      console.error('❌ Error during data reset:', error);
+      alert(`❌ Error during data reset: ${error}\n\nPlease check the console for details.`);
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -303,6 +436,72 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                 </div>
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Earnings</div>
               </div>
+            </div>
+            
+            {/* Reset All Data Button */}
+            <div style={{
+              background: '#fff5f5',
+              border: '2px solid #fed7d7',
+              borderRadius: '15px',
+              padding: '25px',
+              marginTop: '30px',
+              textAlign: 'center'
+            }}>
+              <h3 style={{
+                color: '#c53030',
+                margin: '0 0 15px 0',
+                fontSize: '1.3rem'
+              }}>
+                🗑️ Development Data Reset
+              </h3>
+              <p style={{
+                color: '#744210',
+                margin: '0 0 20px 0',
+                fontSize: '0.95rem',
+                lineHeight: '1.5'
+              }}>
+                <strong>⚠️ WARNING:</strong> This will permanently delete ALL data from the entire system.<br/>
+                Use only for development/testing purposes. This action cannot be undone.
+              </p>
+              <button
+                onClick={resetAllData}
+                disabled={isResetting}
+                style={{
+                  padding: '15px 30px',
+                  backgroundColor: isResetting ? '#cbd5e0' : '#e53e3e',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: isResetting ? 'not-allowed' : 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '1.1rem',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isResetting) {
+                    e.currentTarget.style.backgroundColor = '#c53030';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isResetting) {
+                    e.currentTarget.style.backgroundColor = isResetting ? '#cbd5e0' : '#e53e3e';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
+              >
+                {isResetting ? '🔄 Resetting...' : '🗑️ Reset All Data (Dev)'}
+              </button>
+              {isResetting && (
+                <div style={{
+                  marginTop: '15px',
+                  color: '#744210',
+                  fontSize: '0.9rem'
+                }}>
+                  Please wait while all data is being deleted...
+                </div>
+              )}
             </div>
           </div>
         )}
