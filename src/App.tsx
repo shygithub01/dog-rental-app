@@ -615,6 +615,10 @@ function AppContent() {
       <FavoritesModal
         currentUserId={user?.uid || ''}
         onClose={() => setShowFavorites(false)}
+        onBrowseDogs={() => {
+          setShowFavorites(false);
+          setShowMaps(true);
+        }}
       />
     )
   }
@@ -657,6 +661,7 @@ function AppContent() {
           onRentDog={handleRentDog}
           onMessageOwner={handleMessageDogOwner}
           onBack={() => setShowMaps(false)}
+          currentUserId={user?.uid || ''}
         />
       </div>
     )

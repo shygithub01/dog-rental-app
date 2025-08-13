@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, arrayRem
 interface FavoritesModalProps {
   currentUserId: string;
   onClose: () => void;
+  onBrowseDogs: () => void;
 }
 
 interface Dog {
@@ -20,7 +21,7 @@ interface Dog {
   isAvailable: boolean;
 }
 
-const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose }) => {
+const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose, onBrowseDogs }) => {
   const { db } = useFirebase();
   const [favoriteDogs, setFavoriteDogs] = useState<Dog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -196,7 +197,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose 
               Start browsing dogs and add your favorites by clicking the heart icon
             </p>
             <button
-              onClick={onClose}
+              onClick={onBrowseDogs}
               style={{
                 padding: '12px 24px',
                 backgroundColor: '#667eea',

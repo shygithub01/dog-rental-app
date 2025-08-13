@@ -8,13 +8,15 @@ interface MapsViewProps {
   onRentDog: (dog: Dog) => void;
   onMessageOwner: (dog: Dog) => void;
   onBack: () => void;
+  currentUserId: string;
 }
 
 const MapsView: React.FC<MapsViewProps> = ({
   dogs,
   onRentDog,
   onMessageOwner,
-  onBack
+  onBack,
+  currentUserId
 }) => {
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [userLocation, setUserLocation] = useState<Location | null>(null);
@@ -85,6 +87,7 @@ const MapsView: React.FC<MapsViewProps> = ({
             onRentDog={handleRentFromMap}
             onMessageOwner={handleMessageFromMap}
             userLocation={userLocation || undefined}
+            currentUserId={currentUserId}
           />
         </div>
 

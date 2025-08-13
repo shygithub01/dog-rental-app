@@ -11,6 +11,7 @@ interface DogMapProps {
   onRentDog?: (dog: Dog) => void;
   onMessageOwner?: (dog: Dog) => void;
   userLocation?: Location;
+  currentUserId: string;
 }
 
 const DogMap: React.FC<DogMapProps> = ({
@@ -18,7 +19,8 @@ const DogMap: React.FC<DogMapProps> = ({
   onDogClick,
   onRentDog,
   onMessageOwner,
-  userLocation
+  userLocation,
+  currentUserId
 }) => {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [filters, setFilters] = useState<MapFilters>({
@@ -81,8 +83,6 @@ const DogMap: React.FC<DogMapProps> = ({
   useEffect(() => {
     const checkFavorites = async () => {
       try {
-        // Get current user ID from localStorage or session
-        const currentUserId = localStorage.getItem('currentUserId') || sessionStorage.getItem('currentUserId');
         if (!currentUserId) return;
         
         const userRef = doc(db, 'users', currentUserId);
@@ -99,12 +99,10 @@ const DogMap: React.FC<DogMapProps> = ({
     };
 
     checkFavorites();
-  }, [db]);
+  }, [db, currentUserId]);
 
   const toggleFavorite = async (dogId: string) => {
     try {
-      // Get current user ID from localStorage or session
-      const currentUserId = localStorage.getItem('currentUserId') || sessionStorage.getItem('currentUserId');
       if (!currentUserId) return;
       
       setFavoritesLoading(prev => new Set(prev).add(dogId));
