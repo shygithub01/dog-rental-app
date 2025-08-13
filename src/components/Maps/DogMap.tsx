@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useMapsService } from '../../services/mapsService';
+import { useFirebase } from '../../contexts/FirebaseContext';
+import { doc, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs } from 'firebase/firestore';
 import type { DogLocation, Location, MapFilters } from '../../types/Location';
 import type { Dog } from '../../types/Dog';
 
@@ -27,7 +29,10 @@ const DogMap: React.FC<DogMapProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [useMiles, setUseMiles] = useState(true); // Default to miles
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favoritesLoading, setFavoritesLoading] = useState<Set<string>>(new Set());
   const mapsService = useMapsService();
+  const { db } = useFirebase();
 
   // Get current location on component mount - only run once
   useEffect(() => {
@@ -71,6 +76,69 @@ const DogMap: React.FC<DogMapProps> = ({
       isMounted = false;
     };
   }, []); // Empty dependency array - only run once
+
+  // Check which dogs are in user's favorites
+  useEffect(() => {
+    const checkFavorites = async () => {
+      try {
+        // Get current user ID from localStorage or session
+        const currentUserId = localStorage.getItem('currentUserId') || sessionStorage.getItem('currentUserId');
+        if (!currentUserId) return;
+        
+        const userRef = doc(db, 'users', currentUserId);
+        const userDoc = await getDocs(query(collection(db, 'users'), where('id', '==', currentUserId)));
+        
+        if (!userDoc.empty) {
+          const userData = userDoc.docs[0].data();
+          const favoriteDogIds = userData.favoriteDogs || [];
+          setFavorites(new Set(favoriteDogIds));
+        }
+      } catch (error) {
+        console.error('Error checking favorites:', error);
+      }
+    };
+
+    checkFavorites();
+  }, [db]);
+
+  const toggleFavorite = async (dogId: string) => {
+    try {
+      // Get current user ID from localStorage or session
+      const currentUserId = localStorage.getItem('currentUserId') || sessionStorage.getItem('currentUserId');
+      if (!currentUserId) return;
+      
+      setFavoritesLoading(prev => new Set(prev).add(dogId));
+      
+      const userRef = doc(db, 'users', currentUserId);
+      const isFavorite = favorites.has(dogId);
+      
+      if (isFavorite) {
+        // Remove from favorites
+        await updateDoc(userRef, {
+          favoriteDogs: arrayRemove(dogId)
+        });
+        setFavorites(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(dogId);
+          return newSet;
+        });
+      } else {
+        // Add to favorites
+        await updateDoc(userRef, {
+          favoriteDogs: arrayUnion(dogId)
+        });
+        setFavorites(prev => new Set(prev).add(dogId));
+      }
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    } finally {
+      setFavoritesLoading(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(dogId);
+        return newSet;
+      });
+    }
+  };
 
   const handleFilterChange = useCallback((key: keyof MapFilters, value: any) => {
     setFilters(prev => ({
@@ -361,6 +429,35 @@ const DogMap: React.FC<DogMapProps> = ({
                       Message
                     </button>
                   )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(dog.id);
+                    }}
+                    disabled={favoritesLoading.has(dog.id)}
+                    style={{
+                      padding: '8px 12px',
+                      backgroundColor: favorites.has(dog.id) ? '#e53e3e' : '#ed8936',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: favoritesLoading.has(dog.id) ? 'not-allowed' : 'pointer',
+                      fontSize: '14px',
+                      transition: 'background-color 0.2s',
+                      minWidth: '60px'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!favoritesLoading.has(dog.id)) {
+                        e.currentTarget.style.backgroundColor = favorites.has(dog.id) ? '#c53030' : '#dd6b20';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = favorites.has(dog.id) ? '#e53e3e' : '#ed8936';
+                    }}
+                    title={favorites.has(dog.id) ? 'Remove from favorites' : 'Add to favorites'}
+                  >
+                    {favoritesLoading.has(dog.id) ? '⏳' : (favorites.has(dog.id) ? '❤️' : '🤍')}
+                  </button>
                 </div>
               </div>
             ))}
