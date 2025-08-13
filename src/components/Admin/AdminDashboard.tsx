@@ -97,6 +97,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
 
   const handleUserAction = async (userId: string, action: 'verify' | 'suspend' | 'delete') => {
     try {
+      if (action === 'delete') {
+        // Check if user can be safely deleted
+        const canDelete = await checkUserDeletionSafety(userId);
+        if (!canDelete) {
+          alert('❌ Cannot delete this user. They have transaction history (dogs, rentals, messages, etc.) that must be preserved.');
+          return;
+        }
+        
+        // Double confirmation for deletion
+        if (!window.confirm(`⚠️ Are you sure you want to delete this user?\n\nThis action cannot be undone.`)) {
+          return;
+        }
+      }
+
       const userRef = doc(db, 'users', userId);
       
       switch (action) {
@@ -108,6 +122,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
           break;
         case 'delete':
           await deleteDoc(userRef);
+          console.log(`✅ User ${userId} deleted successfully`);
           break;
       }
       
@@ -115,6 +130,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
       fetchAdminData();
     } catch (error) {
       console.error(`Error performing ${action} on user:`, error);
+      alert(`Error performing ${action} on user: ${error}`);
     }
   };
 
@@ -302,6 +318,54 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
         console.log('ℹ️ Could not check notifications:', error);
       }
       
+      // Check if user has any reviews
+      try {
+        const reviewsSnapshot = await getDocs(collection(db, 'reviews'));
+        const userReviews = reviewsSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.reviewerId === userId || data.revieweeId === userId || data.userId === userId;
+        });
+        
+        if (userReviews.length > 0) {
+          console.log(`🚫 User ${userId} has ${userReviews.length} reviews - cannot delete`);
+          return false;
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check reviews:', error);
+      }
+      
+      // Check if user has any payments
+      try {
+        const paymentsSnapshot = await getDocs(collection(db, 'payments'));
+        const userPayments = paymentsSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.payerId === userId || data.payeeId === userId || data.userId === userId;
+        });
+        
+        if (userPayments.length > 0) {
+          console.log(`🚫 User ${userId} has ${userPayments.length} payments - cannot delete`);
+          return false;
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check payments:', error);
+      }
+      
+      // Check if user has any favorites/bookmarks
+      try {
+        const favoritesSnapshot = await getDocs(collection(db, 'favorites'));
+        const userFavorites = favoritesSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.userId === userId || data.ownerId === userId;
+        });
+        
+        if (userFavorites.length > 0) {
+          console.log(`🚫 User ${userId} has ${userFavorites.length} favorites - cannot delete`);
+          return false;
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check favorites:', error);
+      }
+      
       console.log(`✅ User ${userId} is safe to delete - no transaction history found`);
       return true;
     } catch (error) {
@@ -320,6 +384,68 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
     }
     
     setUserSafetyStatus(safetyStatus);
+  };
+
+  const getDetailedSafetyInfo = async (userId: string): Promise<string> => {
+    try {
+      let reasons: string[] = [];
+      
+      // Check dogs
+      const userDogs = dogs.filter(dog => dog.ownerId === userId);
+      if (userDogs.length > 0) {
+        reasons.push(`Owns ${userDogs.length} dog(s): ${userDogs.map(d => d.name).join(', ')}`);
+      }
+      
+      // Check rentals
+      const userRentals = rentals.filter(rental => 
+        rental.renterId === userId || 
+        rental.userId === userId || 
+        rental.uid === userId || 
+        rental.user === userId || 
+        rental.renter === userId || 
+        rental.dogOwnerId === userId || 
+        rental.ownerId === userId
+      );
+      if (userRentals.length > 0) {
+        reasons.push(`Has ${userRentals.length} rental record(s)`);
+      }
+      
+      // Check rental requests
+      try {
+        const rentalRequestsSnapshot = await getDocs(collection(db, 'rentalRequests'));
+        const userRequests = rentalRequestsSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.renterId === userId || data.userId === userId || data.uid === userId;
+        });
+        if (userRequests.length > 0) {
+          reasons.push(`Has ${userRequests.length} pending rental request(s)`);
+        }
+      } catch (error) {
+        // Ignore errors for this check
+      }
+      
+      // Check messages
+      try {
+        const messagesSnapshot = await getDocs(collection(db, 'messages'));
+        const userMessages = messagesSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.senderId === userId || data.receiverId === userId || data.userId === userId;
+        });
+        if (userMessages.length > 0) {
+          reasons.push(`Has ${userMessages.length} message(s)`);
+        }
+      } catch (error) {
+        // Ignore errors for this check
+      }
+      
+      if (reasons.length === 0) {
+        return "✅ Safe to delete - no transaction history";
+      }
+      
+      return `❌ Cannot delete:\n${reasons.join('\n')}`;
+    } catch (error) {
+      return "❓ Unable to determine safety status";
+    }
   };
 
   const fixDogStatuses = async () => {
@@ -725,9 +851,16 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                         border: '1px solid #feb2b2',
                         borderRadius: '4px',
                         fontSize: '11px',
-                        color: '#c53030'
-                      }}>
-                        ⚠️ Has transaction history - cannot be deleted
+                        color: '#c53030',
+                        cursor: 'pointer'
+                      }}
+                      onClick={async () => {
+                        const info = await getDetailedSafetyInfo(user.id);
+                        alert(`🔍 Safety Check Details for ${user.displayName || user.email}:\n\n${info}`);
+                      }}
+                      title="Click to see detailed safety information"
+                      >
+                        ⚠️ Has transaction history - click for details
                       </div>
                     )}
                   </div>
