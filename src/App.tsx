@@ -566,7 +566,13 @@ function AppContent() {
 
   if (showEarningsReport) {
     return (
-      <div className="dashboard-section">
+      <div className="dashboard-section" style={{
+        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '40px 20px'
+      }}>
         <div className="section-container">
           <div className="card card-elevated" style={{ maxWidth: '800px', margin: '0 auto' }}>
             {/* Form Header */}
@@ -807,7 +813,13 @@ function AppContent() {
 
   if (showPaymentHistory) {
     return (
-      <div className="dashboard-section">
+      <div className="dashboard-section" style={{
+        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '40px 20px'
+      }}>
         <div className="section-container">
           <div className="card card-elevated" style={{ maxWidth: '800px', margin: '0 auto' }}>
             {/* Form Header */}
