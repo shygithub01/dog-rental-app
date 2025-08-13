@@ -44,7 +44,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
   const [showRentalModal, setShowRentalModal] = useState(false);
 
   // Show all dogs except user's own dogs
-  const allDogs = dogs.filter(dog => dog.ownerId !== user?.uid);
+  const allDogs = dogs.filter(dog => dog.ownerId !== user?.id);
   const availableDogs = allDogs.filter(dog => dog.isAvailable);
   const requestedDogs = allDogs.filter(dog => dog.status === 'requested' && !dog.isAvailable);
   const nearbyDogs = availableDogs.slice(0, 4);
@@ -52,12 +52,12 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
   // Fetch user's rentals from the rentals collection
   useEffect(() => {
     const fetchMyRentals = async () => {
-      if (!user?.uid) return;
+      if (!user?.id) return;
       
       try {
         const rentalsQuery = query(
           collection(db, 'rentals'),
-          where('renterId', '==', user.uid),
+          where('renterId', '==', user.id),
           where('status', 'in', ['active', 'completed'])
         );
         const rentalsSnapshot = await getDocs(rentalsQuery);
@@ -75,7 +75,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
     };
 
     fetchMyRentals();
-  }, [user?.uid, db]);
+  }, [user?.id, db]);
 
   const totalPaid = myRentals.reduce((sum, rental) => sum + (rental.totalCost || 0), 0);
 
