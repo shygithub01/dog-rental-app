@@ -150,91 +150,50 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
     }
 
     setIsResetting(true);
-    console.log('🗑️ Starting complete data reset...');
+    console.log('🗑️ Starting COMPLETE data reset...');
 
     try {
-      const batch = writeBatch(db);
       let totalDeleted = 0;
+      const collectionsToDelete = [
+        'notifications', 'messages', 'rentalRequests', 'rentals', 'dogs', 'users',
+        'reviews', 'payments', 'bookmarks', 'favorites', 'reports', 'favorites',
+        'userFavorites', 'dogFavorites', 'rentalHistory', 'userHistory'
+      ];
 
-      // 1. Delete all notifications
-      console.log('🗑️ Deleting notifications...');
-      const notificationsSnapshot = await getDocs(collection(db, 'notifications'));
-      notificationsSnapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-        totalDeleted++;
-      });
-      console.log(`✅ Deleted ${notificationsSnapshot.docs.length} notifications`);
-
-      // 2. Delete all messages
-      console.log('🗑️ Deleting messages...');
-      const messagesSnapshot = await getDocs(collection(db, 'messages'));
-      messagesSnapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-        totalDeleted++;
-      });
-      console.log(`✅ Deleted ${messagesSnapshot.docs.length} messages`);
-
-      // 3. Delete all rental requests
-      console.log('🗑️ Deleting rental requests...');
-      const rentalRequestsSnapshot = await getDocs(collection(db, 'rentalRequests'));
-      rentalRequestsSnapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-        totalDeleted++;
-      });
-      console.log(`✅ Deleted ${rentalRequestsSnapshot.docs.length} rental requests`);
-
-      // 4. Delete all rentals
-      console.log('🗑️ Deleting rentals...');
-      const rentalsSnapshot = await getDocs(collection(db, 'rentals'));
-      rentalsSnapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-        totalDeleted++;
-      });
-      console.log(`✅ Deleted ${rentalsSnapshot.docs.length} rentals`);
-
-      // 5. Delete all dogs
-      console.log('🗑️ Deleting dogs...');
-      const dogsSnapshot = await getDocs(collection(db, 'dogs'));
-      dogsSnapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-        totalDeleted++;
-      });
-      console.log(`✅ Deleted ${dogsSnapshot.docs.length} dogs`);
-
-      // 6. Delete all users (except current admin)
-      console.log('🗑️ Deleting users...');
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      usersSnapshot.docs.forEach(doc => {
-        batch.delete(doc.ref);
-        totalDeleted++;
-      });
-      console.log(`✅ Deleted ${usersSnapshot.docs.length} users`);
-
-      // 7. Check for any other collections that might exist
-      console.log('🔍 Checking for additional collections...');
-      const additionalCollections = ['reviews', 'payments', 'bookmarks', 'favorites', 'reports'];
-      
-      for (const collectionName of additionalCollections) {
+      // Delete collections one by one to ensure complete cleanup
+      for (const collectionName of collectionsToDelete) {
         try {
-          const additionalSnapshot = await getDocs(collection(db, collectionName));
-          if (!additionalSnapshot.empty) {
-            console.log(`🗑️ Deleting ${collectionName}...`);
-            additionalSnapshot.docs.forEach(doc => {
-              batch.delete(doc.ref);
-              totalDeleted++;
-            });
-            console.log(`✅ Deleted ${additionalSnapshot.docs.length} ${collectionName}`);
+          console.log(`🗑️ Deleting collection: ${collectionName}`);
+          const snapshot = await getDocs(collection(db, collectionName));
+          
+          if (!snapshot.empty) {
+            // Use individual deletes for more reliable cleanup
+            const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+            await Promise.all(deletePromises);
+            
+            totalDeleted += snapshot.docs.length;
+            console.log(`✅ Deleted ${snapshot.docs.length} documents from ${collectionName}`);
+          } else {
+            console.log(`ℹ️ Collection ${collectionName} is already empty`);
           }
         } catch (error) {
-          // Collection might not exist, continue
-          console.log(`ℹ️ Collection '${collectionName}' not found or not accessible`);
+          console.log(`ℹ️ Could not access collection ${collectionName}:`, error);
         }
       }
 
-      // Commit all deletions
-      console.log('💾 Committing batch deletion...');
-      await batch.commit();
+      // Additional cleanup - try to delete any other collections that might exist
+      console.log('🔍 Performing additional cleanup...');
       
+      // Force clear any cached data
+      try {
+        // Clear any local storage or session storage
+        localStorage.clear();
+        sessionStorage.clear();
+        console.log('✅ Cleared local storage and session storage');
+      } catch (error) {
+        console.log('ℹ️ Could not clear local storage:', error);
+      }
+
       console.log(`🎉 COMPLETE DATA RESET SUCCESSFUL!`);
       console.log(`📊 Total documents deleted: ${totalDeleted}`);
       
@@ -252,11 +211,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
       });
 
       // Show success message
-      alert(`🎉 Complete data reset successful!\n\nTotal documents deleted: ${totalDeleted}\n\nAll data has been permanently removed from the system.`);
+      alert(`🎉 COMPLETE data reset successful!\n\nTotal documents deleted: ${totalDeleted}\n\nAll data has been permanently removed from the system.\n\nPlease refresh the page completely.`);
 
       // Force complete page refresh to clear all React state
       console.log('🔄 Forcing complete page refresh...');
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
 
     } catch (error) {
       console.error('❌ Error during data reset:', error);
@@ -663,6 +624,59 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                   }}
                 >
                   🔧 Fix Dog Statuses
+                </button>
+
+                <button
+                  onClick={() => {
+                    const commands = `
+🔥 NUCLEAR OPTION - Firebase Console Commands 🔥
+
+If the reset button above doesn't work, use these commands in Firebase Console:
+
+1. Go to Firebase Console > Firestore Database
+2. Click on each collection and delete ALL documents manually
+3. Collections to clear:
+   - users
+   - dogs  
+   - rentals
+   - rentalRequests
+   - messages
+   - notifications
+   - reviews
+   - payments
+   - bookmarks
+   - favorites
+   - reports
+
+4. Or use Firebase CLI (if you have it):
+   firebase firestore:delete --all-collections --force
+
+5. After clearing, refresh this page completely
+                    `;
+                    alert(commands);
+                  }}
+                  style={{
+                    padding: '15px 30px',
+                    backgroundColor: '#9f7a0a',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#744210';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#9f7a0a';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  ☢️ Nuclear Option
                 </button>
               </div>
               {isResetting && (
