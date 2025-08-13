@@ -44,6 +44,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
   const [rentals, setRentals] = useState<RentalData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isResetting, setIsResetting] = useState(false);
+  const [userSafetyStatus, setUserSafetyStatus] = useState<{[key: string]: boolean}>({});
 
   useEffect(() => {
     fetchAdminData();
@@ -82,6 +83,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
         activeRentals: rentalsData.filter(rental => rental.status === 'active').length
       };
       setAdminStats(stats);
+
+      // Update user deletion safety status after all data is loaded
+      setTimeout(() => {
+        updateAllUserSafetyStatus();
+      }, 100);
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
@@ -258,6 +264,101 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
     } finally {
       setIsResetting(false);
     }
+  };
+
+  const checkUserDeletionSafety = async (userId: string): Promise<boolean> => {
+    try {
+      console.log(`🔍 Checking deletion safety for user: ${userId}`);
+      
+      // Check if user owns any dogs
+      const userDogs = dogs.filter(dog => dog.ownerId === userId);
+      if (userDogs.length > 0) {
+        console.log(`🚫 User ${userId} owns ${userDogs.length} dogs - cannot delete`);
+        return false;
+      }
+      
+      // Check if user has any rental history (as renter or owner)
+      const userRentals = rentals.filter(rental => 
+        rental.renterId === userId || 
+        rental.userId === userId || 
+        rental.uid === userId || 
+        rental.user === userId || 
+        rental.renter === userId || 
+        rental.dogOwnerId === userId || 
+        rental.ownerId === userId
+      );
+      
+      if (userRentals.length > 0) {
+        console.log(`🚫 User ${userId} has ${userRentals.length} rental records - cannot delete`);
+        return false;
+      }
+      
+      // Check if user has any pending rental requests
+      try {
+        const rentalRequestsSnapshot = await getDocs(collection(db, 'rentalRequests'));
+        const userRequests = rentalRequestsSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.renterId === userId || data.userId === userId || data.uid === userId;
+        });
+        
+        if (userRequests.length > 0) {
+          console.log(`🚫 User ${userId} has ${userRequests.length} pending requests - cannot delete`);
+          return false;
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check rental requests:', error);
+      }
+      
+      // Check if user has any messages
+      try {
+        const messagesSnapshot = await getDocs(collection(db, 'messages'));
+        const userMessages = messagesSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.senderId === userId || data.receiverId === userId || data.userId === userId;
+        });
+        
+        if (userMessages.length > 0) {
+          console.log(`🚫 User ${userId} has ${userMessages.length} messages - cannot delete`);
+          return false;
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check messages:', error);
+      }
+      
+      // Check if user has any notifications
+      try {
+        const notificationsSnapshot = await getDocs(collection(db, 'notifications'));
+        const userNotifications = notificationsSnapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.userId === userId || data.recipientId === userId || data.uid === userId;
+        });
+        
+        if (userNotifications.length > 0) {
+          console.log(`🚫 User ${userId} has ${userNotifications.length} notifications - cannot delete`);
+          return false;
+        }
+      } catch (error) {
+        console.log('ℹ️ Could not check notifications:', error);
+      }
+      
+      console.log(`✅ User ${userId} is safe to delete - no transaction history found`);
+      return true;
+    } catch (error) {
+      console.error(`❌ Error checking user deletion safety for ${userId}:`, error);
+      // If we can't determine safety, assume unsafe
+      return false;
+    }
+  };
+
+  const updateAllUserSafetyStatus = async () => {
+    const safetyStatus: {[key: string]: boolean} = {};
+    
+    for (const user of users) {
+      const isSafe = await checkUserDeletionSafety(user.id);
+      safetyStatus[user.id] = isSafe;
+    }
+    
+    setUserSafetyStatus(safetyStatus);
   };
 
   if (loading) {
@@ -531,6 +632,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                     <p style={{ margin: 0, color: '#718096', fontSize: '12px' }}>
                       {user.email}
                     </p>
+                    {userSafetyStatus[user.id] === false && (
+                      <div style={{
+                        marginTop: '8px',
+                        padding: '6px 10px',
+                        backgroundColor: '#fed7d7',
+                        border: '1px solid #feb2b2',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        color: '#c53030'
+                      }}>
+                        ⚠️ Has transaction history - cannot be deleted
+                      </div>
+                    )}
                   </div>
                   <div style={{ display: 'flex', gap: '10px' }}>
                     {!user.isVerified && (
@@ -565,17 +679,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                     </button>
                     <button
                       onClick={() => handleUserAction(user.id, 'delete')}
+                      disabled={userSafetyStatus[user.id] === false}
                       style={{
                         padding: '8px 16px',
-                        backgroundColor: '#e53e3e',
+                        backgroundColor: userSafetyStatus[user.id] === false ? '#cbd5e0' : '#e53e3e',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
+                        cursor: userSafetyStatus[user.id] === false ? 'not-allowed' : 'pointer',
+                        fontSize: '12px',
+                        opacity: userSafetyStatus[user.id] === false ? 0.6 : 1
                       }}
                     >
-                      Delete
+                      {userSafetyStatus[user.id] === false ? '🚫 Cannot Delete' : 'Delete'}
                     </button>
                   </div>
                 </div>

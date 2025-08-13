@@ -1429,8 +1429,15 @@ function AppContent() {
               <>
                 {(() => {
                   let currentUserRole = userProfile?.role || 'owner';
+                  
+                  // Special handling for Lucy (keep as renter)
                   if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
                     currentUserRole = 'renter';
+                  }
+                  
+                  // Special handling for admin users - they should see owner actions
+                  if (currentUserRole === 'admin') {
+                    currentUserRole = 'owner';
                   }
                   
                   // Debug logging for role detection
@@ -1471,8 +1478,15 @@ function AppContent() {
                   {/* Role-specific actions */}
                   {(() => {
                     let currentUserRole = userProfile?.role || 'owner';
+                    
+                    // Special handling for Lucy (keep as renter)
                     if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
                       currentUserRole = 'renter';
+                    }
+                    
+                    // Special handling for admin users - they should see owner actions
+                    if (currentUserRole === 'admin') {
+                      currentUserRole = 'owner';
                     }
                     
                     // Debug logging for role detection
