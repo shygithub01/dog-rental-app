@@ -165,7 +165,7 @@ function AppContent() {
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          role: 'renter' as const,
+          role: 'owner' as const,
           joinDate: new Date(),
           lastActive: new Date(),
           isVerified: false,
