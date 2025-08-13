@@ -129,7 +129,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                 fontWeight: 'bold'
               }}
             >
-              Go Back
+              ← Back to Dashboard
             </button>
           )}
         </div>
@@ -227,7 +227,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                 fontWeight: 'bold'
               }}
             >
-              Close
+              ← Back to Dashboard
             </button>
           )}
         </div>
