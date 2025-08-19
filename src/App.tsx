@@ -1587,7 +1587,7 @@ function AppContent() {
                             🔍 Browse All Dogs
                           </button>
                           <button
-                            onClick={() => setShowRenterPendingRequests(true)}
+                            onClick={() => setShowUserProfile(true)}
                             style={{
                               width: '100%',
                               padding: '15px 20px',
