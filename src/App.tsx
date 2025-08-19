@@ -1,57 +1,61 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import { FirebaseProvider } from './contexts/FirebaseContext'
-import { useFirebase } from './contexts/FirebaseContext'
-import AddDogForm from './components/Dogs/AddDogForm'
-import DogCard from './components/Dogs/DogCard'
-import EditDogForm from './components/Dogs/EditDogForm'
-import RentalRequestForm from './components/Rentals/RentalRequestForm'
-import RentalApprovalPanel from './components/Rentals/RentalApprovalPanel'
-import RenterPendingRequests from './components/Rentals/RenterPendingRequests'
-import NotificationBell from './components/Notifications/NotificationBell'
-import UserProfile from './components/User/UserProfile'
-import FavoritesModal from './components/User/FavoritesModal'
-import MessagingCenter from './components/Messaging/MessagingCenter'
-import MapsView from './components/Maps/MapsView'
-import OwnerDashboard from './components/Dashboard/OwnerDashboard'
-import RenterDashboard from './components/Dashboard/RenterDashboard'
-import HybridDashboard from './components/Dashboard/HybridDashboard'
-import AdminDashboard from './components/Admin/AdminDashboard'
-import { cleanupOrphanedData } from './utils/dataCleanup'
-import { collection, getDocs, query, where, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { useNotificationService } from './services/notificationService'
-import { useUserService } from './services/userService'
-import { useMessageService } from './services/messageService'
+import React, { useState, useRef, useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import "./App.css";
+import { useFirebase } from "./contexts/FirebaseContext";
+import { useUserService } from "./services/userService";
+import { useMessageService } from "./services/messageService";
+import { useNotificationService } from "./services/notificationService";
+import { doc, updateDoc, collection, getDocs, query, where, getDoc, setDoc } from "firebase/firestore";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { cleanupOrphanedData, clearAllData } from "./utils/dataCleanup";
+import AdminRoute from "./components/Admin/AdminRoute";
+
+import AddDogForm from "./components/Dogs/AddDogForm";
+import DogCard from "./components/Dogs/DogCard";
+import EditDogForm from "./components/Dogs/EditDogForm";
+import RentalRequestForm from "./components/Rentals/RentalRequestForm";
+import RentalApprovalPanel from "./components/Rentals/RentalApprovalPanel";
+import RenterPendingRequests from "./components/Rentals/RenterPendingRequests";
+import NotificationBell from "./components/Notifications/NotificationBell";
+import UserProfile from "./components/User/UserProfile";
+import FavoritesModal from "./components/User/FavoritesModal";
+import MessagingCenter from "./components/Messaging/MessagingCenter";
+import MapsView from "./components/Maps/MapsView";
+import OwnerDashboard from "./components/Dashboard/OwnerDashboard";
+import RenterDashboard from "./components/Dashboard/RenterDashboard";
+import HybridDashboard from "./components/Dashboard/HybridDashboard";
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import { FirebaseProvider } from "./contexts/FirebaseContext";
 
 function AppContent() {
-  const [user, setUser] = useState<any>(null)
-  const [showAddDog, setShowAddDog] = useState(false)
-  const [showEditDog, setShowEditDog] = useState(false)
-  const [showRentDog, setShowRentDog] = useState(false)
-  const [showApprovalPanel, setShowApprovalPanel] = useState(false)
-  const [showRenterPendingRequests, setShowRenterPendingRequests] = useState(false)
-  const [showUserProfile, setShowUserProfile] = useState(false)
-  const [showFavorites, setShowFavorites] = useState(false)
-  const [showMessaging, setShowMessaging] = useState(false)
-  const [showMaps, setShowMaps] = useState(false)
+  const [user, setUser] = useState<any>(null);
+  const [showAddDog, setShowAddDog] = useState(false);
+  const [showEditDog, setShowEditDog] = useState(false);
+  const [showRentDog, setShowRentDog] = useState(false);
+  const [showApprovalPanel, setShowApprovalPanel] = useState(false);
+  const [showRenterPendingRequests, setShowRenterPendingRequests] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [showMessaging, setShowMessaging] = useState(false);
+  const [showMaps, setShowMaps] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showEarningsReport, setShowEarningsReport] = useState(false);
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
+  const [showInbox, setShowInbox] = useState(false);
   const [userRentals, setUserRentals] = useState<any[]>([]);
   const [ownerEarnings, setOwnerEarnings] = useState<any[]>([]);
-  const [showAdminPanel, setShowAdminPanel] = useState(false);
-  const [editingDog, setEditingDog] = useState<any>(null)
-  const [rentingDog, setRentingDog] = useState<any>(null)
-  const [dogs, setDogs] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
-  const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | null>(null)
-  const [userProfile, setUserProfile] = useState<any>(null)
 
-  const { auth, db } = useFirebase()
-  const notificationService = useNotificationService()
-  const userService = useUserService()
-  const messageService = useMessageService()
+  const [editingDog, setEditingDog] = useState<any>(null);
+  const [rentingDog, setRentingDog] = useState<any>(null);
+  const [dogs, setDogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  const { auth, db } = useFirebase();
+  const notificationService = useNotificationService();
+  const userService = useUserService();
+  const messageService = useMessageService();
 
   useEffect(() => {
     console.log('Firebase Auth initialized:', auth)
@@ -226,37 +230,35 @@ function AppContent() {
             console.log('🔍 DEBUG: Lucy detected, keeping as renter (no auto-fix needed)');
           }
         }
+        
+        // Special fix for Lucy - ensure she's always renter
+        if (userData.email?.toLowerCase().includes('lucy') || userData.displayName?.toLowerCase().includes('lucy')) {
+          if (userData.role !== 'renter') {
+            console.log('🔧 DEBUG: Lucy detected with wrong role, fixing from', userData.role, 'to renter');
+            await updateDoc(userRef, {
+              role: 'renter',
+              isAdmin: false
+            });
+            
+            // Update local state
+            setUserProfile({
+              ...updatedProfile,
+              role: 'renter',
+              isAdmin: false
+            });
+            
+            console.log('✅ Lucy role fixed to renter in database and local state');
+          }
+        }
       }
     } catch (error) {
       console.error('Error creating/updating user profile:', error);
     }
   };
 
-  // Function to make current user an admin (for development)
-  const makeCurrentUserAdmin = async () => {
-    if (!user?.uid) return;
-    
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, { 
-        role: 'admin',
-        isAdmin: true 
-      });
-      
-      // Update local state
-      if (userProfile) {
-        setUserProfile({
-          ...userProfile,
-          role: 'admin',
-          isAdmin: true
-        });
-      }
-      
-      console.log('User role updated to admin');
-    } catch (error) {
-      console.error('Error updating user role:', error);
-    }
-  };
+
+
+
 
   // Function to fix user role to owner (for development)
   const fixUserRoleToOwner = async () => {
@@ -474,7 +476,7 @@ function AppContent() {
 
   const handleDataCleanup = async () => {
     try {
-      const cleanedCount = await cleanupOrphanedData();
+              const cleanedCount = await cleanupOrphanedData(db);
       alert(`Data cleanup complete! Removed ${cleanedCount} orphaned requests.`);
       loadDogsWithUser(user);
     } catch (error) {
@@ -719,11 +721,7 @@ function AppContent() {
     )
   }
 
-  if (showAdminPanel) {
-    return (
-      <AdminDashboard onClose={() => setShowAdminPanel(false)} />
-    );
-  }
+
 
   if (showEarningsReport) {
     return (
@@ -1261,12 +1259,12 @@ function AppContent() {
                       
                       {/* Role-specific Financial Reports */}
                       {(() => {
-                        let currentUserRole = userProfile?.role || 'owner';
+                        let effectiveUserRole = userProfile?.role || 'owner';
                         if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
-                          currentUserRole = 'renter';
+                          effectiveUserRole = 'renter';
                         }
                         
-                        if (currentUserRole === 'owner') {
+                        if (effectiveUserRole === 'owner') {
                           return (
                             <button
                               onClick={() => {
@@ -1293,6 +1291,52 @@ function AppContent() {
                         }
                       })()}
                       
+                      {/* Admin Access - Hidden Route Only */}
+                      {(() => {
+                        let effectiveUserRole = userProfile?.role || 'owner';
+                        if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
+                          effectiveUserRole = 'renter';
+                        }
+                        
+                        // Only show admin access for actual admin users
+                        if (effectiveUserRole === 'admin' && userProfile?.isAdmin === true) {
+                          return (
+                            <button
+                              onClick={() => {
+                                window.location.href = '/admin';
+                                setShowUserDropdown(false);
+                              }}
+                              className="dropdown-item"
+                              style={{ color: '#e53e3e', fontWeight: 'bold' }}
+                            >
+                              ⚙️ Admin Panel
+                            </button>
+                          );
+                        }
+                        return null;
+                      })()}
+
+                      {/* Clear All Data Button - Fresh Start */}
+                      <button
+                        onClick={async () => {
+                          if (confirm('⚠️ WARNING: This will delete ALL data and start fresh. Are you sure?')) {
+                            try {
+                              await clearAllData(db);
+                              setShowUserDropdown(false);
+                            } catch (error) {
+                              console.error('Error clearing data:', error);
+                              alert('❌ Error clearing data: ' + error);
+                            }
+                          }
+                        }}
+                        className="dropdown-item"
+                        style={{ color: '#e53e3e', fontWeight: 'bold' }}
+                      >
+                        🧹 Clear All Data (Fresh Start)
+                      </button>
+
+
+                      
                       <button
                         onClick={() => {
                           setShowMessaging(true);
@@ -1313,36 +1357,25 @@ function AppContent() {
                         🗺️ Maps
                       </button>
                       
-                      {/* Admin Panel Option */}
-                      {userProfile?.role === 'admin' && (
-                        <button
-                          onClick={() => {
-                            setShowAdminPanel(true);
-                            setShowUserDropdown(false);
-                          }}
-                          className="dropdown-item"
-                        >
-                          ⚙️ Admin Panel
-                        </button>
-                      )}
-
-                      {/* Temporary Admin Button (remove in production) */}
-                      {userProfile?.role !== 'admin' && (
-                        <button
-                          onClick={() => {
-                            makeCurrentUserAdmin();
-                            setShowUserDropdown(false);
-                          }}
-                          className="dropdown-item"
-                          style={{ color: '#ed8936' }}
-                        >
-                          🔑 Make Admin (Dev)
-                        </button>
-                      )}
+                      {/* Admin Panel Option - Only for existing admin users */}
+                      {(() => {
+                        let effectiveUserRole = userProfile?.role || 'owner';
+                        
+                        // Special handling for Lucy (keep as renter)
+                        if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
+                          effectiveUserRole = 'renter';
+                        }
+                        
+                        // Only show admin options if user is actually an admin (not renter)
+                        if (effectiveUserRole === 'admin') {
+                          return null; // No admin options in dropdown - use hidden route instead
+                        }
+                        return null;
+                      })()}
 
 
 
-                      
+
 
                       <div className="dropdown-divider" />
                       
@@ -1364,7 +1397,6 @@ function AppContent() {
                           setShowMaps(false);
                           setShowEarningsReport(false);
                           setShowPaymentHistory(false);
-                          setShowAdminPanel(false);
                         }}
                         className="dropdown-item danger"
                       >
@@ -1428,28 +1460,28 @@ function AppContent() {
             {user ? (
               <>
                 {(() => {
-                  let currentUserRole = userProfile?.role || 'owner';
+                  let effectiveUserRole = userProfile?.role || 'owner';
                   
                   // Special handling for Lucy (keep as renter)
                   if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
-                    currentUserRole = 'renter';
+                    effectiveUserRole = 'renter';
                   }
                   
-                  // Special handling for admin users - they should see owner actions
-                  if (currentUserRole === 'admin') {
-                    currentUserRole = 'owner';
+                  // Admin users should see admin-specific content, not owner content
+                  if (effectiveUserRole === 'admin') {
+                    return (
+                      <>
+                        <h3 className="search-title">
+                          🛠️ Admin Control Center
+                        </h3>
+                        <p className="search-subtitle">
+                          Manage users, resolve issues, and monitor system health
+                        </p>
+                      </>
+                    );
                   }
                   
-                  // Debug logging for role detection
-                  console.log('🔍 DEBUG: Role detection in Action Card:', {
-                    userProfile: userProfile,
-                    detectedRole: currentUserRole,
-                    userEmail: userProfile?.email,
-                    userDisplayName: userProfile?.displayName,
-                    timestamp: new Date().toISOString()
-                  });
-                  
-                  if (currentUserRole === 'owner') {
+                  if (effectiveUserRole === 'owner') {
                     return (
                       <>
                         <h3 className="search-title">
@@ -1460,7 +1492,7 @@ function AppContent() {
                         </p>
                       </>
                     );
-                  } else {
+                  } else if (effectiveUserRole === 'renter') {
                     return (
                       <>
                         <h3 className="search-title">
@@ -1477,28 +1509,102 @@ function AppContent() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
                   {/* Role-specific actions */}
                   {(() => {
-                    let currentUserRole = userProfile?.role || 'owner';
+                    let effectiveUserRole = userProfile?.role || 'owner';
                     
                     // Special handling for Lucy (keep as renter)
                     if (userProfile?.email?.toLowerCase().includes('lucy') || userProfile?.displayName?.toLowerCase().includes('lucy')) {
-                      currentUserRole = 'renter';
+                      effectiveUserRole = 'renter';
                     }
                     
-                    // Special handling for admin users - they should see owner actions
-                    if (currentUserRole === 'admin') {
-                      currentUserRole = 'owner';
+                    // Admin users get admin-specific actions
+                    if (effectiveUserRole === 'admin') {
+                      return (
+                        <>
+                          <button
+                            onClick={() => {
+                              window.location.href = '/admin';
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#e53e3e',
+                              border: '2px solid #e53e3e',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#e53e3e';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#e53e3e';
+                            }}
+                          >
+                            🛠️ Admin Dashboard
+                          </button>
+                          <button
+                            onClick={() => setShowUserProfile(true)}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#4299e1',
+                              border: '2px solid #4299e1',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#4299e1';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#4299e1';
+                            }}
+                          >
+                            👥 User Management
+                          </button>
+                          <button
+                            onClick={() => setShowMessaging(true)}
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              backgroundColor: '#ffffff',
+                              color: '#9f7a0a',
+                              border: '2px solid #9f7a0a',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '1rem',
+                              transition: 'all 0.3s ease',
+                              marginBottom: '10px'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = '#9f7a0a';
+                              e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.color = '#9f7a0a';
+                            }}
+                          >
+                            💬 Support Chat
+                          </button>
+                        </>
+                      );
                     }
                     
-                    // Debug logging for role detection
-                    console.log('🔍 DEBUG: Role detection in Action Card:', {
-                      userProfile: userProfile,
-                      detectedRole: currentUserRole,
-                      userEmail: userProfile?.email,
-                      userDisplayName: userProfile?.displayName,
-                      timestamp: new Date().toISOString()
-                    });
-                    
-                    if (currentUserRole === 'owner') {
+                    if (effectiveUserRole === 'owner') {
                       // OWNER ACTIONS
                       return (
                         <>
@@ -1556,7 +1662,7 @@ function AppContent() {
                           </button>
                         </>
                       );
-                    } else {
+                    } else if (effectiveUserRole === 'renter') {
                       // RENTER ACTIONS
                       return (
                         <>
@@ -1785,6 +1891,8 @@ function AppContent() {
                   </div>
                 </div>
                 
+
+                
                 <button
                   onClick={handleGoogleSignIn}
                   disabled={!selectedRole}
@@ -1835,11 +1943,31 @@ function AppContent() {
         <>
           {console.log('🔍 DEBUG: userProfile.role =', userProfile.role, 'userProfile =', userProfile)}
           {(() => {
-            // Temporary fix for Lucy - ensure she gets renter role
+            // Permanent fix for Lucy - ensure she gets renter role
             let currentUserRole = userProfile.role;
             if (userProfile.email?.toLowerCase().includes('lucy') || userProfile.displayName?.toLowerCase().includes('lucy')) {
               currentUserRole = 'renter';
               console.log('🔍 DEBUG: Lucy detected, forcing renter role');
+              
+              // Automatically fix Lucy's role in database if it's wrong
+              if (userProfile.role !== 'renter') {
+                console.log('🔧 DEBUG: Fixing Lucy role in database from', userProfile.role, 'to renter');
+                const userRef = doc(db, 'users', user.uid);
+                updateDoc(userRef, {
+                  role: 'renter',
+                  isAdmin: false
+                }).then(() => {
+                  console.log('✅ Lucy role fixed in database');
+                  // Update local state
+                  setUserProfile({
+                    ...userProfile,
+                    role: 'renter',
+                    isAdmin: false
+                  });
+                }).catch((error) => {
+                  console.error('❌ Error fixing Lucy role in database:', error);
+                });
+              }
             }
             console.log('🔍 DEBUG: Final user role =', currentUserRole);
             
@@ -2023,6 +2151,12 @@ function AppContent() {
           </div>
         </div>
       </div>
+
+
+
+
+      
+
     </div>
   )
 }
@@ -2030,7 +2164,10 @@ function AppContent() {
 function App() {
   return (
     <FirebaseProvider>
-      <AppContent />
+      <Routes>
+        <Route path="/admin" element={<AdminRoute />} />
+        <Route path="/" element={<AppContent />} />
+      </Routes>
     </FirebaseProvider>
   )
 }

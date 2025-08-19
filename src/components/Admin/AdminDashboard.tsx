@@ -97,6 +97,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
 
   const handleUserAction = async (userId: string, action: 'verify' | 'suspend' | 'delete') => {
     try {
+      // Get the user being acted upon
+      const targetUser = users.find(u => u.id === userId);
+      
+      // Protect admin accounts from dangerous actions
+      if (targetUser && targetUser.role === 'admin') {
+        if (action === 'delete' || action === 'suspend') {
+          alert('🛡️ Cannot perform this action on admin accounts. Admin accounts are protected for system security.');
+          return;
+        }
+      }
+      
       if (action === 'delete') {
         // Check if user can be safely deleted
         const canDelete = await checkUserDeletionSafety(userId);
@@ -907,36 +918,61 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                         Verify
                       </button>
                     )}
-                    <button
-                      onClick={() => handleUserAction(user.id, 'suspend')}
-                      style={{
+                    
+                    {/* Protect admin accounts from suspension */}
+                    {user.role !== 'admin' && (
+                      <button
+                        onClick={() => handleUserAction(user.id, 'suspend')}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#ed8936',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '12px'
+                        }}
+                      >
+                        Suspend
+                      </button>
+                    )}
+                    
+                    {/* Protect admin accounts from deletion */}
+                    {user.role !== 'admin' && (
+                      <button
+                        onClick={() => handleUserAction(user.id, 'delete')}
+                        disabled={userSafetyStatus[user.id] === false}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: userSafetyStatus[user.id] === false ? '#cbd5e0' : '#e53e3e',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: userSafetyStatus[user.id] === false ? 'not-allowed' : 'pointer',
+                          fontSize: '12px',
+                          opacity: userSafetyStatus[user.id] === false ? 0.6 : 1
+                        }}
+                      >
+                        {userSafetyStatus[user.id] === false ? '🚫 Cannot Delete' : 'Delete'}
+                      </button>
+                    )}
+                    
+                    {/* Show admin protection message */}
+                    {user.role === 'admin' && (
+                      <div style={{
                         padding: '8px 16px',
-                        backgroundColor: '#ed8936',
+                        backgroundColor: '#4299e1',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                    >
-                      Suspend
-                    </button>
-                    <button
-                      onClick={() => handleUserAction(user.id, 'delete')}
-                      disabled={userSafetyStatus[user.id] === false}
-                      style={{
-                        padding: '8px 16px',
-                        backgroundColor: userSafetyStatus[user.id] === false ? '#cbd5e0' : '#e53e3e',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: userSafetyStatus[user.id] === false ? 'not-allowed' : 'pointer',
                         fontSize: '12px',
-                        opacity: userSafetyStatus[user.id] === false ? 0.6 : 1
-                      }}
-                    >
-                      {userSafetyStatus[user.id] === false ? '🚫 Cannot Delete' : 'Delete'}
-                    </button>
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}>
+                        🛡️ Admin Protected
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
