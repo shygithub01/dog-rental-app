@@ -100,7 +100,16 @@ export class UserService {
           ...data.stats,
           memberSince: data.stats.memberSince.toDate(),
           lastRentalDate: data.stats.lastRentalDate?.toDate()
-        }
+        },
+        // Add verification fields
+        phoneVerified: data.phoneVerified || false,
+        addressVerified: data.addressVerified || false,
+        photoVerified: data.photoVerified || false,
+        idVerified: data.idVerified || false,
+        address: data.address,
+        birthDate: data.birthDate,
+        idDocument: data.idDocument,
+        verificationScore: data.verificationScore
       };
     } catch (error) {
       console.error('Error getting user:', error);
@@ -373,6 +382,35 @@ export class UserService {
       return users;
     } catch (error) {
       console.error('Error searching users:', error);
+      throw error;
+    }
+  }
+
+  // Update user profile fields
+  async updateUserProfile(userId: string, updates: Partial<User>): Promise<void> {
+    try {
+      const docRef = doc(this.db, 'users', userId);
+      const updateData: any = {
+        lastActive: Timestamp.now()
+      };
+
+      // Handle specific fields that need special processing
+      if (updates.phoneNumber !== undefined) updateData.phoneNumber = updates.phoneNumber;
+      if (updates.phoneVerified !== undefined) updateData.phoneVerified = updates.phoneVerified;
+      if (updates.idDocument !== undefined) updateData.idDocument = updates.idDocument;
+      if (updates.idVerified !== undefined) updateData.idVerified = updates.idVerified;
+      if (updates.photoURL !== undefined) updateData.photoURL = updates.photoURL;
+      if (updates.photoVerified !== undefined) updateData.photoVerified = updates.photoVerified;
+      if (updates.address !== undefined) updateData.address = updates.address;
+      if (updates.addressVerified !== undefined) updateData.addressVerified = updates.addressVerified;
+      if (updates.birthDate !== undefined) updateData.birthDate = updates.birthDate;
+      if (updates.bio !== undefined) updateData.bio = updates.bio;
+      if (updates.location !== undefined) updateData.location = updates.location;
+
+      await updateDoc(docRef, updateData);
+      console.log('User profile updated successfully!');
+    } catch (error) {
+      console.error('Error updating user profile:', error);
       throw error;
     }
   }

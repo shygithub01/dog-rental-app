@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import "./App.css";
 import { useFirebase } from "./contexts/FirebaseContext";
 import { useUserService } from "./services/userService";
@@ -2163,12 +2165,14 @@ function AppContent() {
 
 function App() {
   return (
-    <FirebaseProvider>
-      <Routes>
-        <Route path="/admin" element={<AdminRoute />} />
-        <Route path="/" element={<AppContent />} />
-      </Routes>
-    </FirebaseProvider>
+    <DndProvider backend={HTML5Backend}>
+      <FirebaseProvider>
+        <Routes>
+          <Route path="/admin" element={<AdminRoute />} />
+          <Route path="/" element={<AppContent />} />
+        </Routes>
+      </FirebaseProvider>
+    </DndProvider>
   )
 }
 

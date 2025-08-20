@@ -19,6 +19,31 @@ export interface User {
   preferences: UserPreferences;
   stats: UserStats;
   isAdmin?: boolean; // Alternative admin flag
+  
+  // Verification fields
+  phoneVerified?: boolean;
+  addressVerified?: boolean;
+  photoVerified?: boolean;
+  idVerified?: boolean;
+  address?: string;
+  birthDate?: string;
+  idDocument?: string;
+  
+  // Verification score
+  verificationScore?: {
+    percentage: number;
+    verificationLevel: string;
+    breakdown: {
+      email: { score: number; maxScore: number };
+      phone: { score: number; maxScore: number };
+      photo: { score: number; maxScore: number };
+      basicInfo: { score: number; maxScore: number };
+      idDocument: { score: number; maxScore: number };
+      address: { score: number; maxScore: number };
+      activity: { score: number; maxScore: number };
+      reviews: { score: number; maxScore: number };
+    };
+  };
 }
 
 export interface UserPreferences {

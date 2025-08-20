@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where, updateDoc, doc, deleteDoc, writeBatch } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
+// import VerificationProgress from './VerificationProgress';
+import { VerificationService } from '../../services/verificationService';
 
 interface AdminDashboardProps {
   onClose: () => void;
@@ -45,10 +47,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
   const [isResetting, setIsResetting] = useState(false);
   const [userSafetyStatus, setUserSafetyStatus] = useState<{[key: string]: boolean}>({});
+  const [verificationService] = useState(() => new VerificationService(db));
+  const [isVerifying, setIsVerifying] = useState(false);
 
   useEffect(() => {
     fetchAdminData();
   }, []);
+  
+  // Remove auto-verification to prevent loops
+  // Admin verification now happens only when manually triggered
 
   const fetchAdminData = async () => {
     try {
@@ -84,14 +91,33 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
       };
       setAdminStats(stats);
 
-      // Update user deletion safety status after all data is loaded
-      setTimeout(() => {
-        updateAllUserSafetyStatus();
-      }, 100);
+      // Don't auto-load safety status or verification scores
+      // Let users manually trigger these operations
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Refresh verification score for a specific user
+  const handleRefreshVerificationScore = async (userId: string) => {
+    try {
+      const verificationScore = await verificationService.calculateVerificationScore(userId);
+      
+      // Update local users state with new verification score
+      setUsers(prevUsers => 
+        prevUsers.map(user => 
+          user.id === userId 
+            ? { ...user, verificationScore }
+            : user
+        )
+      );
+      
+      console.log(`✅ Verification score refreshed for user ${userId}:`, verificationScore);
+    } catch (error) {
+      console.error('Error refreshing verification score:', error);
+      alert('Error refreshing verification score: ' + error);
     }
   };
 
@@ -383,6 +409,44 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
       console.error(`❌ Error checking user deletion safety for ${userId}:`, error);
       // If we can't determine safety, assume unsafe
       return false;
+    }
+  };
+
+  // Calculate verification scores for all users
+  const calculateAllVerificationScores = async () => {
+    if (isVerifying) {
+      console.log('⏳ Verification already in progress...');
+      return;
+    }
+    
+    setIsVerifying(true);
+    console.log('📊 Starting verification score calculation for all users...');
+    
+    try {
+      for (const user of users) {
+        try {
+          const verificationScore = await verificationService.calculateVerificationScore(user.id);
+          
+          // Update local users state
+          setUsers(prevUsers => 
+            prevUsers.map(u => 
+              u.id === user.id 
+                ? { ...u, verificationScore }
+                : u
+            )
+          );
+          
+          console.log(`✅ Verification score calculated for ${user.displayName || user.email}: ${verificationScore.percentage}%`);
+        } catch (error) {
+          console.error(`❌ Error calculating verification score for user ${user.id}:`, error);
+        }
+      }
+      
+      console.log('🎉 All verification scores calculated successfully!');
+    } catch (error) {
+      console.error('❌ Error in bulk verification score calculation:', error);
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -837,23 +901,76 @@ If the reset button above doesn't work, use these commands in Firebase Console:
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h2 style={{ margin: 0, color: '#2d3748' }}>User Management</h2>
-              <button
-                onClick={updateAllUserSafetyStatus}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#4299e1',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  fontWeight: 'bold'
-                }}
-                title="Refresh safety status for all users"
-              >
-                🔄 Refresh Safety Status
-              </button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  onClick={updateAllUserSafetyStatus}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#4299e1',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                  }}
+                  title="Refresh safety status for all users"
+                >
+                  🔄 Refresh Safety Status
+                </button>
+                
+                  <button
+                    onClick={calculateAllVerificationScores}
+                    disabled={isVerifying}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: isVerifying ? '#cbd5e0' : '#48bb78',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: isVerifying ? 'not-allowed' : 'pointer',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      opacity: isVerifying ? 0.7 : 1
+                    }}
+                    title="🤖 AI-Powered Verification: Analyzes photos, documents, behavior patterns, and more"
+                  >
+                    {isVerifying ? '⏳ Verifying...' : '🤖 Verify All Users'}
+                  </button>
+              </div>
             </div>
+            
+            {/* AI Verification System Info */}
+            <div style={{
+              marginBottom: '20px',
+              padding: '15px',
+              backgroundColor: '#f0fff4',
+              border: '1px solid #9ae6b4',
+              borderRadius: '8px',
+              fontSize: '14px'
+            }}>
+              <h4 style={{ margin: '0 0 10px 0', color: '#22543d' }}>
+                🤖 AI-Powered Verification System
+              </h4>
+              <div style={{ color: '#2f855a', lineHeight: '1.6' }}>
+                <p style={{ margin: '5px 0' }}>
+                  <strong>🔐 Admin Users:</strong> Automatically verified with 100% score
+                </p>
+                <p style={{ margin: '5px 0' }}>
+                  <strong>📸 Photo Analysis:</strong> Face detection, quality check, inappropriate content detection
+                </p>
+                <p style={{ margin: '5px 0' }}>
+                  <strong>📄 Document Verification:</strong> OCR text extraction, authenticity check, fraud detection
+                </p>
+                <p style={{ margin: '5px 0' }}>
+                  <strong>📧 Email/Phone:</strong> Domain reputation, carrier validation, disposable email detection
+                </p>
+                <p style={{ margin: '5px 0' }}>
+                  <strong>🧠 Behavioral Analysis:</strong> Pattern recognition, risk assessment, activity consistency
+                </p>
+              </div>
+            </div>
+            
             <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
               {users.map(user => (
                 <div key={user.id} style={{
@@ -880,6 +997,15 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                       Safety Status: {userSafetyStatus[user.id] === undefined ? '⏳ Loading...' : 
                                     userSafetyStatus[user.id] === true ? '✅ Safe to delete' : '❌ Unsafe to delete'}
                     </div>
+                    
+                    {/* Verification Progress - Temporarily disabled */}
+                    {/* <div style={{ marginTop: '10px' }}>
+                      <VerificationProgress 
+                        user={user}
+                        verificationScore={user.verificationScore || null}
+                        onRefreshScore={() => handleRefreshVerificationScore(user.id)}
+                      />
+                    </div> */}
                     {userSafetyStatus[user.id] === false && (
                       <div style={{
                         marginTop: '8px',
@@ -902,21 +1028,111 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: '10px' }}>
-                    {!user.isVerified && (
-                      <button
-                        onClick={() => handleUserAction(user.id, 'verify')}
-                        style={{
+                    {/* Show verification status with category breakdown */}
+                    {user.verificationScore ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* Overall Score */}
+                        <div style={{
                           padding: '8px 16px',
-                          backgroundColor: '#48bb78',
+                          backgroundColor: user.verificationScore.percentage >= 80 ? '#48bb78' : 
+                                         user.verificationScore.percentage >= 60 ? '#ed8936' : '#e53e3e',
                           color: 'white',
                           border: 'none',
                           borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '12px'
-                        }}
-                      >
-                        Verify
-                      </button>
+                          fontSize: '12px',
+                          textAlign: 'center',
+                          fontWeight: 'bold'
+                        }}>
+                          {user.verificationScore.percentage}% Verified
+                        </div>
+                        
+                        {/* Category Breakdown */}
+                        <div style={{
+                          padding: '10px',
+                          backgroundColor: '#f7fafc',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '6px',
+                          fontSize: '10px',
+                          maxWidth: '220px',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                        }}>
+                          <div style={{ 
+                            fontWeight: 'bold', 
+                            marginBottom: '6px', 
+                            color: '#2d3748',
+                            fontSize: '11px',
+                            textAlign: 'center',
+                            paddingBottom: '4px',
+                            borderBottom: '1px solid #e2e8f0'
+                          }}>
+                            📊 Verification Breakdown
+                          </div>
+                          {(() => {
+                            // Define logical order for categories
+                            const categoryOrder = [
+                              'email',
+                              'phone', 
+                              'photo',
+                              'basicInfo',
+                              'idDocument',
+                              'address',
+                              'activity',
+                              'reviews'
+                            ];
+                            
+                            // Sort categories in logical order
+                            return categoryOrder.map(category => {
+                              const data = user.verificationScore.breakdown[category];
+                              if (!data) return null;
+                              
+                              const isMaxScore = data.score === data.maxScore;
+                              const categoryName = category === 'basicInfo' ? 'Basic Info' : 
+                                                 category === 'idDocument' ? 'ID Document' : 
+                                                 category.charAt(0).toUpperCase() + category.slice(1);
+                              
+                              return (
+                                <div key={category} style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: '3px',
+                                  padding: '2px 4px',
+                                  borderRadius: '3px',
+                                  backgroundColor: isMaxScore ? '#f0fff4' : '#fff5f5',
+                                  border: `1px solid ${isMaxScore ? '#9ae6b4' : '#fed7d7'}`
+                                }}>
+                                  <span style={{ 
+                                    color: isMaxScore ? '#38a169' : '#e53e3e',
+                                    fontWeight: isMaxScore ? 'bold' : 'normal',
+                                    fontSize: '9px'
+                                  }}>
+                                    {isMaxScore ? '✅' : '❌'} {categoryName}
+                                  </span>
+                                  <span style={{ 
+                                    fontWeight: 'bold',
+                                    color: isMaxScore ? '#38a169' : '#e53e3e',
+                                    fontSize: '9px'
+                                  }}>
+                                    {data.score}/{data.maxScore}
+                                  </span>
+                                </div>
+                              );
+                            });
+                          })()}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#718096',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        textAlign: 'center'
+                      }}>
+                        Calculating...
+                      </div>
                     )}
                     
                     {/* Protect admin accounts from suspension */}
@@ -971,6 +1187,23 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                         gap: '5px'
                       }}>
                         🛡️ Admin Protected
+                      </div>
+                    )}
+                    
+                    {/* Show admin auto-verification status */}
+                    {user.role === 'admin' && user.verificationScore && (
+                      <div style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#48bb78',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}>
+                        🤖 AI Auto-Verified
                       </div>
                     )}
                   </div>
