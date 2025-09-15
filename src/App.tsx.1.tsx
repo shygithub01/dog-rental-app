@@ -7,7 +7,7 @@ import { useFirebase } from "./contexts/FirebaseContext";
 import { useUserService } from "./services/userService";
 import { useMessageService } from "./services/messageService";
 import { useNotificationService } from "./services/notificationService";
-import { doc, updateDoc, collection, getDocs, query, where, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, updateDoc, collection, getDocs, query, where, getDoc, setDoc } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { cleanupOrphanedData, clearAllData } from "./utils/dataCleanup";
 import AdminRoute from "./components/Admin/AdminRoute";
@@ -44,7 +44,6 @@ function AppContent() {
   const [showEarningsReport, setShowEarningsReport] = useState(false);
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
-  const [showRoleSwitchModal, setShowRoleSwitchModal] = useState(false);
   const [userRentals, setUserRentals] = useState<any[]>([]);
   const [ownerEarnings, setOwnerEarnings] = useState<any[]>([]);
 
@@ -55,10 +54,6 @@ function AppContent() {
   const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
-  // Role selection / mismatch management
-  const [rolePickerOpen, setRolePickerOpen] = useState(false);
-  const [pendingUser, setPendingUser] = useState<any>(null);
-  const [roleMismatch, setRoleMismatch] = useState<{ saved: 'owner'|'renter'|'admin'|null, chosen: 'owner'|'renter', user: any } | null>(null);
 
   const { auth, db } = useFirebase();
   const notificationService = useNotificationService();
@@ -99,45 +94,26 @@ function AppContent() {
       }
     })
 
-    
-  const RoleSelectionPage = () => (
-    <div className="role-selection">
-      <div className="role-card">
-        <h2>Welcome!</h2>
-        <p>Please choose your role to continue.</p>
-        <div className="role-options">
-          <button onClick={() => confirmNewRole('renter')}>Renter</button>
-          <button onClick={() => confirmNewRole('owner')}>Owner</button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const confirmNewRole = async (role: 'owner' | 'renter') => {
-    if (!user) return;
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, { role, lastActive: serverTimestamp() });
-      const latest = await getDoc(userRef);
-      setUserProfile({ ...(latest.data() || {}), id: user.uid });
-    } catch (err) {
-      console.error('Failed to set role', err);
-    }
-  };
-
-return () => unsubscribe()
+    return () => unsubscribe()
   }, [auth])
 
   const loadUserProfile = async (currentUser: any) => {
     try {
-      console.log('Loading user profile for:', currentUser.uid);
-      const userRef = doc(db, "users", currentUser.uid);
+      console.log('Loading user profile for:', currentUser.uid)
+      const userRef = doc(db, 'users', currentUser.uid);
       const userDoc = await getDoc(userRef);
 
       if (userDoc.exists()) {
-        console.log('Existing profile found, loading...');
-        const data = userDoc.data();
-        const updatedProfile = { ...data, id: currentUser.uid };
+        const userData = userDoc.data();
+        console.log('Existing user profile found:', userData)
+        
+        // Update last active and set profile
+        const updatedProfile = {
+          ...userData,
+          id: currentUser.uid,
+          lastActive: new Date()
+        };
+
         await updateDoc(userRef, { lastActive: new Date() });
         setUserProfile(updatedProfile);
         
@@ -145,7 +121,7 @@ return () => unsubscribe()
         await createWelcomeNotificationIfNeeded(currentUser, false);
         
       } else {
-        console.log('No existing profile found - user needs to select role first');
+        console.log('No existing profile found - user needs to select role first')
         // Don't create profile yet - wait for role selection
         setUserProfile(null);
       }
@@ -471,36 +447,27 @@ return () => unsubscribe()
     }
   };
 
-  
   const handleGoogleSignIn = async () => {
+    if (!selectedRole) {
+      alert('Please select a role before signing in.');
+      return;
+    }
+    
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
+      
+      // After successful sign-in, create the user profile with selected role
       if (result.user) {
-        await loadUserProfile(result.user);
+        await createUserProfileWithRole(result.user, selectedRole);
       }
     } catch (error) {
       console.error('Error signing in with Google:', error);
       alert('Failed to sign in with Google. Please try again.');
     }
   };
-  const confirmSwitchRole = async () => {
-    if (!roleMismatch) return;
-    const { user, chosen } = roleMismatch as any;
-    const uref = doc(db, 'users', user.uid);
-    await updateDoc(uref, { role: chosen, lastActive: new Date() });
-    const updated = await getDoc(uref);
-    setUserProfile({ ...updated.data(), id: user.uid });
-    setRoleMismatch(null);
-  };
 
-  const cancelSwitchRole = () => {
-    if (!roleMismatch) return;
-    // Continue with saved role
-    const { user, saved } = roleMismatch as any;
-    setUserProfile((prev: any) => ({ ...(prev || {}), id: user.uid, role: saved }));
-    setRoleMismatch(null);
-  };const handleUserDropdownToggle = () => {
+  const handleUserDropdownToggle = () => {
     setShowUserDropdown(!showUserDropdown);
   };
 
@@ -532,7 +499,7 @@ return () => unsubscribe()
     }
     
     // Return the role from profile
-    return userProfile.role ?? null;
+    return userProfile.role || 'renter';
   };
 
   const effectiveUserRole = getEffectiveUserRole();
@@ -1391,16 +1358,6 @@ return () => unsubscribe()
                       
                       <button
                         onClick={() => {
-                          setShowRoleSwitchModal(true);
-                          setShowUserDropdown(false);
-                        }}
-                        className="dropdown-item"
-                      >
-                        🔄 Switch Role
-                      </button>
-                      
-                      <button
-                        onClick={() => {
                           auth.signOut();
                           setShowUserDropdown(false);
                           setSelectedRole(null);
@@ -1430,20 +1387,6 @@ return () => unsubscribe()
           </div>
         </div>
       </header>
-      {roleMismatch && (
-        <div className="modal-backdrop">
-          <div className="modal-card">
-            <h3>Role mismatch</h3>
-            <p>
-              Your account is registered as <b>{roleMismatch.saved}</b>, but you selected <b>{roleMismatch.chosen}</b>.
-            </p>
-            <div className="modal-actions">
-              <button onClick={cancelSwitchRole}>Continue as {roleMismatch.saved}</button>
-              <button onClick={confirmSwitchRole}>Switch to {roleMismatch.chosen}</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -1491,80 +1434,7 @@ return () => unsubscribe()
 
       {/* Search/Action Card - Consolidated */}
       <div className="search-card slide-up">
-        {!user ? (
-          // Not logged in - show beautiful landing page
-          <>
-            <h3 className="search-title">
-              Join DogRental today
-            </h3>
-            <p className="search-subtitle">
-              Sign in to start renting dogs or list your dogs for rent
-            </p>
-            
-            {/* Role Selection */}
-            
-            <button
-              onClick={handleGoogleSignIn}
-              className="btn btn-google btn-lg"
-              style={{ marginTop: 'var(--space-6)' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Sign in with Google
-            </button>
-          </>
-        ) : user && !userProfile ? (
-          // User is logged in but no profile yet - show role selection
-          <>
-            <h3 className="search-title">
-              Choose Your Role
-            </h3>
-            <p className="search-subtitle">
-              How would you like to use DogRental?
-            </p>
-            
-            <div className="role-selection">
-              <div className="role-options">
-                <button
-                  onClick={() => setSelectedRole('renter')}
-                  className={`role-option ${selectedRole === 'renter' ? 'selected' : ''}`}
-                >
-                  <span className="role-option-icon">🐾</span>
-                  <span className="role-option-text">Rent dogs from others</span>
-                </button>
-                
-                <button
-                  onClick={() => setSelectedRole('owner')}
-                  className={`role-option ${selectedRole === 'owner' ? 'selected' : ''}`}
-                >
-                  <span className="role-option-icon">🏠</span>
-                  <span className="role-option-text">List my dogs for rent</span>
-                </button>
-              </div>
-              
-              <button
-                onClick={async () => {
-                  if (selectedRole && user) {
-                    try {
-                      await createUserProfileWithRole(user, selectedRole);
-                    } catch (error) {
-                      console.error('Error creating user profile:', error);
-                    }
-                  }
-                }}
-                disabled={!selectedRole}
-                className={`btn btn-success btn-lg ${!selectedRole ? 'loading' : ''}`}
-                style={{ marginTop: 'var(--space-6)' }}
-              >
-                Continue with {selectedRole === 'renter' ? 'Renting' : selectedRole === 'owner' ? 'Hosting' : 'Role Selection'}
-              </button>
-            </div>
-          </>
-        ) : user && userProfile ? (
+        {user && userProfile ? (
               <>
                 {(() => {
                   if (effectiveUserRole === 'admin') {
@@ -2031,7 +1901,135 @@ return () => unsubscribe()
                   ✅ Continue with {selectedRole ? (selectedRole === 'renter' ? 'Renter' : 'Owner') : 'Selected'} Role
                 </button>
               </>
-            ) : null}
+            ) : (
+              <>
+                <h3 className="search-title">
+                  Join DogRental today
+                </h3>
+                <p className="search-subtitle">
+                  Sign in to start renting dogs or list your dogs for rent
+                </p>
+                
+                {/* Role Selection */}
+                <div className="role-selection">
+                  <div className="role-selection-title">I want to:</div>
+                  
+                  <div className="role-options">
+                    <button
+                      onClick={() => setSelectedRole('renter')}
+                      style={{
+                        width: '100%',
+                        padding: '15px 20px',
+                        backgroundColor: selectedRole === 'renter' ? '#38a169' : '#ffffff',
+                        color: selectedRole === 'renter' ? '#ffffff' : '#38a169',
+                        border: '2px solid #38a169',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
+                        transition: 'all 0.3s ease',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'renter') {
+                          e.currentTarget.style.backgroundColor = '#38a169';
+                          e.currentTarget.style.color = '#ffffff';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'renter') {
+                          e.currentTarget.style.backgroundColor = '#ffffff';
+                          e.currentTarget.style.color = '#38a169';
+                        }
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>🐾</span>
+                      Rent dogs from others
+                    </button>
+                    
+                    <button
+                      onClick={() => setSelectedRole('owner')}
+                      style={{
+                        width: '100%',
+                        padding: '15px 20px',
+                        backgroundColor: selectedRole === 'owner' ? '#38a169' : '#ffffff',
+                        color: selectedRole === 'owner' ? '#ffffff' : '#38a169',
+                        border: '2px solid #38a169',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
+                        transition: 'all 0.3s ease',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px'
+                      }}
+                      onMouseOver={(e) => {
+                        if (selectedRole !== 'owner') {
+                          e.currentTarget.style.backgroundColor = '#38a169';
+                          e.currentTarget.style.color = '#ffffff';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (selectedRole !== 'owner') {
+                          e.currentTarget.style.backgroundColor = '#ffffff';
+                          e.currentTarget.style.color = '#38a169';
+                        }
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>🏠</span>
+                      List my dogs for rent
+                    </button>
+                  </div>
+                </div>
+                
+                <button
+                  onClick={handleGoogleSignIn}
+                  disabled={!selectedRole}
+                  style={{
+                    width: '100%',
+                    padding: '15px 20px',
+                    backgroundColor: selectedRole ? '#38a169' : '#e2e8f0',
+                    color: selectedRole ? '#ffffff' : '#a0aec0',
+                    border: '2px solid #38a169',
+                    borderRadius: '10px',
+                    cursor: selectedRole ? 'pointer' : 'not-allowed',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    marginTop: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseOver={(e) => {
+                    if (selectedRole) {
+                      e.currentTarget.style.backgroundColor = '#2f855a';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (selectedRole) {
+                      e.currentTarget.style.backgroundColor = '#38a169';
+                    }
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Sign in with Google
+                </button>
+              </>
+            )}
 
           </div>
         </div>
@@ -2076,7 +2074,9 @@ return () => unsubscribe()
               return (
                 <div className="fade-in">
                   <AdminDashboard
-                    onClose={() => setShowUserProfile(false)}
+                    onManageUsers={() => setShowUserProfile(true)}
+                    onViewSupport={() => setShowMessaging(true)}
+                    user={userProfile}
                   />
                 </div>
               );
@@ -2231,92 +2231,6 @@ return () => unsubscribe()
           </div>
         </div>
       </div>
-      
-      {/* Role Switch Modal */}
-      {showRoleSwitchModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '30px',
-            borderRadius: '15px',
-            maxWidth: '400px',
-            width: '90%',
-            textAlign: 'center',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
-          }}>
-            <h3 style={{
-              marginBottom: '20px',
-              color: '#2d3748',
-              fontSize: '1.5rem'
-            }}>
-              Switch Role
-            </h3>
-            <p style={{
-              marginBottom: '30px',
-              color: '#666',
-              fontSize: '1rem'
-            }}>
-              Choose how you want to use DogRental
-            </p>
-            
-            <div style={{ marginBottom: 'var(--space-8)' }}>
-              <button
-                onClick={() => {
-                  // Update user role in Firestore
-                  const userRef = doc(db, "users", user.uid);
-                  updateDoc(userRef, { role: 'renter' }).then(() => {
-                    setUserProfile((prev: any) => ({ ...prev, role: 'renter' }));
-                    setShowRoleSwitchModal(false);
-                  });
-                }}
-                className="btn btn-success btn-lg"
-                style={{ marginBottom: 'var(--space-3)' }}
-              >
-                <span style={{ fontSize: '1.2rem' }}>🐾</span>
-                Continue as Renter
-              </button>
-              
-              <button
-                onClick={() => {
-                  // Update user role in Firestore
-                  const userRef = doc(db, "users", user.uid);
-                  updateDoc(userRef, { role: 'owner' }).then(() => {
-                    setUserProfile((prev: any) => ({ ...prev, role: 'owner' }));
-                    setShowRoleSwitchModal(false);
-                  });
-                }}
-                className="btn btn-success btn-lg"
-              >
-                <span style={{ fontSize: '1.2rem' }}>🏠</span>
-                Switch to Owner
-              </button>
-            </div>
-            
-            <button
-              onClick={() => setShowRoleSwitchModal(false)}
-              className="btn"
-              style={{
-                backgroundColor: 'var(--secondary-200)',
-                color: 'var(--secondary-600)',
-                fontSize: '0.9rem'
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

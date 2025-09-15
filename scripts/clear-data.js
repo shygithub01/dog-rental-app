@@ -3,18 +3,17 @@
 // Simple script to clear all Firebase data
 // Usage: node scripts/clear-data.js
 
-const { initializeApp } = require('firebase/app');
-const { getFirestore, collection, getDocs, writeBatch, doc } = require('firebase/firestore');
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs, writeBatch, doc } from 'firebase/firestore';
 
 // Your Firebase config (copy from src/firebase/config.ts)
 const firebaseConfig = {
-  // Copy your config here
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: "AIzaSyCX7lbqN6uYrisjdrD0fehWd0Bbbo5AfDU",
+  authDomain: "dog-rental-app.firebaseapp.com",
+  projectId: "dog-rental-app",
+  storageBucket: "dog-rental-app.firebasestorage.app",
+  messagingSenderId: "1011731918336",
+  appId: "1:1011731918336:web:e0713a7dbbadc8964772e5"
 };
 
 async function clearAllData() {
