@@ -136,503 +136,415 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
   };
 
   return (
-    <div style={{
-      background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/image1.png")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-      padding: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '40px',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-        maxWidth: '800px',
-        width: '100%',
-        margin: '0 auto'
-      }}>
-        {/* Form Header */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '40px',
-          paddingBottom: '20px',
-          borderBottom: '2px solid #f7fafc'
-        }}>
-          <div style={{
-            fontSize: '3rem',
-            marginBottom: '15px'
-          }}>
-            🐕
+    <div style={{ minHeight: '100vh', background: 'white' }}>
+      {/* Modern Header - Same as App.tsx */}
+      <header className="modern-header fade-in">
+        <div className="header-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <a href="#" className="logo">
+              DogRental
+            </a>
           </div>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#2d3748',
-            margin: '0 0 10px 0',
-            fontWeight: 'bold'
-          }}>
-            Add Your Dog
-          </h2>
-          <p style={{
-            color: '#4a5568',
-            fontSize: '1.1rem',
-            margin: 0,
-            lineHeight: '1.6'
-          }}>
-            Share your furry friend with the community and start earning
-          </p>
         </div>
+      </header>
 
-        <form onSubmit={handleSubmit}>
-          {/* Image Upload Section */}
-          <div style={{
-            marginBottom: '30px',
-            padding: '25px',
-            backgroundColor: '#f7fafc',
-            borderRadius: '15px',
-            border: '2px dashed #e2e8f0'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 15px 0',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}>
-              📸 Dog Photo
-            </h3>
-            <ImageUpload 
-              onImageUploaded={handleImageUploaded}
-              currentImageUrl={formData.imageUrl}
-            />
-          </div>
-
-          {/* Dog Information */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              🐾 Basic Information
-            </h3>
+      {/* Hero Section - Matching App.tsx Pattern */}
+      <section className="hero-section">
+        <div className="hero-content fade-in">
+          {/* Hero Text */}
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Add your furry friend to our community
+            </h1>
+            <p className="hero-subtitle">
+              Share your dog with trusted renters and start earning while creating happy memories for fellow dog lovers.
+            </p>
             
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '20px', 
-              marginBottom: '20px'
-            }} className="mobile-form-grid">
-              <div>
-                <label htmlFor="name" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Dog Name *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Enter your dog's name"
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-number">📸</div>
+                <div className="hero-stat-label">Upload photos</div>
               </div>
-
-              <div>
-                <label htmlFor="breed" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Breed *
-                </label>
-                <input
-                  type="text"
-                  id="breed"
-                  name="breed"
-                  value={formData.breed}
-                  onChange={handleChange}
-                  required
-                  placeholder="e.g., Golden Retriever"
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
+              <div className="hero-stat">
+                <div className="hero-stat-number">🐕</div>
+                <div className="hero-stat-label">Dog details</div>
               </div>
-            </div>
-
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '20px', 
-              marginBottom: '20px'
-            }} className="mobile-form-grid">
-              <div>
-                <label htmlFor="age" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Age (years) *
-                </label>
-                <input
-                  type="number"
-                  id="age"
-                  name="age"
-                  min="1"
-                  max="20"
-                  value={formData.age}
-                  onChange={handleChange}
-                  required
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
-              </div>
-              <div>
-                <label htmlFor="size" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Size *
-                </label>
-                <select
-                  id="size"
-                  name="size"
-                  value={formData.size}
-                  onChange={handleChange}
-                  required
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white',
-                    cursor: 'pointer'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                >
-                  <option value="small">Small (under 20 lbs)</option>
-                  <option value="medium">Medium (20-50 lbs)</option>
-                  <option value="large">Large (over 50 lbs)</option>
-                </select>
+              <div className="hero-stat">
+                <div className="hero-stat-number">💰</div>
+                <div className="hero-stat-label">Set your price</div>
               </div>
             </div>
           </div>
 
-          {/* Description */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              📝 Description
+          {/* Form Card - Same Style as Search Card in App.tsx */}
+          <div className="search-card slide-up">
+            <h3 className="search-title">
+              List Your Dog
             </h3>
-            <label htmlFor="description" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748',
-              fontSize: '1rem'
-            }}>
-              Tell us about your dog *
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-              rows={4}
-              placeholder="Describe your dog's personality, training, special needs, etc."
-              style={{ 
-                width: '100%', 
-                padding: '15px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '10px',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                backgroundColor: 'white',
-                resize: 'vertical',
-                fontFamily: 'inherit'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
+            <p className="search-subtitle">
+              Fill out the details below to get started
+            </p>
 
-          {/* Pricing & Location */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              💰 Pricing & Location
-            </h3>
-            
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '20px'
-            }} className="mobile-form-grid">
-              <div>
-                <label htmlFor="pricePerDay" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Price per day ($) *
-                </label>
-                <input
-                  type="number"
-                  id="pricePerDay"
-                  name="pricePerDay"
-                  min="10"
-                  max="500"
-                  value={formData.pricePerDay}
-                  onChange={handleChange}
-                  required
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
-              </div>
-              <div>
-                <label htmlFor="location" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Location *
-                </label>
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  placeholder="City, State"
-                  required
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* GPS Coordinates */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              📍 GPS Coordinates (Required for Maps)
-            </h3>
-            
-            <div style={{ 
-              display: 'flex', 
-              gap: '15px', 
-              alignItems: 'center',
-              marginBottom: '15px'
-            }}>
-              <button
-                type="button"
-                onClick={getCurrentLocation}
-                disabled={locationLoading}
-                style={{
-                  padding: '12px 20px',
-                  backgroundColor: locationLoading ? '#cbd5e0' : '#6A32B0',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: locationLoading ? 'not-allowed' : 'pointer',
+            <form onSubmit={handleSubmit} style={{ marginTop: '32px' }}>
+              {/* Image Upload Section */}
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{
+                  display: 'block',
                   fontSize: '1rem',
-                  fontWeight: 'bold',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {locationLoading ? '📍 Getting Location...' : '📍 Use My Current Location'}
-              </button>
-              
-              {coordinates && (
-                <div style={{
-                  padding: '10px 15px',
-                  backgroundColor: '#f0fff4',
-                  border: '2px solid #68d391',
-                  borderRadius: '8px',
-                  color: '#22543d',
-                  fontSize: '0.9rem'
+                  fontWeight: '600',
+                  color: '#374151',
+                  marginBottom: '8px'
                 }}>
-                  ✅ Location set: {coordinates.lat.toFixed(6)}, {coordinates.lng.toFixed(6)}
+                  📸 Dog Photo
+                </label>
+                <div style={{
+                  background: '#f9fafb',
+                  border: '2px dashed #d1d5db',
+                  borderRadius: '12px',
+                  padding: '20px'
+                }}>
+                  <ImageUpload 
+                    onImageUploaded={handleImageUploaded}
+                    currentImageUrl={formData.imageUrl}
+                  />
+                </div>
+              </div>
+
+              {/* Basic Information */}
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '16px', 
+                marginBottom: '24px'
+              }}>
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Dog Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter dog's name"
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.2s ease',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Breed *
+                  </label>
+                  <input
+                    type="text"
+                    name="breed"
+                    value={formData.breed}
+                    onChange={handleChange}
+                    required
+                    placeholder="e.g., Golden Retriever"
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.2s ease',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '16px', 
+                marginBottom: '24px'
+              }}>
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Age (years) *
+                  </label>
+                  <input
+                    type="number"
+                    name="age"
+                    min="1"
+                    max="20"
+                    value={formData.age}
+                    onChange={handleChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.2s ease',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Size *
+                  </label>
+                  <select
+                    name="size"
+                    value={formData.size}
+                    onChange={handleChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.2s ease',
+                      backgroundColor: 'white',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="small">Small (under 20 lbs)</option>
+                    <option value="medium">Medium (20-50 lbs)</option>
+                    <option value="large">Large (over 50 lbs)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: '#374151',
+                  marginBottom: '6px'
+                }}>
+                  Description *
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                  rows={3}
+                  placeholder="Tell us about your dog's personality, training, special needs..."
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    transition: 'border-color 0.2s ease',
+                    backgroundColor: 'white',
+                    resize: 'vertical',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
+              {/* Pricing & Location */}
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '16px', 
+                marginBottom: '24px'
+              }}>
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Price per day ($) *
+                  </label>
+                  <input
+                    type="number"
+                    name="pricePerDay"
+                    min="10"
+                    max="500"
+                    value={formData.pricePerDay}
+                    onChange={handleChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.2s ease',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Location *
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="City, State"
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.2s ease',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* GPS Coordinates */}
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: '#374151',
+                  marginBottom: '6px'
+                }}>
+                  📍 GPS Coordinates (Required for Maps)
+                </label>
+                
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '12px', 
+                  alignItems: 'center',
+                  marginBottom: '12px'
+                }}>
+                  <button
+                    type="button"
+                    onClick={getCurrentLocation}
+                    disabled={locationLoading}
+                    className="btn-glass-primary"
+                    style={{
+                      fontSize: '0.875rem',
+                      padding: '10px 16px'
+                    }}
+                  >
+                    {locationLoading ? '📍 Getting Location...' : '📍 Use My Current Location'}
+                  </button>
+                  
+                  {coordinates && (
+                    <div style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#f0fdf4',
+                      border: '1px solid #bbf7d0',
+                      borderRadius: '6px',
+                      color: '#166534',
+                      fontSize: '0.75rem'
+                    }}>
+                      ✅ Location set: {coordinates.lat.toFixed(4)}, {coordinates.lng.toFixed(4)}
+                    </div>
+                  )}
+                </div>
+                
+                <div style={{
+                  padding: '12px',
+                  backgroundColor: '#f9fafb',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem',
+                  color: '#6b7280'
+                }}>
+                  <strong>Why GPS coordinates?</strong> This helps renters find dogs near them on the map. 
+                  Your exact location is only used for distance calculations and won't be shared publicly.
+                </div>
+              </div>
+
+              {error && (
+                <div style={{
+                  color: '#dc2626',
+                  marginBottom: '16px',
+                  padding: '12px',
+                  backgroundColor: '#fef2f2',
+                  borderRadius: '8px',
+                  border: '1px solid #fecaca',
+                  fontSize: '0.875rem'
+                }}>
+                  ⚠️ {error}
                 </div>
               )}
-            </div>
-            
-            <div style={{
-              padding: '15px',
-              backgroundColor: '#f7fafc',
-              border: '2px solid #e2e8f0',
-              borderRadius: '8px',
-              fontSize: '0.9rem',
-              color: '#4a5568'
-            }}>
-              <strong>Why GPS coordinates?</strong> This helps renters find dogs near them on the map. 
-              Your exact location is only used for distance calculations and won't be shared publicly.
-            </div>
-          </div>
 
-          {error && (
-            <div style={{
-              color: '#e53e3e',
-              marginBottom: '20px',
-              padding: '15px',
-              backgroundColor: '#fed7d7',
-              borderRadius: '10px',
-              border: '1px solid #feb2b2',
-              fontSize: '0.95rem'
-            }}>
-              ⚠️ {error}
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div style={{ 
-            display: 'flex', 
-            gap: '15px', 
-            justifyContent: 'center',
-            marginTop: '30px'
-          }}>
-            {onCancel && (
-              <button
-                type="button"
-                onClick={onCancel}
-                style={{
-                  padding: '15px 30px',
-                  backgroundColor: '#6A32B0',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '1rem',
-                  transition: 'all 0.2s',
-                  minWidth: '120px'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
-              >
-                ← Cancel
-              </button>
-            )}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                padding: '15px 30px',
-                backgroundColor: loading ? '#cbd5e0' : '#6A32B0',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                minWidth: '120px'
-              }}
-              onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#6A32B0';
-              }}
-              onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#8A52D0';
-              }}
-            >
-              {loading ? '🐕 Adding Dog...' : '✅ Add Dog'}
-            </button>
+              {/* Action Buttons - Same style as App.tsx */}
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                gap: '12px', 
+                marginTop: '24px'
+              }}>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-glass-primary w-full mb-4"
+                >
+                  {loading ? '🐕 Adding Dog...' : '✅ Add Dog'}
+                </button>
+                
+                {onCancel && (
+                  <button
+                    type="button"
+                    onClick={onCancel}
+                    className="btn-glass-primary w-full mb-4"
+                  >
+                    ← Back to Dashboard
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   );
 };
