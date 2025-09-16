@@ -1,4 +1,9 @@
-/* Complete Professional Dog Rental App with Quizist-Inspired Design */
+/* Complete Professional Dog Rental App with Quizist-Inspired Design and Custom Background */
+
+body, .hero-section, .dashboard-section { 
+  background: url('/images/image1.png') center/cover no-repeat fixed !important; 
+}
+
 :root {
   /* Quizist Purple Theme Palette */
   --primary-purple: #8B5CF6;
@@ -56,10 +61,16 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   line-height: 1.6;
   color: var(--text-primary);
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-purple) 30%, var(--deep-purple) 70%, var(--dark-purple) 100%);
+  /* Updated background with your dog image */
+  background: 
+    /* Purple overlay to maintain design consistency */
+    linear-gradient(135deg, rgba(139, 92, 246, 0.85) 0%, rgba(168, 85, 247, 0.9) 30%, rgba(124, 58, 237, 0.9) 70%, rgba(109, 40, 217, 0.95) 100%),
+    /* Your dog image - update this path to match your PNG file location */
+    url('/images/dogs-background.png') center/cover no-repeat fixed;
   min-height: 100vh;
   font-size: 16px;
   overflow-x: hidden;
+  position: relative;
 }
 
 /* Enhanced Header */
@@ -94,6 +105,7 @@ body {
   align-items: center;
   gap: 0.75rem;
   transition: transform 0.2s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .logo:hover {
@@ -160,6 +172,7 @@ body {
 .user-name {
   font-weight: 600;
   color: var(--text-white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .dropdown-arrow {
@@ -225,7 +238,7 @@ body {
   margin: 0.5rem 0;
 }
 
-/* Hero Section */
+/* Hero Section with enhanced background blend */
 .hero-section {
   min-height: 100vh;
   display: flex;
@@ -233,7 +246,12 @@ body {
   color: white;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-purple) 30%, var(--deep-purple) 70%, var(--dark-purple) 100%);
+  /* Enhanced background that complements your dog image */
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(139, 92, 246, 0.7) 0%, rgba(168, 85, 247, 0.8) 30%, rgba(124, 58, 237, 0.8) 70%, rgba(109, 40, 217, 0.9) 100%);
 }
 
 .hero-section::before {
@@ -270,7 +288,7 @@ body {
   font-weight: 900;
   line-height: 1.05;
   margin-bottom: 1.5rem;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   letter-spacing: -0.02em;
   color: var(--text-white);
 }
@@ -281,7 +299,7 @@ body {
   line-height: 1.6;
   margin-bottom: 2.5rem;
   opacity: 0.95;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   color: var(--text-light);
 }
 
@@ -398,21 +416,6 @@ body {
   overflow: hidden;
 }
 
-.role-option::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.role-option:hover::before {
-  left: 100%;
-}
-
 .role-option:hover {
   border-color: var(--glass-border-strong);
   background: var(--glass-bg-strong);
@@ -487,14 +490,14 @@ body {
 }
 
 .btn-google {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   color: var(--text-secondary);
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-google:hover:not(:disabled) {
-  background: #f7fafc;
+  background: white;
   border-color: var(--primary-purple);
   color: var(--primary-purple);
   transform: translateY(-2px);
@@ -529,10 +532,17 @@ body {
   box-shadow: var(--glass-shadow-strong);
 }
 
-/* Dashboard Sections */
+/* Dashboard Sections with enhanced backgrounds */
 .dashboard-section {
   padding: 4rem 0;
   position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dashboard-section:nth-child(even) {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .section-container {
@@ -549,17 +559,19 @@ body {
 .section-title {
   font-size: 2.75rem;
   font-weight: 900;
-  color: var(--text-primary);
+  color: white;
   margin-bottom: 1rem;
   letter-spacing: -0.025em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .section-subtitle {
   font-size: 1.25rem;
-  color: var(--text-secondary);
+  color: var(--text-light);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Dogs Grid */
@@ -579,15 +591,17 @@ body {
 }
 
 .service-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: var(--border-radius-lg);
   padding: 2.5rem;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.4s ease;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .service-card::before {
@@ -610,6 +624,7 @@ body {
   transform: translateY(-8px);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
   border-color: var(--primary-purple);
+  background: white;
 }
 
 .service-icon {
@@ -639,12 +654,14 @@ body {
 
 /* Card Components */
 .card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: var(--border-radius-lg);
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .card:hover {
@@ -679,11 +696,13 @@ body {
 .form-select {
   width: 100%;
   padding: 0.875rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--border-radius);
   font-size: 1rem;
   transition: all 0.2s ease;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .form-input:focus,
@@ -692,79 +711,12 @@ body {
   outline: none;
   border-color: var(--primary-purple);
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  background: white;
 }
 
 .form-textarea {
   resize: vertical;
   min-height: 120px;
-}
-
-/* Modal Styles */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.modal-card {
-  background: var(--glass-bg-strong);
-  border: 1px solid var(--glass-border-strong);
-  border-radius: 24px;
-  padding: 2rem;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-  backdrop-filter: var(--backdrop-blur);
-  -webkit-backdrop-filter: var(--backdrop-blur);
-  color: white;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-  justify-content: center;
-}
-
-/* Notification Styles */
-.notification {
-  padding: 1rem;
-  border-radius: var(--border-radius);
-  margin-bottom: 1rem;
-  border-left: 4px solid;
-}
-
-.notification.success {
-  background: #f0fdf4;
-  border-color: #22c55e;
-  color: #15803d;
-}
-
-.notification.error {
-  background: #fef2f2;
-  border-color: #ef4444;
-  color: #dc2626;
-}
-
-.notification.warning {
-  background: #fffbeb;
-  border-color: #f59e0b;
-  color: #d97706;
-}
-
-.notification.info {
-  background: #eff6ff;
-  border-color: var(--primary-purple);
-  color: var(--deep-purple);
 }
 
 /* Loading States */
@@ -781,368 +733,6 @@ body {
 .loading {
   opacity: 0.6;
   pointer-events: none;
-}
-
-/* Status Indicators */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.status-available {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-rented {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-unavailable {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-/* Dog Card Styles */
-.dog-card {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  border: 1px solid #e2e8f0;
-}
-
-.dog-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--primary-purple);
-}
-
-.dog-card-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  background: #f8fafc;
-}
-
-.dog-card-content {
-  padding: 1.5rem;
-}
-
-.dog-card-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.dog-card-details {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-}
-
-.dog-card-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary-purple);
-  margin-bottom: 1rem;
-}
-
-.dog-card-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.dog-card-btn {
-  flex: 1;
-  min-width: 100px;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: var(--border-radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.875rem;
-}
-
-.dog-card-btn.primary {
-  background: var(--primary-purple);
-  color: white;
-}
-
-.dog-card-btn.primary:hover {
-  background: var(--hover-purple);
-  transform: translateY(-1px);
-}
-
-.dog-card-btn.secondary {
-  background: #f1f5f9;
-  color: var(--text-secondary);
-}
-
-.dog-card-btn.secondary:hover {
-  background: #e2e8f0;
-  color: var(--text-primary);
-}
-
-/* Dashboard Specific Styles */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.dashboard-stat {
-  background: white;
-  padding: 2rem;
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.dashboard-stat:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-stat-number {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--primary-purple);
-  margin-bottom: 0.5rem;
-}
-
-.dashboard-stat-label {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-/* Table Styles */
-.table-container {
-  overflow-x: auto;
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-
-.table th,
-.table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.table th {
-  background: #f8fafc;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.table td {
-  color: var(--text-secondary);
-}
-
-.table tr:hover {
-  background: #f8fafc;
-}
-
-/* Message Styles */
-.message-container {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-.message-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.message-content {
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* Rental Request Styles */
-.rental-request {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
-}
-
-.rental-request:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-.rental-request-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.rental-request-info {
-  flex: 1;
-}
-
-.rental-request-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.rental-request-btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: var(--border-radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.875rem;
-}
-
-.rental-request-btn.approve {
-  background: #22c55e;
-  color: white;
-}
-
-.rental-request-btn.approve:hover {
-  background: #16a34a;
-  transform: translateY(-1px);
-}
-
-.rental-request-btn.reject {
-  background: #ef4444;
-  color: white;
-}
-
-.rental-request-btn.reject:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
-}
-
-/* Favorites Styles */
-.favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.favorite-item {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-}
-
-.favorite-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Maps Styles */
-.maps-container {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
-  height: 600px;
-  position: relative;
-}
-
-.maps-controls {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 10;
-  display: flex;
-  gap: 0.5rem;
-}
-
-.maps-control-btn {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: var(--border-radius);
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.maps-control-btn:hover {
-  background: #f8fafc;
-  border-color: var(--primary-purple);
-}
-
-/* Admin Styles */
-.admin-panel {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.admin-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.admin-stat {
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  text-align: center;
-  border: 1px solid #e2e8f0;
 }
 
 /* Utility Classes */
@@ -1286,17 +876,6 @@ body {
   }
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @keyframes spin {
   0% { 
     transform: rotate(0deg); 
@@ -1306,29 +885,12 @@ body {
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
 .slide-up {
   animation: slideUp 0.6s ease-out;
 }
 
 .fade-in {
   animation: fadeIn 0.5s ease-out;
-}
-
-.slide-in {
-  animation: slideIn 0.4s ease-out;
-}
-
-.pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Responsive Design */
@@ -1345,14 +907,6 @@ body {
   
   .search-card {
     max-width: 100%;
-  }
-  
-  .dashboard-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-  
-  .dogs-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }
 
@@ -1399,49 +953,6 @@ body {
     right: -10px;
     min-width: 200px;
   }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .dogs-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .dog-card-actions {
-    flex-direction: column;
-  }
-  
-  .dog-card-btn {
-    width: 100%;
-  }
-  
-  .rental-request-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-  
-  .rental-request-actions {
-    justify-content: center;
-  }
-  
-  .modal-card {
-    margin: 1rem;
-    padding: 1.5rem;
-  }
-  
-  .table-container {
-    font-size: 0.875rem;
-  }
-  
-  .maps-container {
-    height: 400px;
-  }
-  
-  .admin-stats {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1461,22 +972,6 @@ body {
   .service-card {
     padding: 2rem;
   }
-  
-  .section-title {
-    font-size: 1.875rem;
-  }
-  
-  .dashboard-stat {
-    padding: 1.5rem;
-  }
-  
-  .dog-card-content {
-    padding: 1rem;
-  }
-  
-  .favorites-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Focus and Accessibility */
@@ -1490,22 +985,282 @@ body {
   outline-offset: 2px;
 }
 
-/* High contrast support */
-@media (prefers-contrast: high) {
-  :root {
-    --glass-bg: rgba(255, 255, 255, 0.9);
-    --glass-border: rgba(0, 0, 0, 0.2);
-  }
-  
-  .search-card {
-    background: rgba(255, 255, 255, 0.95);
-    color: #000;
-  }
-  
-  .search-title,
-  .search-subtitle {
-    color: #000;
-  }
+/* Enhanced Glass Effects for Background Image */
+.glass-overlay {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--border-radius-lg);
+}
+
+/* Special Featured Section with Dog Background */
+.featured-dogs-section {
+  min-height: 60vh;
+  background: 
+    linear-gradient(135deg, rgba(139, 92, 246, 0.6) 0%, rgba(168, 85, 247, 0.7) 100%),
+    url('/images/dogs-background.png') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  position: relative;
+  margin: 4rem 0;
+}
+
+.featured-dogs-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.featured-dogs-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.featured-dogs-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.featured-dogs-description {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  opacity: 0.95;
+}
+
+/* Enhanced Dog Cards */
+.dog-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dog-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  background: white;
+}
+
+.dog-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.dog-card:hover .dog-image {
+  transform: scale(1.05);
+}
+
+.dog-info {
+  padding: 1.5rem;
+}
+
+.dog-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.dog-breed {
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.dog-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-purple);
+  margin-bottom: 1rem;
+}
+
+.dog-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.rating-stars {
+  color: #fbbf24;
+}
+
+.rating-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Enhanced Footer */
+.app-footer {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border-top: 1px solid var(--glass-border);
+  color: white;
+  padding: 3rem 0 2rem;
+  margin-top: 4rem;
+}
+
+.footer-content {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.footer-section h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.footer-section p,
+.footer-section a {
+  color: var(--text-light);
+  text-decoration: none;
+  line-height: 1.6;
+  transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--glass-border);
+  margin-top: 2rem;
+  padding-top: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-available {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.status-rented {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-pending {
+  background: rgba(251, 191, 36, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+/* Navigation Improvements */
+.nav-link {
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: white;
+  background: var(--glass-bg);
+}
+
+.nav-link.active {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
 }
 
 /* Reduced motion support */
@@ -1515,44 +1270,27 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
-  .hero-section::before {
-    animation: none;
-  }
-  
-  .loading-spinner {
-    animation: none;
-  }
 }
 
-/* Print styles */
+/* Print Styles */
 @media print {
   .modern-header,
-  .hero-section,
-  .services-section {
-    display: none;
+  .btn,
+  .modal-overlay,
+  .user-dropdown-menu {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
   }
   
   .card,
-  .dog-card,
-  .rental-request {
-    box-shadow: none;
-    border: 1px solid #ccc;
-  }
-  
-  .btn {
-    display: none;
-  }
-}
-
-/* Dark mode support (if needed in future) */
-@media (prefers-color-scheme: dark) {
-  /* Ready for dark mode implementation */
-}
-
-/* Mobile form grid helper */
-@media (max-width: 768px) {
-  .mobile-form-grid {
-    grid-template-columns: 1fr !important;
+  .service-card,
+  .dog-card {
+    background: white !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
   }
 }
