@@ -256,7 +256,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -288,7 +288,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -328,7 +328,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -358,7 +358,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                     backgroundColor: 'white',
                     cursor: 'pointer'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 >
                   <option value="small">Small (under 20 lbs)</option>
@@ -409,7 +409,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                 resize: 'vertical',
                 fontFamily: 'inherit'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+              onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
@@ -460,7 +460,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -491,7 +491,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -523,7 +523,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                 disabled={locationLoading}
                 style={{
                   padding: '12px 20px',
-                  backgroundColor: locationLoading ? '#cbd5e0' : '#28a745',
+                  backgroundColor: locationLoading ? '#cbd5e0' : '#6A32B0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -590,7 +590,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                 onClick={onCancel}
                 style={{
                   padding: '15px 30px',
-                  backgroundColor: '#718096',
+                  backgroundColor: '#6A32B0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '10px',
@@ -600,8 +600,8 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                   transition: 'all 0.2s',
                   minWidth: '120px'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
               >
                 ← Cancel
               </button>
@@ -611,7 +611,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
               disabled={loading}
               style={{
                 padding: '15px 30px',
-                backgroundColor: loading ? '#cbd5e0' : '#48bb78',
+                backgroundColor: loading ? '#cbd5e0' : '#6A32B0',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -622,10 +622,10 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                 minWidth: '120px'
               }}
               onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#38a169';
+                if (!loading) e.currentTarget.style.backgroundColor = '#6A32B0';
               }}
               onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#48bb78';
+                if (!loading) e.currentTarget.style.backgroundColor = '#8A52D0';
               }}
             >
               {loading ? '🐕 Adding Dog...' : '✅ Add Dog'}
@@ -637,4 +637,4 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
   );
 };
 
-export default AddDogForm; 
+export default AddDogForm;

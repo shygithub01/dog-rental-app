@@ -243,7 +243,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -275,7 +275,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -315,7 +315,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -345,7 +345,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     backgroundColor: 'white',
                     cursor: 'pointer'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 >
                   <option value="small">Small (under 20 lbs)</option>
@@ -396,7 +396,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                 resize: 'vertical',
                 fontFamily: 'inherit'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+              onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
@@ -447,7 +447,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -478,7 +478,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -629,7 +629,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                 onClick={onCancel}
                 style={{
                   padding: '15px 30px',
-                  backgroundColor: '#718096',
+                  backgroundColor: '#6A32B0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '10px',
@@ -639,8 +639,8 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                   transition: 'all 0.2s',
                   minWidth: '120px'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
               >
                 ← Cancel
               </button>
@@ -650,7 +650,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
               disabled={loading}
               style={{
                 padding: '15px 30px',
-                backgroundColor: loading ? '#cbd5e0' : '#4299e1',
+                backgroundColor: loading ? '#cbd5e0' : '#6A32B0',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -661,10 +661,10 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                 minWidth: '120px'
               }}
               onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#3182ce';
+                if (!loading) e.currentTarget.style.backgroundColor = '#8A52D0';
               }}
               onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#4299e1';
+                if (!loading) e.currentTarget.style.backgroundColor = '#6A32B0';
               }}
             >
               {loading ? '✏️ Updating...' : '✅ Update Dog'}

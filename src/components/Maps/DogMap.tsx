@@ -279,7 +279,7 @@ const DogMap: React.FC<DogMapProps> = ({
           onClick={() => setUseMiles(!useMiles)}
           style={{
             padding: '6px 12px',
-            backgroundColor: '#6c757d',
+            backgroundColor: '#6A32B0',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -294,7 +294,7 @@ const DogMap: React.FC<DogMapProps> = ({
           onClick={handleUseMyLocation}
           style={{
             padding: '6px 12px',
-            backgroundColor: '#28a745',
+            backgroundColor: '#6A32B0',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -391,7 +391,7 @@ const DogMap: React.FC<DogMapProps> = ({
                       style={{
                         flex: 1,
                         padding: '8px 12px',
-                        backgroundColor: '#007bff',
+                        backgroundColor: '#6A32B0',
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',
@@ -400,10 +400,10 @@ const DogMap: React.FC<DogMapProps> = ({
                         transition: 'background-color 0.2s'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#0056b3';
+                        e.currentTarget.style.backgroundColor = '#8A52D0';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#007bff';
+                        e.currentTarget.style.backgroundColor = '#6A32B0';
                       }}
                     >
                       Rent
@@ -418,7 +418,7 @@ const DogMap: React.FC<DogMapProps> = ({
                       style={{
                         flex: 1,
                         padding: '8px 12px',
-                        backgroundColor: '#28a745',
+                        backgroundColor: '#6A32B0',
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',
@@ -427,10 +427,10 @@ const DogMap: React.FC<DogMapProps> = ({
                         transition: 'background-color 0.2s'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1e7e34';
+                        e.currentTarget.style.backgroundColor = '#8A52D0';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#28a745';
+                        e.currentTarget.style.backgroundColor = '#6A32B0';
                       }}
                     >
                       Message

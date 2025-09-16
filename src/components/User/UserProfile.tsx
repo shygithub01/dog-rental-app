@@ -408,15 +408,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
           {onClose && (
             <button
               onClick={onClose}
-              style={{
-                padding: '12px 24px',
-                backgroundColor: '#718096',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
+              className="btn-glass"
             >
               ← Back to Dashboard
             </button>
@@ -479,7 +471,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               justifyContent: 'center',
               fontSize: '2rem',
               color: '#4a5568',
-              border: '3px solid #4299e1'
+              border: '3px solid #6A32B0'
             }}>
               {!user.photoURL && '👤'}
             </div>
@@ -501,22 +493,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               }}>
                 <span>⭐ {user.rating.toFixed(1)} ({user.totalReviews} reviews)</span>
                 <span>📅 Member since {formatDate(user.joinDate)}</span>
-                {user.isVerified && <span style={{ color: '#48bb78' }}>✅ Verified</span>}
+                {user.isVerified && <span style={{ color: '#6A32B0' }}>✅ Verified</span>}
               </div>
             </div>
           </div>
           {onClose && (
             <button
               onClick={onClose}
-              style={{
-                padding: '12px 24px',
-                backgroundColor: '#718096',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
+              className="btn-glass"
             >
               ← Back to Dashboard
             </button>
@@ -618,17 +602,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             <button
               key={key}
               onClick={() => setActiveTab(key as any)}
-              style={{
-                padding: '12px 20px',
-                backgroundColor: activeTab === key ? '#4299e1' : 'transparent',
-                color: activeTab === key ? 'white' : '#4a5568',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '0.9rem',
-                transition: 'all 0.2s'
-              }}
+              className={`px-5 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${
+                activeTab === key 
+                  ? 'bg-primary-600/30 text-primary-900 border border-primary-400/30' 
+                  : 'text-gray-600 hover:bg-white/10 hover:text-primary-800'
+              }`}
             >
               {icon} {label}
             </button>
@@ -805,7 +783,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                             <span style={{
                               padding: '2px 8px',
                               borderRadius: '12px',
-                              backgroundColor: dog.isAvailable ? '#48bb78' : '#e53e3e',
+                              backgroundColor: dog.isAvailable ? '#6A32B0' : '#e53e3e',
                               color: 'white',
                               fontWeight: 'bold'
                             }}>
@@ -894,8 +872,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                           borderRadius: '12px',
                           fontSize: '0.8rem',
                           fontWeight: 'bold',
-                          backgroundColor: rental.status === 'completed' ? '#48bb78' : 
-                                         rental.status === 'active' ? '#4299e1' : '#e53e3e',
+                          backgroundColor: rental.status === 'completed' ? '#6A32B0' : 
+                                         rental.status === 'active' ? '#6A32B0' : '#e53e3e',
                           color: 'white'
                         }}>
                           {rental.status.toUpperCase()}

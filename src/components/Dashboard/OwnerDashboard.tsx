@@ -285,14 +285,14 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                                 🏠 Rented by: {dogRental.renterName}
                               </p>
                               <p style={{
-                                color: '#718096',
+                                color: '#6A32B0',
                                 margin: '0 0 5px 0',
                                 fontSize: '0.8rem'
                               }}>
                                 💰 Total Cost: ${dogRental.totalCost}
                               </p>
                               <p style={{
-                                color: '#718096',
+                                color: '#6A32B0',
                                 margin: '0',
                                 fontSize: '0.8rem'
                               }}>
@@ -340,7 +340,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                               style={{
                                 flex: 1,
                                 padding: '12px',
-                                backgroundColor: '#4299e1',
+                                backgroundColor: '#6A32B0',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '8px',
@@ -349,8 +349,8 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                                 fontSize: '0.9rem',
                                 transition: 'all 0.2s'
                               }}
-                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3182ce'}
-                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4299e1'}
+                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
                             >
                               ✏️ Edit
                             </button>

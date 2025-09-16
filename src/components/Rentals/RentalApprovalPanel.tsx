@@ -391,7 +391,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                 onClick={() => handleApprove(request)}
                 style={{
                   padding: '10px 20px',
-                  backgroundColor: '#48bb78',
+                  backgroundColor: '#6A32B0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -400,8 +400,8 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                   fontSize: '1rem',
                   transition: 'all 0.2s'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
               >
                 ✅ Approve Request
               </button>

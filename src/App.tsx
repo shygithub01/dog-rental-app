@@ -99,33 +99,7 @@ function AppContent() {
       }
     })
 
-    
-  const RoleSelectionPage = () => (
-    <div className="role-selection">
-      <div className="role-card">
-        <h2>Welcome!</h2>
-        <p>Please choose your role to continue.</p>
-        <div className="role-options">
-          <button onClick={() => confirmNewRole('renter')}>Renter</button>
-          <button onClick={() => confirmNewRole('owner')}>Owner</button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const confirmNewRole = async (role: 'owner' | 'renter') => {
-    if (!user) return;
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, { role, lastActive: serverTimestamp() });
-      const latest = await getDoc(userRef);
-      setUserProfile({ ...(latest.data() || {}), id: user.uid });
-    } catch (err) {
-      console.error('Failed to set role', err);
-    }
-  };
-
-return () => unsubscribe()
+    return () => unsubscribe()
   }, [auth])
 
   const loadUserProfile = async (currentUser: any) => {
@@ -219,7 +193,7 @@ return () => unsubscribe()
           currentUser.uid,
           'welcome',
           {
-            title: '🐕 Welcome to DogRental!',
+            title: 'Welcome to DogRental!',
             message: `Welcome ${currentUser.displayName || currentUser.email}! You can now browse dogs, add your own dogs for rent, and start connecting with other dog lovers in your community.`,
             data: {
               userId: currentUser.uid,
@@ -316,7 +290,7 @@ return () => unsubscribe()
       console.log('Number of dogs:', allDogs.length)
       
       // Debug: Check ownerId values
-      console.log('🔍 DEBUG Dog ownerIds:', allDogs.map((dog: any) => ({
+      console.log('DEBUG Dog ownerIds:', allDogs.map((dog: any) => ({
         id: dog.id,
         name: dog.name,
         ownerId: dog.ownerId,
@@ -436,7 +410,7 @@ return () => unsubscribe()
         dog.ownerId,
         'rental_request',
         {
-          title: `💬 New Message about ${dog.name}`,
+          title: `New Message about ${dog.name}`,
           message: `${user.displayName || user.email || 'Unknown'} sent you a message about ${dog.name}`,
           data: {
             senderId: user.uid,
@@ -471,7 +445,6 @@ return () => unsubscribe()
     }
   };
 
-  
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -484,6 +457,7 @@ return () => unsubscribe()
       alert('Failed to sign in with Google. Please try again.');
     }
   };
+
   const confirmSwitchRole = async () => {
     if (!roleMismatch) return;
     const { user, chosen } = roleMismatch as any;
@@ -500,7 +474,9 @@ return () => unsubscribe()
     const { user, saved } = roleMismatch as any;
     setUserProfile((prev: any) => ({ ...(prev || {}), id: user.uid, role: saved }));
     setRoleMismatch(null);
-  };const handleUserDropdownToggle = () => {
+  };
+
+  const handleUserDropdownToggle = () => {
     setShowUserDropdown(!showUserDropdown);
   };
 
@@ -545,7 +521,7 @@ return () => unsubscribe()
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        background: 'linear-gradient(135deg, #6A32B0 0%, #8A52D0 100%)'
       }}>
         <div style={{
           background: 'white',
@@ -558,7 +534,7 @@ return () => unsubscribe()
             width: '50px',
             height: '50px',
             border: '4px solid #e2e8f0',
-            borderTop: '4px solid #667eea',
+            borderTop: '4px solid #6A32B0',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
@@ -570,7 +546,7 @@ return () => unsubscribe()
     );
   }
 
-// Show different forms/panels based on state
+  // Show different forms/panels based on state
   if (showAddDog) {
     return (
       <AddDogForm
@@ -635,10 +611,10 @@ return () => unsubscribe()
             </p>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+          <div className="flex justify-center mb-8">
             <button
               onClick={() => setShowApprovalPanel(false)}
-              className="btn-secondary"
+              className="btn-glass"
             >
               ← Back to Dashboard
             </button>
@@ -684,10 +660,10 @@ return () => unsubscribe()
             </p>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+          <div className="flex justify-center mb-8">
             <button
               onClick={() => setShowRenterPendingRequests(false)}
-              className="btn-secondary"
+              className="btn-glass"
             >
               ← Back to Dashboard
             </button>
@@ -789,7 +765,6 @@ return () => unsubscribe()
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
             border: '1px solid #e2e8f0'
           }}>
-            {/* Form Header */}
             <div style={{
               textAlign: 'center',
               marginBottom: '40px',
@@ -805,16 +780,15 @@ return () => unsubscribe()
               </p>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+            <div className="flex justify-center mb-8">
               <button
                 onClick={() => setShowEarningsReport(false)}
-                className="btn-secondary"
+                className="btn-glass"
               >
                 ← Back to Dashboard
               </button>
             </div>
 
-            {/* Earnings Summary Cards */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
@@ -822,7 +796,7 @@ return () => unsubscribe()
               marginBottom: '30px'
             }}>
               <div style={{
-                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                background: 'linear-gradient(135deg, #8A52D0 0%, #6A32B0 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -830,7 +804,6 @@ return () => unsubscribe()
               }}>
                 <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
                   ${(() => {
-                    // Calculate past earnings from completed rentals
                     const pastEarnings = ownerEarnings
                       .filter(rental => rental.status === 'completed')
                       .reduce((sum: number, rental: any) => sum + (rental.totalCost || 0), 0);
@@ -839,185 +812,6 @@ return () => unsubscribe()
                 </div>
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Past Earnings</div>
               </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
-                color: 'white',
-                padding: '25px',
-                borderRadius: '15px',
-                textAlign: 'center'
-              }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
-                  ${(() => {
-                    // Calculate pending earnings from active rentals
-                    const pendingEarnings = ownerEarnings
-                      .filter(rental => rental.status === 'active')
-                      .reduce((sum: number, rental: any) => sum + (rental.totalCost || 0), 0);
-                    return pendingEarnings;
-                  })()}
-                </div>
-                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Pending to Earn</div>
-              </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                padding: '25px',
-                borderRadius: '15px',
-                textAlign: 'center'
-              }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
-                  ${(() => {
-                    // Calculate total earnings
-                    const totalEarnings = ownerEarnings.reduce((sum: number, rental: any) => 
-                      sum + (rental.totalCost || 0), 0);
-                    return totalEarnings;
-                  })()}
-                </div>
-                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Earnings</div>
-              </div>
-            </div>
-
-            {/* Earnings Details */}
-            <div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 20px 0',
-                fontWeight: 'bold'
-              }}>
-                📊 Earnings Breakdown
-              </h3>
-              
-              {/* Fetch and display actual earnings data */}
-              {(() => {
-                if (ownerEarnings.length > 0) {
-                  return (
-                    <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
-                      {ownerEarnings.map((rental: any, index: number) => (
-                        <div key={rental.id || index} style={{
-                          background: 'white',
-                          padding: '20px',
-                          borderRadius: '10px',
-                          marginBottom: index < ownerEarnings.length - 1 ? '15px' : '0',
-                          border: '1px solid #e2e8f0',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                        }}>
-                          <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'flex-start',
-                            marginBottom: '15px'
-                          }}>
-                            <div style={{ flex: 1 }}>
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '10px',
-                                marginBottom: '8px'
-                              }}>
-                                <span style={{
-                                  padding: '4px 8px',
-                                  backgroundColor: rental.status === 'active' ? '#fef5e7' : '#c6f6d5',
-                                  color: rental.status === 'active' ? '#c05621' : '#22543d',
-                                  borderRadius: '20px',
-                                  fontSize: '0.8rem',
-                                  fontWeight: 'bold'
-                                }}>
-                                  {rental.status === 'active' ? '🟡 Active' : '✅ Completed'}
-                                </span>
-                                <span style={{
-                                  fontSize: '0.9rem',
-                                  color: '#4a5568'
-                                }}>
-                                  {rental.startDate?.toDate ? rental.startDate.toDate().toLocaleDateString() : 'N/A'} - {rental.endDate?.toDate ? rental.endDate.toDate().toLocaleDateString() : 'N/A'}
-                                </span>
-                              </div>
-                              <h4 style={{
-                                fontSize: '1.2rem',
-                                color: '#2d3748',
-                                margin: '0 0 5px 0',
-                                fontWeight: 'bold'
-                              }}>
-                                {rental.dogName || 'Unknown Dog'} ({rental.dogBreed || 'Unknown Breed'})
-                              </h4>
-                              <p style={{
-                                color: '#4a5568',
-                                margin: '0 0 5px 0',
-                                fontSize: '0.9rem'
-                              }}>
-                                Rented by: {rental.renterName || 'Unknown Renter'}
-                              </p>
-                            </div>
-                            <div style={{
-                              textAlign: 'right',
-                              minWidth: '100px'
-                            }}>
-                              <div style={{
-                                fontSize: '1.5rem',
-                                fontWeight: 'bold',
-                                color: '#48bb78',
-                                marginBottom: '5px'
-                              }}>
-                                ${rental.totalCost || 0}
-                              </div>
-                              <div style={{
-                                fontSize: '0.8rem',
-                                color: '#4a5568'
-                              }}>
-                                Earnings
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {rental.status === 'active' && (
-                            <div style={{
-                              background: '#fef5e7',
-                              padding: '10px',
-                              borderRadius: '8px',
-                              border: '1px solid #fed7aa'
-                            }}>
-                              <p style={{
-                                color: '#c05621',
-                                margin: 0,
-                                fontSize: '0.9rem',
-                                fontStyle: 'italic'
-                              }}>
-                                ⏳ This rental is currently active - payment pending
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div style={{ 
-                      background: '#f7fafc', 
-                      padding: '40px', 
-                      borderRadius: '15px',
-                      textAlign: 'center',
-                      border: '2px dashed #cbd5e0'
-                    }}>
-                      <div style={{ fontSize: '3rem', marginBottom: '20px' }}>💰</div>
-                      <h4 style={{
-                        fontSize: '1.3rem',
-                        color: '#2d3748',
-                        margin: '0 0 10px 0',
-                        fontWeight: 'bold'
-                      }}>
-                        No earnings yet
-                      </h4>
-                      <p style={{
-                        color: '#4a5568',
-                        margin: 0,
-                        fontSize: '1rem'
-                      }}>
-                        Start listing your dogs to earn rental income
-                      </p>
-                    </div>
-                  );
-                }
-              })()}
             </div>
           </div>
         </div>
@@ -1044,7 +838,6 @@ return () => unsubscribe()
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
             border: '1px solid #e2e8f0'
           }}>
-            {/* Form Header */}
             <div style={{
               textAlign: 'center',
               marginBottom: '40px',
@@ -1060,195 +853,13 @@ return () => unsubscribe()
               </p>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+            <div className="flex justify-center mb-8">
               <button
                 onClick={() => setShowPaymentHistory(false)}
-                className="btn-secondary"
+                className="btn-glass"
               >
                 ← Back to Dashboard
               </button>
-            </div>
-
-            {/* Payment History Summary Cards */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: '20px',
-              marginBottom: '30px'
-            }}>
-              <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                padding: '25px',
-                borderRadius: '15px',
-                textAlign: 'center'
-              }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
-                  ${(() => {
-                    // Calculate total paid from rentals
-                    const totalPaid = userRentals.reduce((sum: number, rental: any) => 
-                      sum + (rental.totalCost || 0), 0);
-                    return totalPaid;
-                  })()}
-                </div>
-                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Paid</div>
-              </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
-                color: 'white',
-                padding: '25px',
-                borderRadius: '15px',
-                textAlign: 'center'
-              }}>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
-                  {userRentals.length}
-                </div>
-                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Rentals</div>
-              </div>
-            </div>
-
-            {/* Rental History Details */}
-            <div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 20px 0',
-                fontWeight: 'bold'
-              }}>
-                📋 Rental Details
-              </h3>
-              
-              {/* Fetch and display actual rental history */}
-              {(() => {
-                if (userRentals.length > 0) {
-                  return (
-                    <div style={{ background: '#f7fafc', padding: '20px', borderRadius: '15px' }}>
-                      {userRentals.map((rental: any, index: number) => (
-                        <div key={rental.id || index} style={{
-                          background: 'white',
-                          padding: '20px',
-                          borderRadius: '10px',
-                          marginBottom: index < userRentals.length - 1 ? '15px' : '0',
-                          border: '1px solid #e2e8f0',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                        }}>
-                          <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'flex-start',
-                            marginBottom: '15px'
-                          }}>
-                            <div style={{ flex: 1 }}>
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '10px',
-                                marginBottom: '8px'
-                              }}>
-                                <span style={{
-                                  padding: '4px 8px',
-                                  backgroundColor: rental.status === 'active' ? '#c6f6d5' : '#c6f6d5',
-                                  color: rental.status === 'active' ? '#22543d' : '#22543d',
-                                  borderRadius: '20px',
-                                  fontSize: '0.8rem',
-                                  fontWeight: 'bold'
-                                }}>
-                                  {rental.status === 'active' ? '🟢 Active' : '✅ Completed'}
-                                </span>
-                                <span style={{
-                                  fontSize: '0.9rem',
-                                  color: '#4a5568'
-                                }}>
-                                  {rental.startDate?.toDate ? rental.startDate.toDate().toLocaleDateString() : 'N/A'} - {rental.endDate?.toDate ? rental.endDate.toDate().toLocaleDateString() : 'N/A'}
-                                </span>
-                              </div>
-                              <h4 style={{
-                                fontSize: '1.2rem',
-                                color: '#2d3748',
-                                margin: '0 0 5px 0',
-                                fontWeight: 'bold'
-                              }}>
-                                {rental.dogName || 'Unknown Dog'} ({rental.dogBreed || 'Unknown Breed'})
-                              </h4>
-                              <p style={{
-                                color: '#4a5568',
-                                margin: '0 0 5px 0',
-                                fontSize: '0.9rem'
-                              }}>
-                                Owner: {rental.dogOwnerName || 'Unknown Owner'}
-                              </p>
-                            </div>
-                            <div style={{
-                              textAlign: 'right',
-                              minWidth: '100px'
-                            }}>
-                              <div style={{
-                                fontSize: '1.5rem',
-                                fontWeight: 'bold',
-                                color: '#667eea',
-                                marginBottom: '5px'
-                              }}>
-                                ${rental.totalCost || 0}
-                              </div>
-                              <div style={{
-                                fontSize: '0.8rem',
-                                color: '#4a5568'
-                              }}>
-                                Total Cost
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {rental.status === 'active' && (
-                            <div style={{
-                              background: '#fef5e7',
-                              padding: '10px',
-                              borderRadius: '8px',
-                              border: '1px solid #fed7aa'
-                            }}>
-                              <p style={{
-                                color: '#c05621',
-                                margin: 0,
-                                fontSize: '0.9rem',
-                                fontStyle: 'italic'
-                              }}>
-                                ⏳ This rental is currently active
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div style={{ 
-                      background: '#f7fafc', 
-                      padding: '40px', 
-                      borderRadius: '15px',
-                      textAlign: 'center',
-                      border: '2px dashed #cbd5e0'
-                    }}>
-                      <div style={{ fontSize: '3rem', marginBottom: '20px' }}>💳</div>
-                      <h4 style={{
-                        fontSize: '1.3rem',
-                        color: '#2d3748',
-                        margin: '0 0 10px 0',
-                        fontWeight: 'bold'
-                      }}>
-                        No payment history yet
-                      </h4>
-                      <p style={{
-                        color: '#4a5568',
-                        margin: 0,
-                        fontSize: '1rem'
-                      }}>
-                        Start exploring and rent your first dog companion
-                      </p>
-                    </div>
-                  );
-                }
-              })()}
             </div>
           </div>
         </div>
@@ -1263,7 +874,7 @@ return () => unsubscribe()
         <div className="header-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
             <a href="#" className="logo">
-              🐕 DogRental
+              DogRental
             </a>
           </div>
 
@@ -1301,7 +912,7 @@ return () => unsubscribe()
                         }}
                         className="dropdown-item"
                       >
-                        👤 Profile
+                        Profile
                       </button>
                       
                       {/* Role-specific Financial Reports */}
@@ -1315,7 +926,7 @@ return () => unsubscribe()
                               }}
                               className="dropdown-item"
                             >
-                              💰 Earnings Report
+                              Earnings Report
                             </button>
                           );
                         } else if (effectiveUserRole === 'renter') {
@@ -1327,7 +938,7 @@ return () => unsubscribe()
                               }}
                               className="dropdown-item"
                             >
-                              💳 Payment History
+                              Payment History
                             </button>
                           );
                         }
@@ -1344,27 +955,27 @@ return () => unsubscribe()
                           className="dropdown-item"
                           style={{ color: '#e53e3e', fontWeight: 'bold' }}
                         >
-                          ⚙️ Admin Panel
+                          Admin Panel
                         </button>
                       )}
 
                       {/* Clear All Data Button - Fresh Start */}
                       <button
                         onClick={async () => {
-                          if (confirm('⚠️ WARNING: This will delete ALL data and start fresh. Are you sure?')) {
+                          if (confirm('WARNING: This will delete ALL data and start fresh. Are you sure?')) {
                             try {
                               await clearAllData(db);
                               setShowUserDropdown(false);
                             } catch (error) {
                               console.error('Error clearing data:', error);
-                              alert('❌ Error clearing data: ' + error);
+                              alert('Error clearing data: ' + error);
                             }
                           }
                         }}
                         className="dropdown-item"
                         style={{ color: '#e53e3e', fontWeight: 'bold' }}
                       >
-                        🧹 Clear All Data (Fresh Start)
+                        Clear All Data (Fresh Start)
                       </button>
                       
                       <button
@@ -1374,7 +985,7 @@ return () => unsubscribe()
                         }}
                         className="dropdown-item"
                       >
-                        💬 Inbox
+                        Inbox
                       </button>
                       
                       <button
@@ -1384,7 +995,7 @@ return () => unsubscribe()
                         }}
                         className="dropdown-item"
                       >
-                        🗺️ Maps
+                        Maps
                       </button>
 
                       <div className="dropdown-divider" />
@@ -1396,7 +1007,7 @@ return () => unsubscribe()
                         }}
                         className="dropdown-item"
                       >
-                        🔄 Switch Role
+                        Switch Role
                       </button>
                       
                       <button
@@ -1420,7 +1031,7 @@ return () => unsubscribe()
                         }}
                         className="dropdown-item danger"
                       >
-                        🚪 Sign Out
+                        Sign Out
                       </button>
                     </div>
                   )}
@@ -1430,6 +1041,7 @@ return () => unsubscribe()
           </div>
         </div>
       </header>
+
       {roleMismatch && (
         <div className="modal-backdrop">
           <div className="modal-card">
@@ -1486,92 +1098,89 @@ return () => unsubscribe()
                 </div>
               </div>
             )}
-
           </div>
 
-      {/* Search/Action Card - Consolidated */}
-      <div className="search-card slide-up">
-        {!user ? (
-          // Not logged in - show beautiful landing page
-          <>
-            <h3 className="search-title">
-              Join DogRental today
-            </h3>
-            <p className="search-subtitle">
-              Sign in to start renting dogs or list your dogs for rent
-            </p>
-            
-            {/* Role Selection */}
-            
-            <button
-              onClick={handleGoogleSignIn}
-              className="btn btn-google btn-lg"
-              style={{ marginTop: 'var(--space-6)' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Sign in with Google
-            </button>
-          </>
-        ) : user && !userProfile ? (
-          // User is logged in but no profile yet - show role selection
-          <>
-            <h3 className="search-title">
-              Choose Your Role
-            </h3>
-            <p className="search-subtitle">
-              How would you like to use DogRental?
-            </p>
-            
-            <div className="role-selection">
-              <div className="role-options">
-                <button
-                  onClick={() => setSelectedRole('renter')}
-                  className={`role-option ${selectedRole === 'renter' ? 'selected' : ''}`}
-                >
-                  <span className="role-option-icon">🐾</span>
-                  <span className="role-option-text">Rent dogs from others</span>
-                </button>
+          {/* Search/Action Card - Consolidated */}
+          <div className="search-card slide-up">
+            {!user ? (
+              // Not logged in - show beautiful landing page
+              <>
+                <h3 className="search-title">
+                  Join DogRental today
+                </h3>
+                <p className="search-subtitle">
+                  Sign in to start renting dogs or list your dogs for rent
+                </p>
                 
                 <button
-                  onClick={() => setSelectedRole('owner')}
-                  className={`role-option ${selectedRole === 'owner' ? 'selected' : ''}`}
+                  onClick={handleGoogleSignIn}
+                  className="btn btn-google btn-lg"
+                  style={{ marginTop: 'var(--space-6)' }}
                 >
-                  <span className="role-option-icon">🏠</span>
-                  <span className="role-option-text">List my dogs for rent</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Sign in with Google
                 </button>
-              </div>
-              
-              <button
-                onClick={async () => {
-                  if (selectedRole && user) {
-                    try {
-                      await createUserProfileWithRole(user, selectedRole);
-                    } catch (error) {
-                      console.error('Error creating user profile:', error);
-                    }
-                  }
-                }}
-                disabled={!selectedRole}
-                className={`btn btn-success btn-lg ${!selectedRole ? 'loading' : ''}`}
-                style={{ marginTop: 'var(--space-6)' }}
-              >
-                Continue with {selectedRole === 'renter' ? 'Renting' : selectedRole === 'owner' ? 'Hosting' : 'Role Selection'}
-              </button>
-            </div>
-          </>
-        ) : user && userProfile ? (
+              </>
+            ) : user && !userProfile ? (
+              // User is logged in but no profile yet - show role selection
+              <>
+                <h3 className="search-title">
+                  Choose Your Role
+                </h3>
+                <p className="search-subtitle">
+                  How would you like to use DogRental?
+                </p>
+                
+                <div className="role-selection">
+                  <div className="role-options">
+                    <button
+                      onClick={() => setSelectedRole('renter')}
+                      className={`role-option ${selectedRole === 'renter' ? 'selected' : ''}`}
+                    >
+                      <span className="role-option-icon">🐾</span>
+                      <span className="role-option-text">Rent dogs from others</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => setSelectedRole('owner')}
+                      className={`role-option ${selectedRole === 'owner' ? 'selected' : ''}`}
+                    >
+                      <span className="role-option-icon">🏠</span>
+                      <span className="role-option-text">List my dogs for rent</span>
+                    </button>
+                  </div>
+                  
+                  <button
+                    onClick={async () => {
+                      if (selectedRole && user) {
+                        try {
+                          await createUserProfileWithRole(user, selectedRole);
+                        } catch (error) {
+                          console.error('Error creating user profile:', error);
+                        }
+                      }
+                    }}
+                    disabled={!selectedRole}
+                    className={`btn btn-success btn-lg ${!selectedRole ? 'loading' : ''}`}
+                    style={{ marginTop: 'var(--space-6)' }}
+                  >
+                    Continue with {selectedRole === 'renter' ? 'Renting' : selectedRole === 'owner' ? 'Hosting' : 'Role Selection'}
+                  </button>
+                </div>
+              </>
+            ) : user && userProfile ? (
               <>
                 {(() => {
                   if (effectiveUserRole === 'admin') {
                     return (
                       <>
                         <h3 className="search-title">
-                          🛠️ Admin Control Center
+                          Admin Control Center
                         </h3>
                         <p className="search-subtitle">
                           Manage users, resolve issues, and monitor system health
@@ -1616,81 +1225,21 @@ return () => unsubscribe()
                             onClick={() => {
                               window.location.href = '/admin';
                             }}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#e53e3e',
-                              border: '2px solid #e53e3e',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#e53e3e';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#e53e3e';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            🛠️ Admin Dashboard
+                            Admin Dashboard
                           </button>
                           <button
                             onClick={() => setShowUserProfile(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#4299e1',
-                              border: '2px solid #4299e1',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#4299e1';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#4299e1';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            👥 User Management
+                            User Management
                           </button>
                           <button
                             onClick={() => setShowMessaging(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#9f7a0a',
-                              border: '2px solid #9f7a0a',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#9f7a0a';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#9f7a0a';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            💬 Support Chat
+                            Support Chat
                           </button>
                         </>
                       );
@@ -1702,55 +1251,15 @@ return () => unsubscribe()
                         <>
                           <button
                             onClick={() => setShowAddDog(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#38a169',
-                              border: '2px solid #38a169',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#38a169';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#38a169';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            🐕 Add New Dog
+                            Add New Dog
                           </button>
                           <button
                             onClick={() => setShowApprovalPanel(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#38a169',
-                              border: '2px solid #38a169',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#38a169';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#38a169';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            📋 My Requests
+                            My Requests
                           </button>
                         </>
                       );
@@ -1760,107 +1269,27 @@ return () => unsubscribe()
                         <>
                           <button
                             onClick={() => setShowMaps(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#38a169',
-                              border: '2px solid #38a169',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#38a169';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#38a169';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            🔍 Browse All Dogs
+                            Browse All Dogs
                           </button>
                           <button
                             onClick={() => setShowUserProfile(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#38a169',
-                              border: '2px solid #38a169',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#38a169';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#38a169';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            📅 My Rentals
+                            My Rentals
                           </button>
                           <button
                             onClick={() => setShowFavorites(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#38a169',
-                              border: '2px solid #38a169',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#38a169';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#38a169';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            ❤️ Favorites
+                            Favorites
                           </button>
                           <button
                             onClick={() => setShowRenterPendingRequests(true)}
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              backgroundColor: '#ffffff',
-                              color: '#38a169',
-                              border: '2px solid #38a169',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              fontWeight: 'bold',
-                              fontSize: '1rem',
-                              transition: 'all 0.3s ease',
-                              marginBottom: '10px'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#38a169';
-                              e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                              e.currentTarget.style.color = '#38a169';
-                            }}
+                            className="btn-glass-primary w-full mb-4"
                           >
-                            📋 Pending Requests
+                            Pending Requests
                           </button>
                         </>
                       );
@@ -1870,169 +1299,13 @@ return () => unsubscribe()
                   
                   <button
                     onClick={handleDataCleanup}
-                    style={{
-                      width: '100%',
-                      padding: '15px 20px',
-                      backgroundColor: '#ffffff',
-                      color: '#38a169',
-                      border: '2px solid #38a169',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      transition: 'all 0.3s ease',
-                      marginBottom: '10px'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor = '#38a169';
-                      e.currentTarget.style.color = '#ffffff';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = '#ffffff';
-                      e.currentTarget.style.color = '#38a169';
-                    }}
+                    className="btn-glass-primary w-full mb-4"
                   >
-                    🧹 Clean Data
+                    Clean Data
                   </button>
                 </div>
               </>
-            ) : user && !userProfile ? (
-              // User is signed in but no profile exists - show role selection
-              <>
-                <h3 className="search-title">
-                  Welcome back! Choose your role
-                </h3>
-                <p className="search-subtitle">
-                  We need to know how you'd like to use DogRental
-                </p>
-                
-                {/* Role Selection */}
-                <div className="role-selection">
-                  <div className="role-selection-title">I want to:</div>
-                  
-                  <div className="role-options">
-                    <button
-                      onClick={() => setSelectedRole('renter')}
-                      style={{
-                        width: '100%',
-                        padding: '15px 20px',
-                        backgroundColor: selectedRole === 'renter' ? '#38a169' : '#ffffff',
-                        color: selectedRole === 'renter' ? '#ffffff' : '#38a169',
-                        border: '2px solid #38a169',
-                        borderRadius: '10px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        transition: 'all 0.3s ease',
-                        marginBottom: '10px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '10px'
-                      }}
-                      onMouseOver={(e) => {
-                        if (selectedRole !== 'renter') {
-                          e.currentTarget.style.backgroundColor = '#38a169';
-                          e.currentTarget.style.color = '#ffffff';
-                        }
-                      }}
-                      onMouseOut={(e) => {
-                        if (selectedRole !== 'renter') {
-                          e.currentTarget.style.backgroundColor = '#ffffff';
-                          e.currentTarget.style.color = '#38a169';
-                        }
-                      }}
-                    >
-                      <span style={{ fontSize: '1.2rem' }}>🐾</span>
-                      Rent dogs from others
-                    </button>
-                    
-                    <button
-                      onClick={() => setSelectedRole('owner')}
-                      style={{
-                        width: '100%',
-                        padding: '15px 20px',
-                        backgroundColor: selectedRole === 'owner' ? '#38a169' : '#ffffff',
-                        color: selectedRole === 'owner' ? '#ffffff' : '#38a169',
-                        border: '2px solid #38a169',
-                        borderRadius: '10px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        transition: 'all 0.3s ease',
-                        marginBottom: '10px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '10px'
-                      }}
-                      onMouseOver={(e) => {
-                        if (selectedRole !== 'owner') {
-                          e.currentTarget.style.backgroundColor = '#38a169';
-                          e.currentTarget.style.color = '#ffffff';
-                        }
-                      }}
-                      onMouseOut={(e) => {
-                        if (selectedRole !== 'owner') {
-                          e.currentTarget.style.backgroundColor = '#ffffff';
-                          e.currentTarget.style.color = '#38a169';
-                        }
-                      }}
-                    >
-                      <span style={{ fontSize: '1.2rem' }}>🏠</span>
-                      List my dogs for rent
-                    </button>
-                  </div>
-                </div>
-                
-                <button
-                  onClick={async () => {
-                    if (!selectedRole) {
-                      alert('Please select a role first.');
-                      return;
-                    }
-                    
-                    try {
-                      await createUserProfileWithRole(user, selectedRole);
-                    } catch (error) {
-                      console.error('Error creating profile:', error);
-                      alert('Failed to create profile. Please try again.');
-                    }
-                  }}
-                  disabled={!selectedRole}
-                  style={{
-                    width: '100%',
-                    padding: '15px 20px',
-                    backgroundColor: selectedRole ? '#38a169' : '#e2e8f0',
-                    color: selectedRole ? '#ffffff' : '#a0aec0',
-                    border: '2px solid #38a169',
-                    borderRadius: '10px',
-                    cursor: selectedRole ? 'pointer' : 'not-allowed',
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    transition: 'all 0.3s ease',
-                    marginTop: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px'
-                  }}
-                  onMouseOver={(e) => {
-                    if (selectedRole) {
-                      e.currentTarget.style.backgroundColor = '#2f855a';
-                    }
-                  }}
-                  onMouseOut={(e) => {
-                    if (selectedRole) {
-                      e.currentTarget.style.backgroundColor = '#38a169';
-                    }
-                  }}
-                >
-                  ✅ Continue with {selectedRole ? (selectedRole === 'renter' ? 'Renter' : 'Owner') : 'Selected'} Role
-                </button>
-              </>
             ) : null}
-
           </div>
         </div>
       </section>
@@ -2040,9 +1313,9 @@ return () => unsubscribe()
       {/* Role-Based Dashboard Content */}
       {user && userProfile && (
         <>
-          {console.log('🔍 DEBUG: userProfile.role =', userProfile.role, 'effectiveUserRole =', effectiveUserRole, 'userProfile =', userProfile)}
+          {console.log('DEBUG: userProfile.role =', userProfile.role, 'effectiveUserRole =', effectiveUserRole, 'userProfile =', userProfile)}
           {(() => {
-            console.log('🔍 DEBUG: Final user role =', effectiveUserRole);
+            console.log('DEBUG: Final user role =', effectiveUserRole);
             
             if (effectiveUserRole === 'owner') {
               return (
@@ -2091,7 +1364,7 @@ return () => unsubscribe()
         <section className="dashboard-section">
           <div className="section-container">
             <div className="section-header">
-              <h2 className="section-title">🐕 Available Dogs</h2>
+              <h2 className="section-title">Available Dogs</h2>
               <p className="section-subtitle">
                 Discover amazing dogs ready for their next adventure
               </p>
@@ -2126,7 +1399,7 @@ return () => unsubscribe()
         </section>
       )}
 
-      {/* Services Section */}
+      {/* Services Section - Show on landing page */}
       <section className="dashboard-section" style={{ background: '#f8fafc' }}>
         <div className="section-container">
           <div className="section-header">
@@ -2194,43 +1467,45 @@ return () => unsubscribe()
         </div>
       </section>
 
-      {/* Footer */}
-      <div style={{
-        background: '#2d3748',
-        color: 'white',
-        padding: '40px',
-        textAlign: 'center'
-      }}>
+      {/* Footer - Only show when user is logged in */}
+      {user && userProfile && (
         <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto'
+          background: '#2d3748',
+          color: 'white',
+          padding: '40px',
+          textAlign: 'center'
         }}>
-          <h3 style={{
-            margin: '0 0 20px 0',
-            fontSize: '1.5rem',
-            fontWeight: 'bold'
-          }}>
-            🐕 DogRental
-          </h3>
-          <p style={{
-            margin: '0 0 20px 0',
-            opacity: 0.8,
-            lineHeight: '1.6'
-          }}>
-            Connecting dog lovers with trusted companions in your neighborhood.
-          </p>
           <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '30px',
-            marginTop: '30px'
+            maxWidth: '1200px',
+            margin: '0 auto'
           }}>
-            <span style={{ opacity: 0.7 }}>© 2024 DogRental</span>
-            <span style={{ opacity: 0.7 }}>Privacy Policy</span>
-            <span style={{ opacity: 0.7 }}>Terms of Service</span>
+            <h3 style={{
+              margin: '0 0 20px 0',
+              fontSize: '1.5rem',
+              fontWeight: 'bold'
+            }}>
+              DogRental
+            </h3>
+            <p style={{
+              margin: '0 0 20px 0',
+              opacity: 0.8,
+              lineHeight: '1.6'
+            }}>
+              Connecting dog lovers with trusted companions in your neighborhood.
+            </p>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '30px',
+              marginTop: '30px'
+            }}>
+              <span style={{ opacity: 0.7 }}>© 2024 DogRental</span>
+              <span style={{ opacity: 0.7 }}>Privacy Policy</span>
+              <span style={{ opacity: 0.7 }}>Terms of Service</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       
       {/* Role Switch Modal */}
       {showRoleSwitchModal && (

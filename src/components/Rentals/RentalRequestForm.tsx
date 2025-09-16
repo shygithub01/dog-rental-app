@@ -345,7 +345,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -377,7 +377,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -432,7 +432,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     <div style={{
                       fontSize: '1.2rem',
                       fontWeight: 'bold',
-                      color: '#38a169'
+                      color: '#6A32B0'
                     }}>
                       ${totalCost.total}
                     </div>
@@ -487,7 +487,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -533,7 +533,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 resize: 'vertical',
                 fontFamily: 'inherit'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#4299e1'}
+              onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
@@ -565,7 +565,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 onClick={onCancel}
                 style={{
                   padding: '15px 30px',
-                  backgroundColor: '#718096',
+                  backgroundColor: '#6A32B0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '10px',
@@ -575,8 +575,8 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   transition: 'all 0.2s',
                   minWidth: '120px'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4a5568'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#718096'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
               >
                 ← Cancel
               </button>

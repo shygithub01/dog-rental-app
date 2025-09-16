@@ -63,15 +63,7 @@ const MapsView: React.FC<MapsViewProps> = ({
         </div>
         <button
           onClick={onBack}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
+          className="btn-glass"
         >
           ← Back to Dashboard
         </button>
@@ -150,7 +142,7 @@ const MapsView: React.FC<MapsViewProps> = ({
                 style={{
                   flex: 1,
                   padding: '10px',
-                  backgroundColor: selectedDog.isAvailable ? '#007bff' : '#6c757d',
+                  backgroundColor: selectedDog.isAvailable ? '#6A32B0' : '#6c757d',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',

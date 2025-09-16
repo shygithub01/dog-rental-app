@@ -152,7 +152,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         
         <p style={{
           margin: '0 0 20px 0',
-          color: '#718096',
+          color: '#6A32B0',
           fontSize: '0.9rem',
           textAlign: 'center'
         }}>
@@ -243,7 +243,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
             onClick={onCancel}
             style={{
               padding: '10px 20px',
-              backgroundColor: '#718096',
+              backgroundColor: '#6A32B0',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
@@ -257,7 +257,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
             onClick={handleCropComplete}
             style={{
               padding: '10px 20px',
-              backgroundColor: '#48bb78',
+              backgroundColor: '#6A32B0',
               color: 'white',
               border: 'none',
               borderRadius: '8px',

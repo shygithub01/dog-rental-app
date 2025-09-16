@@ -176,7 +176,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                   onClick={onBrowseDogs}
                   style={{
                     padding: '15px 30px',
-                    backgroundColor: '#48bb78',
+                    backgroundColor: '#6A32B0',
                     color: 'white',
                     border: 'none',
                     borderRadius: '10px',
@@ -185,8 +185,8 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                     fontSize: '1rem',
                     transition: 'all 0.2s'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#38a169'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#48bb78'}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
                 >
                   Browse Dogs
                 </button>
@@ -250,7 +250,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                           {rental.dogBreed}
                         </p>
                         <p style={{
-                          color: '#718096',
+                          color: '#6A32B0',
                           margin: '0 0 5px 0',
                           fontSize: '0.9rem'
                         }}>
@@ -297,7 +297,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                         style={{
                           flex: 1,
                           padding: '12px',
-                          backgroundColor: '#4299e1',
+                          backgroundColor: '#6A32B0',
                           color: 'white',
                           border: 'none',
                           borderRadius: '8px',
@@ -306,8 +306,8 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                           fontSize: '0.9rem',
                           transition: 'all 0.2s'
                         }}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3182ce'}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4299e1'}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
                       >
                         💬 Message Owner
                       </button>
@@ -400,7 +400,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Paid</div>
               </div>
               <div style={{
-                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                background: 'linear-gradient(135deg, #8A52D0 0%, #6A32B0 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',

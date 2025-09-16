@@ -179,16 +179,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
           <button
             onClick={onClose}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#718096',
-              color: 'white',
-              border: 'none',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '1rem'
-            }}
+            className="btn-glass"
           >
             ← Back to Dashboard
           </button>
@@ -221,16 +212,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
             </p>
             <button
               onClick={onBrowseDogs}
-              style={{
-                padding: '12px 24px',
-                backgroundColor: '#667eea',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1rem'
-              }}
+              className="btn-glass-primary"
             >
               Browse Dogs
             </button>
@@ -323,7 +305,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
                   marginBottom: '15px'
                 }}>
                   <span style={{
-                    color: '#48bb78',
+                    color: '#6A32B0',
                     fontSize: '1.1rem',
                     fontWeight: 'bold'
                   }}>

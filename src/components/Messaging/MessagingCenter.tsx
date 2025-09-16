@@ -62,7 +62,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                 onClick={handleBackToDashboard}
                 style={{
                   padding: '8px 12px',
-                  backgroundColor: '#6c757d',
+                  backgroundColor: '#6A32B0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',

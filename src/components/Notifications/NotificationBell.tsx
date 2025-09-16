@@ -256,7 +256,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                     onClick={handleMarkAllAsRead}
                     style={{
                       padding: '8px 16px',
-                      backgroundColor: '#4299e1',
+                      backgroundColor: '#6A32B0',
                       color: 'white',
                       border: 'none',
                       borderRadius: '8px',
@@ -272,7 +272,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                   onClick={handleClose}
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: '#718096',
+                    backgroundColor: '#6A32B0',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
@@ -315,7 +315,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                     No notifications yet
                   </h3>
                   <p style={{
-                    color: '#718096',
+                    color: '#6A32B0',
                     margin: 0
                   }}>
                     You'll see notifications here when you have rental activity.
@@ -333,7 +333,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                       style={{
                         padding: '15px',
                         borderRadius: '10px',
-                        border: notification.read ? '1px solid #e2e8f0' : '2px solid #4299e1',
+                        border: notification.read ? '1px solid #e2e8f0' : '2px solid #6A32B0',
                         backgroundColor: notification.read ? '#f7fafc' : 'white',
                         cursor: 'pointer',
                         transition: 'all 0.2s'
@@ -379,7 +379,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                                 <div style={{
                                   width: '8px',
                                   height: '8px',
-                                  backgroundColor: '#4299e1',
+                                  backgroundColor: '#6A32B0',
                                   borderRadius: '50%'
                                 }} />
                               )}

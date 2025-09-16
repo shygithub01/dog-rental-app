@@ -1,68 +1,404 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+/* Enhanced Glassmorphism Components - Quizist Purple Theme */
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Purple Theme Palette */
+    --primary-50: #faf5ff;
+    --primary-100: #f3e8ff;
+    --primary-200: #e9d5ff;
+    --primary-300: #d8b4fe;
+    --primary-400: #c084fc;
+    --primary-500: #a855f7;
+    --primary-600: #9333ea;
+    --primary-700: #7c3aed;
+    --primary-800: #6b21a8;
+    --primary-900: #581c87;
+    
+    /* Quizist-inspired variables */
+    --purple-gradient: linear-gradient(135deg, #8B5CF6 0%, #A855F7 30%, #7C3AED 70%, #6D28D9 100%);
+    --glass-white: rgba(255, 255, 255, 0.15);
+    --glass-white-strong: rgba(255, 255, 255, 0.25);
+    --glass-white-subtle: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-border-strong: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    --glass-shadow-strong: 0 20px 40px rgba(31, 38, 135, 0.5);
+    --glass-shadow-subtle: 0 4px 16px rgba(31, 38, 135, 0.2);
   }
-  a:hover {
-    color: #747bff;
+}
+
+@layer components {
+  /* Core Glassmorphism Button - Enhanced */
+  .btn-glass {
+    @apply relative overflow-hidden;
+    background: var(--glass-white);
+    border: 2px solid var(--glass-border);
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    text-decoration: none;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  .btn-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .btn-glass:hover::before {
+    left: 100%;
+  }
+  
+  .btn-glass:hover {
+    background: var(--glass-white-strong);
+    border-color: var(--glass-border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--glass-shadow-strong);
+  }
+  
+  .btn-glass:active {
+    transform: translateY(0);
+  }
+  
+  /* Primary Glass Button - Enhanced for Quizist look */
+  .btn-glass-primary {
+    @apply relative overflow-hidden w-full;
+    background: var(--glass-white) !important;
+    border: 2px solid var(--glass-border) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    padding: 1.25rem 2rem !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: var(--glass-shadow) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    min-height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .btn-glass-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .btn-glass-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-glass-primary:hover {
+    background: var(--glass-white-strong) !important;
+    border-color: var(--glass-border-strong) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: var(--glass-shadow-strong) !important;
+  }
+  
+  .btn-glass-primary:active {
+    transform: translateY(-1px) !important;
+  }
+  
+  /* Action Card Components - Like Quizist upload/topic cards */
+  .action-card-glass {
+    background: var(--glass-white);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .action-card-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .action-card-glass:hover::before {
+    left: 100%;
+  }
+  
+  .action-card-glass:hover {
+    background: var(--glass-white-strong);
+    transform: translateY(-8px);
+    box-shadow: var(--glass-shadow-strong);
+    border-color: var(--glass-border-strong);
+  }
+  
+  /* Enhanced Card Components */
+  .card-glass {
+    background: var(--glass-white);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+  }
+  
+  .card-glass:hover {
+    background: var(--glass-white-strong);
+    transform: translateY(-4px);
+    box-shadow: var(--glass-shadow-strong);
+  }
+  
+  .card-elevated {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  
+  .glass-surface {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  /* Enhanced Form Glass Elements */
+  .glass-input {
+    background: var(--glass-white-subtle);
+    border: 2px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem;
+    color: white;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+  
+  .glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .glass-input:focus {
+    outline: none;
+    border-color: var(--glass-border-strong);
+    background: var(--glass-white);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-select {
+    background: var(--glass-white-subtle);
+    border: 2px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem;
+    color: white;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .glass-select:focus {
+    outline: none;
+    border-color: var(--glass-border-strong);
+    background: var(--glass-white);
+  }
+  
+  /* Upload Area - Quizist Style */
+  .upload-glass {
+    background: var(--glass-white-subtle);
+    border: 2px dashed var(--glass-border);
+    border-radius: 20px;
+    padding: 3rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .upload-glass:hover {
+    background: var(--glass-white);
+    border-color: var(--glass-border-strong);
+    border-style: solid;
+  }
+  
+  /* Navigation Glass */
+  .nav-glass {
+    background: var(--glass-white-subtle);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  
+  /* Modal Glass - Enhanced */
+  .modal-glass {
+    background: var(--glass-white-strong);
+    border: 1px solid var(--glass-border-strong);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  
+  /* Status Glass Elements - Enhanced */
+  .status-success {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #065f46;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  
+  .status-warning {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #92400e;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  
+  .status-error {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #991b1b;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  
+  .status-info {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: #4c1d95;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  
+  /* Stats Cards - Quizist inspired */
+  .stat-glass {
+    background: var(--glass-white);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    box-shadow: var(--glass-shadow-subtle);
+  }
+  
+  .stat-glass:hover {
+    transform: translateY(-4px);
+    background: var(--glass-white-strong);
+    box-shadow: var(--glass-shadow);
+  }
+  
+  /* Role Selection Cards - Enhanced */
+  .role-card-glass {
+    background: var(--glass-white);
+    border: 2px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .role-card-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .role-card-glass:hover::before {
+    left: 100%;
+  }
+  
+  .role-card-glass:hover {
+    background: var(--glass-white-strong);
+    border-color: var(--glass-border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--glass-shadow);
+  }
+  
+  .role-card-glass.selected {
+    background: var(--glass-white-strong);
+    border-color: rgba(251, 191, 36, 0.6);
+    box-shadow: var(--glass-shadow);
+  }
+  
+  /* Dropdown Glass - Enhanced */
+  .dropdown-glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+  
+  /* Loading Glass */
+  .loading-glass {
+    background: var(--glass-white);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 3rem;
+    text-align: center;
   }
 }
