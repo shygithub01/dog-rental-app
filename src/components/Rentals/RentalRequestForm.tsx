@@ -43,8 +43,8 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
       return { days: 0, total: 0 };
     }
     
-    const startDate = new Date(formData.startDate);
-    const endDate = new Date(formData.endDate);
+    const startDate = new Date(formData.startDate  + 'T12:00:00');
+    const endDate = new Date(formData.endDate + 'T12:00:00');
     
     if (endDate <= startDate) {
       return { days: 0, total: 0 };
@@ -64,8 +64,8 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         throw new Error('You must be logged in to request a dog');
       }
 
-      const startDate = new Date(formData.startDate);
-      const endDate = new Date(formData.endDate);
+      const startDate = new Date(formData.startDate + 'T12:00:00');
+      const endDate = new Date(formData.endDate + 'T12:00:00');
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 

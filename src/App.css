@@ -545,6 +545,35 @@ body {
   box-shadow: var(--glass-shadow-strong);
 }
 
+.btn-glass-primary {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  padding: 1rem 2rem !important;
+  border-radius: var(--border-radius) !important;
+  transition: all 0.3s ease !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: var(--backdrop-blur) !important;
+  -webkit-backdrop-filter: var(--backdrop-blur) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-glass-primary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--glass-shadow-strong) !important;
+}
+
+
+
+
 /* Dashboard Sections with enhanced backgrounds */
 .dashboard-section {
   padding: 4rem 0;

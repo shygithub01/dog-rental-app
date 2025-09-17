@@ -188,19 +188,37 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
   };
 
   const formatDate = (timestamp: any) => {
-    if (!timestamp) return 'N/A';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString();
-  };
-
-  const handleBack = () => {
-    // This should trigger going back to dashboard
-    onClose?.();
+    console.log('formatDate called with:', timestamp);
+    console.log('timestamp type:', typeof timestamp);
+    
+    if (!timestamp) {
+      console.log('No timestamp provided, returning N/A');
+      return 'N/A';
+    }
+    
+    try {
+      let date;
+      if (timestamp.toDate) {
+        console.log('Using Firestore timestamp.toDate()');
+        date = timestamp.toDate();
+      } else {
+        console.log('Using new Date() constructor');
+        date = new Date(timestamp);
+      }
+      
+      console.log('Formatted date object:', date);
+      const formatted = date.toLocaleDateString();
+      console.log('Final formatted date:', formatted);
+      return formatted;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid Date';
+    }
   };
 
   return (
     <div style={{ minHeight: '100vh', background: 'white' }}>
-      {/* Modern Header - Same as AddDogForm */}
+      {/* Modern Header - Exact copy from AddDogForm */}
       <header className="modern-header fade-in">
         <div className="header-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
@@ -211,10 +229,10 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
         </div>
       </header>
 
-      {/* Hero Section - Matching AddDogForm Pattern */}
+      {/* Hero Section - Exact copy from AddDogForm structure */}
       <section className="hero-section">
         <div className="hero-content fade-in">
-          {/* Hero Text */}
+          {/* Hero Text - Exact copy from AddDogForm */}
           <div className="hero-text">
             <h1 className="hero-title">
               Manage your rental requests
@@ -239,7 +257,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
             </div>
           </div>
 
-          {/* Form Card - Same Style as Search Card in AddDogForm */}
+          {/* Form Card - Exact copy from AddDogForm structure */}
           <div className="search-card slide-up">
             <h3 className="search-title">
               Rental Requests
@@ -301,130 +319,144 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                     {requests.map((request) => (
                       <div key={request.id} style={{
                         background: '#f9fafb',
-                        border: '1px solid #d1d5db',
+                        border: '2px dashed #d1d5db',
                         borderRadius: '12px',
-                        padding: '24px',
+                        padding: '20px',
                         marginBottom: '24px'
                       }}>
                         <div style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          marginBottom: '20px',
-                          paddingBottom: '16px',
-                          borderBottom: '1px solid #e5e7eb'
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '16px',
+                          marginBottom: '24px'
                         }}>
                           <div>
-                            <h4 style={{
-                              margin: '0 0 8px 0',
-                              color: '#1f2937',
-                              fontSize: '1.25rem',
-                              fontWeight: '600'
+                            <label style={{
+                              display: 'block',
+                              fontSize: '0.875rem',
+                              fontWeight: '500',
+                              color: '#374151',
+                              marginBottom: '6px'
+                            }}>
+                              Dog & Renter
+                            </label>
+                            <div style={{
+                              padding: '12px 16px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '1rem',
+                              backgroundColor: 'white'
                             }}>
                               🐕 {request.dogName} ({request.dogBreed})
-                            </h4>
-                            <p style={{
-                              margin: 0,
-                              color: '#6b7280',
-                              fontSize: '0.9rem'
-                            }}>
-                              Requested by: <strong style={{ color: '#374151' }}>{request.renterName}</strong>
-                            </p>
+                              <br />
+                              <small style={{ color: '#6b7280' }}>
+                                By: {request.renterName}
+                              </small>
+                            </div>
                           </div>
-                          <div style={{
-                            background: '#f59e0b',
-                            color: 'white',
-                            padding: '8px 16px',
-                            borderRadius: '6px',
-                            fontSize: '0.75rem',
-                            fontWeight: '600'
-                          }}>
-                            PENDING
+
+                          <div>
+                            <label style={{
+                              display: 'block',
+                              fontSize: '0.875rem',
+                              fontWeight: '500',
+                              color: '#374151',
+                              marginBottom: '6px'
+                            }}>
+                              Total Cost
+                            </label>
+                            <div style={{
+                              padding: '12px 16px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '1rem',
+                              backgroundColor: 'white',
+                              color: '#059669',
+                              fontWeight: '600'
+                            }}>
+                              ${request.totalCost}
+                            </div>
                           </div>
                         </div>
 
                         <div style={{
                           display: 'grid',
                           gridTemplateColumns: '1fr 1fr',
-                          gap: '20px',
+                          gap: '16px',
                           marginBottom: '24px'
                         }}>
                           <div>
-                            <div style={{ marginBottom: '12px' }}>
-                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Start Date:</span>
-                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{formatDate(request.startDate)}</div>
-                            </div>
-                            <div style={{ marginBottom: '12px' }}>
-                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>End Date:</span>
-                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{formatDate(request.endDate)}</div>
-                            </div>
-                            <div>
-                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Duration:</span>
-                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{request.daysDiff} day{request.daysDiff !== 1 ? 's' : ''}</div>
+                            <label style={{
+                              display: 'block',
+                              fontSize: '0.875rem',
+                              fontWeight: '500',
+                              color: '#374151',
+                              marginBottom: '6px'
+                            }}>
+                              Start Date
+                            </label>
+                            <div style={{
+                              padding: '12px 16px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '1rem',
+                              backgroundColor: 'white',
+                              fontWeight: '600',
+                              color: '#1f2937'
+                            }}>
+                              {formatDate(request.startDate)}
                             </div>
                           </div>
+
                           <div>
-                            <div style={{ marginBottom: '12px' }}>
-                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Total Cost:</span>
-                              <div style={{ color: '#059669', fontWeight: '600', fontSize: '1.1rem' }}>${request.totalCost}</div>
-                            </div>
-                            <div style={{ marginBottom: '12px' }}>
-                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Contact:</span>
-                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{request.contactPhone}</div>
-                            </div>
-                            <div>
-                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Requested:</span>
-                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{formatDate(request.createdAt)}</div>
+                            <label style={{
+                              display: 'block',
+                              fontSize: '0.875rem',
+                              fontWeight: '500',
+                              color: '#374151',
+                              marginBottom: '6px'
+                            }}>
+                              End Date  
+                            </label>
+                            <div style={{
+                              padding: '12px 16px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '1rem',
+                              backgroundColor: 'white',
+                              fontWeight: '600',
+                              color: '#1f2937'
+                            }}>
+                              {formatDate(request.endDate)}
                             </div>
                           </div>
                         </div>
 
                         {request.specialRequests && (
-                          <div style={{
-                            background: 'white',
-                            padding: '16px',
-                            borderRadius: '8px',
-                            marginBottom: '24px',
-                            border: '1px solid #e5e7eb'
-                          }}>
-                            <p style={{
-                              margin: '0 0 8px 0',
-                              fontWeight: '600',
+                          <div style={{ marginBottom: '24px' }}>
+                            <label style={{
+                              display: 'block',
+                              fontSize: '0.875rem',
+                              fontWeight: '500',
                               color: '#374151',
-                              fontSize: '0.9rem'
+                              marginBottom: '6px'
                             }}>
-                              📝 Special Requests:
-                            </p>
-                            <p style={{
-                              margin: 0,
-                              color: '#6b7280',
-                              fontStyle: 'italic',
-                              lineHeight: '1.5'
+                              Special Requests
+                            </label>
+                            <div style={{
+                              padding: '12px 16px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '1rem',
+                              backgroundColor: 'white',
+                              fontStyle: 'italic'
                             }}>
                               {request.specialRequests}
-                            </p>
+                            </div>
                           </div>
                         )}
 
-                        <div style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '12px'
-                        }}>
-                          <button
-                            onClick={() => handleApprove(request)}
-                            className="btn-glass-primary w-full mb-4"
-                            style={{ background: 'inherit !important', border: 'inherit !important' }}
-                          >
-                            ✅ Approve Request
-                          </button>
-                          <button
-                            onClick={() => handleReject(request)}
-                            className="btn-glass-primary w-full mb-4"
-                          >
-                            ❌ Reject Request
-                          </button>
-                        </div>
+                        {/* Remove action buttons from here - they'll go at the bottom */}
                       </div>
                     ))}
                   </div>
@@ -436,8 +468,35 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                   gap: '12px',
                   marginTop: '24px'
                 }}>
+                  {/* Show approve/reject buttons for each request at the bottom */}
+                  {requests.map((request) => (
+                    <div key={`actions-${request.id}`} style={{ marginBottom: '12px' }}>
+                      <div style={{ 
+                        fontSize: '0.875rem', 
+                        fontWeight: '600', 
+                        color: 'white', 
+                        marginBottom: '8px',
+                        textAlign: 'center'
+                      }}>
+                        Actions for {request.dogName}:
+                      </div>
+                      <button
+                        onClick={() => handleApprove(request)}
+                        className="btn-glass-primary w-full mb-4"
+                      >
+                        Approve Request
+                      </button>
+                      <button
+                        onClick={() => handleReject(request)}
+                        className="btn-glass-primary w-full mb-4"
+                      >
+                        Reject Request
+                      </button>
+                    </div>
+                  ))}
+                  
                   <button
-                    onClick={handleBack}
+                    onClick={onClose}
                     className="btn-glass-primary w-full mb-4"
                   >
                     ← Back to Dashboard
