@@ -24,9 +24,10 @@ interface RentalRequest {
 interface RenterPendingRequestsProps {
   currentUserId: string;
   onRequestUpdate?: () => void;
+  onClose?: () => void;
 }
 
-const RenterPendingRequests: React.FC<RenterPendingRequestsProps> = ({ currentUserId, onRequestUpdate }) => {
+const RenterPendingRequests: React.FC<RenterPendingRequestsProps> = ({ currentUserId, onRequestUpdate, onClose }) => {
   const [requests, setRequests] = useState<RentalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -98,196 +99,257 @@ const RenterPendingRequests: React.FC<RenterPendingRequestsProps> = ({ currentUs
     return date.toLocaleDateString();
   };
 
-  if (loading) {
-    return (
-      <div style={{
-        padding: '20px',
-        textAlign: 'center',
-        color: '#4a5568'
-      }}>
-        Loading your pending requests...
-      </div>
-    );
-  }
-
-  if (requests.length === 0) {
-    return (
-      <div style={{
-        padding: '20px',
-        textAlign: 'center',
-        color: '#4a5568',
-        background: '#f7fafc',
-        borderRadius: '10px',
-        border: '2px solid #e2e8f0'
-      }}>
-        <h3 style={{ margin: '0 0 10px 0', color: '#2d3748' }}>
-          📋 No Pending Requests
-        </h3>
-        <p style={{ margin: 0, opacity: 0.8 }}>
-          You don't have any pending rental requests at the moment.
-        </p>
-      </div>
-    );
-  }
+  const handleBack = () => {
+    onClose?.();
+  };
 
   return (
-    <div>
-      <h3 style={{
-        margin: '0 0 20px 0',
-        color: '#2d3748',
-        fontSize: '1.5rem',
-        textAlign: 'center'
-      }}>
-        📋 Your Pending Requests ({requests.length})
-      </h3>
-
-      {error && (
-        <div style={{
-          color: '#e53e3e',
-          marginBottom: '20px',
-          padding: '15px',
-          backgroundColor: '#fed7d7',
-          borderRadius: '8px',
-          border: '1px solid #feb2b2'
-        }}>
-          {error}
+    <div style={{ minHeight: '100vh', background: 'white' }}>
+      {/* Modern Header - Same as AddDogForm */}
+      <header className="modern-header fade-in">
+        <div className="header-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <a href="#" className="logo">
+              DogRental
+            </a>
+          </div>
         </div>
-      )}
+      </header>
 
-      <div style={{
-        display: 'grid',
-        gap: '20px'
-      }}>
-        {requests.map((request) => (
-          <div key={request.id} style={{
-            background: 'white',
-            border: '2px solid #e2e8f0',
-            borderRadius: '12px',
-            padding: '20px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-          }}>
-            {/* Request Header */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '15px',
-              paddingBottom: '15px',
-              borderBottom: '1px solid #e2e8f0'
-            }}>
-              <div>
-                <h4 style={{
-                  margin: '0 0 5px 0',
-                  color: '#2d3748',
-                  fontSize: '1.2rem'
-                }}>
-                  🐕 {request.dogName} ({request.dogBreed})
-                </h4>
-                <p style={{
-                  margin: 0,
-                  color: '#4a5568',
-                  fontSize: '0.9rem'
-                }}>
-                  Owner: <strong>{request.dogOwnerName}</strong>
-                </p>
+      {/* Hero Section - Matching AddDogForm Pattern */}
+      <section className="hero-section">
+        <div className="hero-content fade-in">
+          {/* Hero Text */}
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Your pending requests
+            </h1>
+            <p className="hero-subtitle">
+              Track and manage your rental requests. Stay updated on the status of your dog rental applications.
+            </p>
+            
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-number">{requests.length}</div>
+                <div className="hero-stat-label">Pending Requests</div>
               </div>
-              <div style={{
-                background: '#ed8936',
-                color: 'white',
-                padding: '6px 12px',
-                borderRadius: '20px',
-                fontSize: '0.8rem',
-                fontWeight: 'bold'
-              }}>
-                PENDING
+              <div className="hero-stat">
+                <div className="hero-stat-number">📋</div>
+                <div className="hero-stat-label">Track Status</div>
               </div>
-            </div>
-
-            {/* Request Details */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '15px',
-              marginBottom: '20px'
-            }}>
-              <div>
-                <p style={{ margin: '0 0 5px 0', color: '#4a5568' }}>
-                  <strong>Start Date:</strong> {formatDate(request.startDate)}
-                </p>
-                <p style={{ margin: '0 0 5px 0', color: '#4a5568' }}>
-                  <strong>End Date:</strong> {formatDate(request.endDate)}
-                </p>
-                <p style={{ margin: '0 0 5px 0', color: '#4a5568' }}>
-                  <strong>Duration:</strong> {request.daysDiff} day{request.daysDiff !== 1 ? 's' : ''}
-                </p>
+              <div className="hero-stat">
+                <div className="hero-stat-number">🐕</div>
+                <div className="hero-stat-label">Find Perfect Match</div>
               </div>
-              <div>
-                <p style={{ margin: '0 0 5px 0', color: '#4a5568' }}>
-                  <strong>Total Cost:</strong> ${request.totalCost}
-                </p>
-                <p style={{ margin: '0 0 5px 0', color: '#4a5568' }}>
-                  <strong>Contact:</strong> {request.contactPhone}
-                </p>
-                <p style={{ margin: '0 0 5px 0', color: '#4a5568' }}>
-                  <strong>Requested:</strong> {formatDate(request.createdAt)}
-                </p>
-              </div>
-            </div>
-
-            {/* Special Requests */}
-            {request.specialRequests && (
-              <div style={{
-                background: '#f7fafc',
-                padding: '15px',
-                borderRadius: '8px',
-                marginBottom: '20px',
-                border: '1px solid #e2e8f0'
-              }}>
-                <p style={{
-                  margin: '0 0 8px 0',
-                  fontWeight: 'bold',
-                  color: '#2d3748'
-                }}>
-                  📝 Special Requests:
-                </p>
-                <p style={{
-                  margin: 0,
-                  color: '#4a5568',
-                  fontStyle: 'italic'
-                }}>
-                  {request.specialRequests}
-                </p>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div style={{
-              display: 'flex',
-              gap: '15px',
-              justifyContent: 'flex-end'
-            }}>
-              <button
-                onClick={() => handleCancelRequest(request)}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#e53e3e',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '1rem',
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c53030'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e53e3e'}
-              >
-                ❌ Cancel Request
-              </button>
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Form Card - Same Style as Search Card in AddDogForm */}
+          <div className="search-card slide-up">
+            <h3 className="search-title">
+              My Requests
+            </h3>
+            <p className="search-subtitle">
+              Review your pending requests and manage them below
+            </p>
+
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '40px' }}>
+                <div style={{
+                  width: '50px',
+                  height: '50px',
+                  border: '4px solid #e2e8f0',
+                  borderTop: '4px solid #6A32B0',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  margin: '0 auto 20px'
+                }}></div>
+                <p style={{ color: '#6b7280' }}>Loading your requests...</p>
+              </div>
+            ) : (
+              <>
+                {error && (
+                  <div style={{
+                    color: '#dc2626',
+                    marginBottom: '24px',
+                    padding: '12px',
+                    backgroundColor: '#fef2f2',
+                    borderRadius: '8px',
+                    border: '1px solid #fecaca',
+                    fontSize: '0.875rem'
+                  }}>
+                    ⚠️ {error}
+                  </div>
+                )}
+
+                {requests.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '40px' }}>
+                    <div style={{ fontSize: '4rem', marginBottom: '20px' }}>📋</div>
+                    <h4 style={{
+                      fontSize: '1.25rem',
+                      fontWeight: '600',
+                      color: '#374151',
+                      margin: '0 0 8px 0'
+                    }}>
+                      No Pending Requests
+                    </h4>
+                    <p style={{
+                      color: '#6b7280',
+                      fontSize: '1rem',
+                      margin: 0
+                    }}>
+                      You don't have any pending rental requests at the moment.
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ marginTop: '32px' }}>
+                    {requests.map((request) => (
+                      <div key={request.id} style={{
+                        background: '#f9fafb',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '12px',
+                        padding: '24px',
+                        marginBottom: '24px'
+                      }}>
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '20px',
+                          paddingBottom: '16px',
+                          borderBottom: '1px solid #e5e7eb'
+                        }}>
+                          <div>
+                            <h4 style={{
+                              margin: '0 0 8px 0',
+                              color: '#1f2937',
+                              fontSize: '1.25rem',
+                              fontWeight: '600'
+                            }}>
+                              🐕 {request.dogName} ({request.dogBreed})
+                            </h4>
+                            <p style={{
+                              margin: 0,
+                              color: '#6b7280',
+                              fontSize: '0.9rem'
+                            }}>
+                              Owner: <strong style={{ color: '#374151' }}>{request.dogOwnerName}</strong>
+                            </p>
+                          </div>
+                          <div style={{
+                            background: '#f59e0b',
+                            color: 'white',
+                            padding: '8px 16px',
+                            borderRadius: '6px',
+                            fontSize: '0.75rem',
+                            fontWeight: '600'
+                          }}>
+                            PENDING
+                          </div>
+                        </div>
+
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '20px',
+                          marginBottom: '24px'
+                        }}>
+                          <div>
+                            <div style={{ marginBottom: '12px' }}>
+                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Start Date:</span>
+                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{formatDate(request.startDate)}</div>
+                            </div>
+                            <div style={{ marginBottom: '12px' }}>
+                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>End Date:</span>
+                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{formatDate(request.endDate)}</div>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Duration:</span>
+                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{request.daysDiff} day{request.daysDiff !== 1 ? 's' : ''}</div>
+                            </div>
+                          </div>
+                          <div>
+                            <div style={{ marginBottom: '12px' }}>
+                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Total Cost:</span>
+                              <div style={{ color: '#059669', fontWeight: '600', fontSize: '1.1rem' }}>${request.totalCost}</div>
+                            </div>
+                            <div style={{ marginBottom: '12px' }}>
+                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Contact:</span>
+                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{request.contactPhone}</div>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Requested:</span>
+                              <div style={{ color: '#1f2937', fontWeight: '600' }}>{formatDate(request.createdAt)}</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {request.specialRequests && (
+                          <div style={{
+                            background: 'white',
+                            padding: '16px',
+                            borderRadius: '8px',
+                            marginBottom: '24px',
+                            border: '1px solid #e5e7eb'
+                          }}>
+                            <p style={{
+                              margin: '0 0 8px 0',
+                              fontWeight: '600',
+                              color: '#374151',
+                              fontSize: '0.9rem'
+                            }}>
+                              📝 Special Requests:
+                            </p>
+                            <p style={{
+                              margin: 0,
+                              color: '#6b7280',
+                              fontStyle: 'italic',
+                              lineHeight: '1.5'
+                            }}>
+                              {request.specialRequests}
+                            </p>
+                          </div>
+                        )}
+
+                        <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '12px'
+                        }}>
+                          <button
+                            onClick={() => handleCancelRequest(request)}
+                            className="btn-glass-primary w-full mb-4"
+                            style={{
+                              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                              borderColor: 'rgba(239, 68, 68, 0.3)'
+                            }}
+                          >
+                            ❌ Cancel Request
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  marginTop: '24px'
+                }}>
+                  <button
+                    onClick={handleBack}
+                    className="btn-glass-primary w-full mb-4"
+                  >
+                    ← Back to Dashboard
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

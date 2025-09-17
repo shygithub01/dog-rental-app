@@ -574,7 +574,7 @@ function AppContent() {
       <RentalRequestForm
         dog={rentingDog}
         onSuccess={handleRentDogSuccess}
-        onCancel={() => {
+        onClose={() => {
           setShowRentDog(false)
           setRentingDog(null)
         }}
@@ -583,103 +583,28 @@ function AppContent() {
   }
 
   if (showApprovalPanel) {
-    return (
-      <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        padding: '40px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <div className="card card-elevated" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          {/* Form Header */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '40px',
-            paddingBottom: '24px',
-            borderBottom: '1px solid #f1f5f9'
-          }}>
-            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📋</div>
-            <h2 className="section-title" style={{ marginBottom: '8px' }}>
-              Rental Request Management
-            </h2>
-            <p className="section-subtitle" style={{ margin: 0 }}>
-              Review and manage pending rental requests for your dogs
-            </p>
-          </div>
-
-          <div className="flex justify-center mb-8">
-            <button
-              onClick={() => setShowApprovalPanel(false)}
-              className="btn-glass"
-            >
-              ← Back to Dashboard
-            </button>
-          </div>
-
-          <RentalApprovalPanel
-            currentUserId={user.uid}
-            onRequestUpdate={() => {
-              loadDogsWithUser(user)
-            }}
-          />
-        </div>
-      </div>
-    )
+  return (
+    <RentalApprovalPanel
+      currentUserId={user.uid}
+      onRequestUpdate={() => {
+        loadDogsWithUser(user)
+      }}
+      onClose={() => setShowApprovalPanel(false)}  // Add this line
+    />
+  )
   }
 
   if (showRenterPendingRequests) {
-    return (
-      <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        padding: '40px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <div className="card card-elevated" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          {/* Form Header */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '40px',
-            paddingBottom: '24px',
-            borderBottom: '1px solid #f1f5f9'
-          }}>
-            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📋</div>
-            <h2 className="section-title" style={{ marginBottom: '8px' }}>
-              Your Pending Requests
-            </h2>
-            <p className="section-subtitle" style={{ margin: 0 }}>
-              Review and manage your pending rental requests
-            </p>
-          </div>
-
-          <div className="flex justify-center mb-8">
-            <button
-              onClick={() => setShowRenterPendingRequests(false)}
-              className="btn-glass"
-            >
-              ← Back to Dashboard
-            </button>
-          </div>
-
-          <RenterPendingRequests
-            currentUserId={user.uid}
-            onRequestUpdate={() => {
-              loadDogsWithUser(user)
-            }}
-          />
-        </div>
-      </div>
-    )
-  }
-
+  return (
+    <RenterPendingRequests
+      currentUserId={user.uid}
+      onRequestUpdate={() => {
+        loadDogsWithUser(user)
+      }}
+      onClose={() => setShowRenterPendingRequests(false)}
+    />
+  )
+  }  
   if (showUserProfile) {
     return (
       <UserProfile

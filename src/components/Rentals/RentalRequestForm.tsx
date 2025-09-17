@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, addDoc, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { useNotificationService } from '../../services/notificationService';
@@ -21,9 +21,10 @@ interface RentalRequestFormProps {
   dog: Dog;
   onSuccess?: () => void;
   onCancel?: () => void;
+  onClose?: () => void;
 }
 
-const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, onCancel }) => {
+const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, onCancel, onClose }) => {
   const [formData, setFormData] = useState({
     startDate: '',
     endDate: '',
@@ -35,6 +36,23 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
 
   const { auth, db } = useFirebase();
   const notificationService = useNotificationService();
+
+  // Calculate total cost - memoized to prevent re-render issues
+  const totalCost = useMemo(() => {
+    if (!formData.startDate || !formData.endDate) {
+      return { days: 0, total: 0 };
+    }
+    
+    const startDate = new Date(formData.startDate);
+    const endDate = new Date(formData.endDate);
+    
+    if (endDate <= startDate) {
+      return { days: 0, total: 0 };
+    }
+    
+    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    return { days: daysDiff, total: daysDiff * dog.pricePerDay };
+  }, [formData.startDate, formData.endDate, dog.pricePerDay]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +69,6 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      // Validation
       if (startDate < today) {
         throw new Error('Start date cannot be in the past');
       }
@@ -60,20 +77,8 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
       }
 
       const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-      const totalCost = daysDiff * dog.pricePerDay;
+      const totalCostValue = daysDiff * dog.pricePerDay;
 
-      console.log('Creating rental request:', {
-        dogId: dog.id,
-        dogName: dog.name,
-        renterId: auth.currentUser.uid,
-        renterName: auth.currentUser.displayName || auth.currentUser.email,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        totalCost,
-        daysDiff
-      });
-
-      // Create rental request
       const requestRef = await addDoc(collection(db, 'rentalRequests'), {
         dogId: dog.id,
         dogName: dog.name,
@@ -84,24 +89,22 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         renterName: auth.currentUser.displayName || auth.currentUser.email,
         startDate: Timestamp.fromDate(startDate),
         endDate: Timestamp.fromDate(endDate),
-        totalCost,
+        totalCost: totalCostValue,
         daysDiff,
         specialRequests: formData.specialRequests,
         contactPhone: formData.contactPhone,
-        status: 'pending', // pending, approved, rejected, cancelled
+        status: 'pending',
         createdAt: Timestamp.now()
       });
 
-      // Update dog to requested state
       await updateDoc(doc(db, 'dogs', dog.id), {
         isAvailable: false,
-        status: 'requested', // available, requested, rented
+        status: 'requested',
         requestedBy: auth.currentUser.uid,
         requestedAt: Timestamp.now(),
         updatedAt: Timestamp.now()
       });
 
-      // Create notification for dog owner
       await notificationService.createNotification(
         dog.ownerId,
         'rental_request',
@@ -116,15 +119,13 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
             renterName: auth.currentUser.displayName || auth.currentUser.email,
             startDate: formData.startDate,
             endDate: formData.endDate,
-            totalCost
+            totalCost: totalCostValue
           }
         }
       );
 
-      console.log('Rental request created successfully!');
       onSuccess?.();
     } catch (error: any) {
-      console.error('Error creating rental request:', error);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -139,477 +140,301 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
     }));
   };
 
-  // Calculate total cost based on selected dates
-  const calculateTotalCost = () => {
-    if (!formData.startDate || !formData.endDate) return { days: 0, total: 0 };
-    
-    const startDate = new Date(formData.startDate);
-    const endDate = new Date(formData.endDate);
-    
-    if (endDate <= startDate) return { days: 0, total: 0 };
-    
-    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    return { days: daysDiff, total: daysDiff * dog.pricePerDay };
+  const handleBack = () => {
+    if (onClose) {
+      onClose();
+    } else if (onCancel) {
+      onCancel();
+    }
   };
 
-  const totalCost = calculateTotalCost();
-
   return (
-    <div style={{
-      background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/image1.png")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-      padding: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '40px',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-        maxWidth: '800px',
-        width: '100%',
-        margin: '0 auto'
-      }}>
-        {/* Form Header */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '40px',
-          paddingBottom: '20px',
-          borderBottom: '2px solid #f7fafc'
-        }}>
-          <div style={{
-            fontSize: '3rem',
-            marginBottom: '15px'
-          }}>
-            🐕
+    <div style={{ minHeight: '100vh', background: 'white' }}>
+      <header className="modern-header fade-in">
+        <div className="header-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <a href="#" className="logo">
+              DogRental
+            </a>
           </div>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#2d3748',
-            margin: '0 0 10px 0',
-            fontWeight: 'bold'
-          }}>
-            Rent {dog.name}
-          </h2>
-          <p style={{
-            color: '#4a5568',
-            fontSize: '1.1rem',
-            margin: 0,
-            lineHeight: '1.6'
-          }}>
-            Request to rent this adorable {dog.breed} for your perfect adventure
-          </p>
         </div>
+      </header>
 
-        {/* Dog Info Card */}
-        <div style={{
-          background: '#f7fafc',
-          padding: '25px',
-          borderRadius: '15px',
-          marginBottom: '30px',
-          border: '2px solid #e2e8f0'
-        }}>
-          <h3 style={{
-            fontSize: '1.3rem',
-            color: '#2d3748',
-            margin: '0 0 15px 0',
-            fontWeight: 'bold'
-          }}>
-            🐾 About {dog.name}
-          </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '15px',
-            marginBottom: '15px'
-          }} className="mobile-form-grid">
-            <div>
-              <strong style={{ color: '#4a5568' }}>Breed:</strong> {dog.breed}
-            </div>
-            <div>
-              <strong style={{ color: '#4a5568' }}>Age:</strong> {dog.age} year{dog.age !== 1 ? 's' : ''} old
-            </div>
-            <div>
-              <strong style={{ color: '#4a5568' }}>Size:</strong> {dog.size}
-            </div>
-            <div>
-              <strong style={{ color: '#4a5568' }}>Location:</strong> {dog.location}
-            </div>
-          </div>
-          <div style={{
-            marginBottom: '15px'
-          }}>
-            <strong style={{ color: '#4a5568' }}>Description:</strong>
-            <p style={{
-              color: '#2d3748',
-              margin: '5px 0 0 0',
-              lineHeight: '1.5'
-            }}>
-              {dog.description}
+      <section className="hero-section">
+        <div className="hero-content fade-in">
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Request to rent {dog.name}
+            </h1>
+            <p className="hero-subtitle">
+              Submit your rental request for this adorable {dog.breed}. Perfect for your next adventure together.
             </p>
-          </div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '15px',
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            border: '1px solid #e2e8f0'
-          }}>
-            <div>
-              <div style={{
-                fontSize: '0.9rem',
-                color: '#4a5568',
-                marginBottom: '5px'
-              }}>
-                Price per day
-              </div>
-              <div style={{
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                color: '#2d3748'
-              }}>
-                ${dog.pricePerDay}
-              </div>
-            </div>
-            <div style={{
-              textAlign: 'right'
-            }}>
-              <div style={{
-                fontSize: '0.9rem',
-                color: '#4a5568',
-                marginBottom: '5px'
-              }}>
-                Owner
-              </div>
-              <div style={{
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                color: '#2d3748'
-              }}>
-                {dog.ownerName}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          {/* Rental Details */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              📅 Rental Details
-            </h3>
             
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '20px', 
-              marginBottom: '20px'
-            }} className="mobile-form-grid">
-              <div>
-                <label htmlFor="startDate" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
-                }}>
-                  Start Date *
-                </label>
-                <input
-                  type="date"
-                  id="startDate"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-number">${dog.pricePerDay}</div>
+                <div className="hero-stat-label">Per day</div>
               </div>
+              <div className="hero-stat">
+                <div className="hero-stat-number">{dog.age}y</div>
+                <div className="hero-stat-label">{dog.size} size</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat-number">📍</div>
+                <div className="hero-stat-label">{dog.location}</div>
+              </div>
+            </div>
+          </div>
 
-              <div>
-                <label htmlFor="endDate" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
+          <div className="search-card slide-up">
+            <h3 className="search-title">
+              Rental Request
+            </h3>
+            <p className="search-subtitle">
+              Fill out the details below to request this dog
+            </p>
+
+            <div style={{
+              background: '#f9fafb',
+              border: '2px dashed #d1d5db',
+              borderRadius: '12px',
+              padding: '20px',
+              marginBottom: '24px'
+            }}>
+              <h4 style={{
+                fontSize: '1rem',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '12px'
+              }}>
+                🐕 About {dog.name}
+              </h4>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '12px',
+                marginBottom: '12px'
+              }}>
+                <div>
+                  <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Breed:</span>
+                  <div style={{ color: '#374151', fontWeight: '600' }}>{dog.breed}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Owner:</span>
+                  <div style={{ color: '#374151', fontWeight: '600' }}>{dog.ownerName}</div>
+                </div>
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Description:</span>
+                <p style={{
+                  color: '#374151',
+                  margin: '4px 0 0 0',
+                  lineHeight: '1.5',
+                  fontSize: '0.875rem'
                 }}>
-                  End Date *
-                </label>
-                <input
-                  type="date"
-                  id="endDate"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleChange}
-                  required
-                  min={formData.startDate || new Date().toISOString().split('T')[0]}
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s',
-                    backgroundColor: 'white'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                />
+                  {dog.description}
+                </p>
               </div>
             </div>
 
-            {/* Cost Calculation */}
-            {formData.startDate && formData.endDate && (
-              <div style={{
-                background: '#f0fff4',
-                padding: '20px',
-                borderRadius: '10px',
-                border: '2px solid #9ae6b4',
-                marginBottom: '20px'
+            <form onSubmit={handleSubmit} style={{ marginTop: '32px' }}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '16px', 
+                marginBottom: '24px'
               }}>
-                <h4 style={{
-                  fontSize: '1.1rem',
-                  color: '#2d3748',
-                  margin: '0 0 10px 0',
-                  fontWeight: 'bold'
-                }}>
-                  💰 Cost Breakdown
-                </h4>
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    Start Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#374151',
+                    marginBottom: '6px'
+                  }}>
+                    End Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                    required
+                    min={formData.startDate || new Date().toISOString().split('T')[0]}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      backgroundColor: 'white'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {formData.startDate && formData.endDate && totalCost.days > 0 && (
                 <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '15px'
-                }} className="mobile-form-grid">
-                  <div>
-                    <div style={{
-                      fontSize: '0.9rem',
-                      color: '#4a5568',
-                      marginBottom: '5px'
-                    }}>
-                      Duration
+                  background: '#f0fdf4',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  marginBottom: '24px',
+                  border: '1px solid #bbf7d0'
+                }}>
+                  <h4 style={{
+                    fontSize: '0.9rem',
+                    color: '#374151',
+                    margin: '0 0 8px 0',
+                    fontWeight: '600'
+                  }}>
+                    💰 Cost Breakdown
+                  </h4>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '12px'
+                  }}>
+                    <div>
+                      <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Duration:</span>
+                      <div style={{ fontWeight: '600', color: '#374151' }}>{totalCost.days} day{totalCost.days !== 1 ? 's' : ''}</div>
                     </div>
-                    <div style={{
-                      fontSize: '1.2rem',
-                      fontWeight: 'bold',
-                      color: '#2d3748'
-                    }}>
-                      {totalCost.days} day{totalCost.days !== 1 ? 's' : ''}
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{
-                      fontSize: '0.9rem',
-                      color: '#4a5568',
-                      marginBottom: '5px'
-                    }}>
-                      Total Cost
-                    </div>
-                    <div style={{
-                      fontSize: '1.2rem',
-                      fontWeight: 'bold',
-                      color: '#6A32B0'
-                    }}>
-                      ${totalCost.total}
+                    <div>
+                      <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Total Cost:</span>
+                      <div style={{ fontWeight: '600', color: '#059669', fontSize: '1.1rem' }}>${totalCost.total}</div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
 
-          {/* Contact Information */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              📞 Contact Information
-            </h3>
-            
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '20px'
-            }} className="mobile-form-grid">
-              <div>
-                <label htmlFor="contactPhone" style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  fontWeight: 'bold',
-                  color: '#2d3748',
-                  fontSize: '1rem'
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: '#374151',
+                  marginBottom: '6px'
                 }}>
                   Phone Number *
                 </label>
                 <input
                   type="tel"
-                  id="contactPhone"
                   name="contactPhone"
                   value={formData.contactPhone}
                   onChange={handleChange}
                   required
                   placeholder="(555) 123-4567"
-                  style={{ 
-                    width: '100%', 
-                    padding: '15px', 
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '10px',
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '8px',
                     fontSize: '1rem',
-                    transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
-            </div>
-          </div>
 
-          {/* Special Requests */}
-          <div style={{
-            marginBottom: '30px'
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 20px 0',
-              fontWeight: 'bold'
-            }}>
-              📝 Special Requests
-            </h3>
-            <label htmlFor="specialRequests" style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: 'bold',
-              color: '#2d3748',
-              fontSize: '1rem'
-            }}>
-              Any special requirements or requests?
-            </label>
-            <textarea
-              id="specialRequests"
-              name="specialRequests"
-              value={formData.specialRequests}
-              onChange={handleChange}
-              rows={4}
-              placeholder="Tell the owner about any special needs, preferences, or questions you have..."
-              style={{ 
-                width: '100%', 
-                padding: '15px', 
-                border: '2px solid #e2e8f0',
-                borderRadius: '10px',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                backgroundColor: 'white',
-                resize: 'vertical',
-                fontFamily: 'inherit'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: '#374151',
+                  marginBottom: '6px'
+                }}>
+                  Special Requests
+                </label>
+                <textarea
+                  name="specialRequests"
+                  value={formData.specialRequests}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Any special requirements or questions for the owner..."
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    backgroundColor: 'white',
+                    resize: 'vertical',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
 
-          {error && (
-            <div style={{
-              color: '#e53e3e',
-              marginBottom: '20px',
-              padding: '15px',
-              backgroundColor: '#fed7d7',
-              borderRadius: '10px',
-              border: '1px solid #feb2b2',
-              fontSize: '0.95rem'
-            }}>
-              ⚠️ {error}
-            </div>
-          )}
+              {error && (
+                <div style={{
+                  color: '#dc2626',
+                  marginBottom: '16px',
+                  padding: '12px',
+                  backgroundColor: '#fef2f2',
+                  borderRadius: '8px',
+                  border: '1px solid #fecaca',
+                  fontSize: '0.875rem'
+                }}>
+                  ⚠️ {error}
+                </div>
+              )}
 
-          {/* Action Buttons */}
-          <div style={{ 
-            display: 'flex', 
-            gap: '15px', 
-            justifyContent: 'center',
-            marginTop: '30px'
-          }}>
-            {onCancel && (
-              <button
-                type="button"
-                onClick={onCancel}
-                style={{
-                  padding: '15px 30px',
-                  backgroundColor: '#6A32B0',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '1rem',
-                  transition: 'all 0.2s',
-                  minWidth: '120px'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
-              >
-                ← Cancel
-              </button>
-            )}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                padding: '15px 30px',
-                backgroundColor: loading ? '#cbd5e0' : '#ed8936',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                minWidth: '120px'
-              }}
-              onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#dd6b20';
-              }}
-              onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#ed8936';
-              }}
-            >
-              {loading ? '📝 Submitting...' : '📝 Submit Request'}
-            </button>
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                gap: '12px', 
+                marginTop: '24px'
+              }}>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-glass-primary w-full mb-4"
+                >
+                  {loading ? '📝 Submitting Request...' : '📝 Submit Request'}
+                </button>
+                
+                {(onCancel || onClose) && (
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="btn-glass-primary w-full mb-4"
+                  >
+                    ← Back to Browse
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   );
 };
 
-export default RentalRequestForm; 
+export default RentalRequestForm;
