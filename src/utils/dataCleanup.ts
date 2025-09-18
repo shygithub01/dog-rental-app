@@ -1,4 +1,4 @@
-import { collection, getDocs, deleteDoc, doc, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, writeBatch, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export const cleanupOrphanedData = async (db: any) => {

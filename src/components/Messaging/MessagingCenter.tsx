@@ -71,7 +71,6 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
               💬 {selectedConversation ? 'Chat with Dog Owner' : 'Your Messages'}
             </h3>
             <p style={{
-              margin: '0 0 24px 0',
               fontSize: '1.1rem',
               color: '#4b5563',
               textAlign: 'center',

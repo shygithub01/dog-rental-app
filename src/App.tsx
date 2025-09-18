@@ -713,6 +713,185 @@ function AppContent() {
                 ← Back to Dashboard
               </button>
             </div>
+
+            {/* Payment History Content */}
+            <div style={{ padding: '0 24px 24px 24px' }}>
+              {userRentals.length === 0 ? (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '60px 20px',
+                  color: '#64748b'
+                }}>
+                  <div style={{ fontSize: '4rem', marginBottom: '20px' }}>💳</div>
+                  <h3 style={{ 
+                    fontSize: '1.5rem', 
+                    marginBottom: '12px', 
+                    color: '#1e293b' 
+                  }}>
+                    No Payment History Yet
+                  </h3>
+                  <p style={{ margin: 0, fontSize: '1rem' }}>
+                    Start renting dogs to see your payment history here.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Payment Summary */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    gap: '20px',
+                    marginBottom: '32px'
+                  }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                      color: 'white',
+                      padding: '24px',
+                      borderRadius: '16px',
+                      textAlign: 'center',
+                      boxShadow: '0 8px 32px rgba(139, 92, 246, 0.3)'
+                    }}>
+                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>💳</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '4px' }}>
+                        ${userRentals.reduce((sum, rental) => sum + (rental.totalCost || 0), 0)}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Paid</div>
+                    </div>
+                    
+                    <div style={{
+                      background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                      color: 'white',
+                      padding: '24px',
+                      borderRadius: '16px',
+                      textAlign: 'center',
+                      boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3)'
+                    }}>
+                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📊</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '4px' }}>
+                        {userRentals.length}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Rentals</div>
+                    </div>
+
+                    <div style={{
+                      background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                      color: 'white',
+                      padding: '24px',
+                      borderRadius: '16px',
+                      textAlign: 'center',
+                      boxShadow: '0 8px 32px rgba(245, 158, 11, 0.3)'
+                    }}>
+                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📅</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '4px' }}>
+                        {userRentals.filter(r => r.status === 'completed').length}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Completed</div>
+                    </div>
+                  </div>
+
+                  {/* Payment History List */}
+                  <div style={{
+                    background: 'rgba(249, 250, 251, 0.8)',
+                    border: '1px solid rgba(229, 231, 235, 0.5)',
+                    borderRadius: '12px',
+                    padding: '24px'
+                  }}>
+                    <h4 style={{
+                      margin: '0 0 20px 0',
+                      fontSize: '1.25rem',
+                      color: '#1f2937',
+                      fontWeight: '600'
+                    }}>
+                      💳 Payment Details
+                    </h4>
+                    
+                    <div style={{ display: 'grid', gap: '16px' }}>
+                      {userRentals
+                        .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
+                        .map((rental, index) => (
+                        <div key={rental.id || index} style={{
+                          background: 'white',
+                          padding: '20px',
+                          borderRadius: '12px',
+                          border: '1px solid rgba(229, 231, 235, 0.5)',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            marginBottom: '12px'
+                          }}>
+                            <div>
+                              <div style={{ 
+                                fontWeight: '600', 
+                                color: '#1f2937', 
+                                fontSize: '1.1rem',
+                                marginBottom: '4px' 
+                              }}>
+                                🐕 {rental.dogName} ({rental.dogBreed})
+                              </div>
+                              <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+                                Owner: {rental.dogOwnerName || 'Unknown'}
+                              </div>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <div style={{ 
+                                fontWeight: 'bold', 
+                                color: '#059669', 
+                                fontSize: '1.25rem',
+                                marginBottom: '4px' 
+                              }}>
+                                ${rental.totalCost || 0}
+                              </div>
+                              <div style={{
+                                fontSize: '0.8rem',
+                                padding: '4px 8px',
+                                borderRadius: '12px',
+                                display: 'inline-block',
+                                backgroundColor: rental.status === 'completed' ? '#d1fae5' : 
+                                               rental.status === 'active' ? '#fef3c7' : '#fee2e2',
+                                color: rental.status === 'completed' ? '#065f46' : 
+                                       rental.status === 'active' ? '#92400e' : '#991b1b'
+                              }}>
+                                {rental.status.charAt(0).toUpperCase() + rental.status.slice(1)}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '16px',
+                            fontSize: '0.9rem',
+                            color: '#6b7280',
+                            borderTop: '1px solid rgba(229, 231, 235, 0.5)',
+                            paddingTop: '12px'
+                          }}>
+                            <div>
+                              <span style={{ fontWeight: '600', color: '#374151' }}>Start Date:</span><br/>
+                              {new Date(rental.startDate).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </div>
+                            <div>
+                              <span style={{ fontWeight: '600', color: '#374151' }}>End Date:</span><br/>
+                              {new Date(rental.endDate).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -449,15 +449,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             
             <div className="hero-stats">
               <div className="hero-stat">
-                <div className="hero-stat-number">{profile?.dogsOwned || 0}</div>
+                <div className="hero-stat-number">{profile?.dogs?.length || 0}</div>
                 <div className="hero-stat-label">Dogs Owned</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-number">{profile?.totalRentals || 0}</div>
+                <div className="hero-stat-number">{0}</div>
                 <div className="hero-stat-label">Total Rentals</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-number">${profile?.totalEarnings || 0}</div>
+                <div className="hero-stat-number">${0}</div>
                 <div className="hero-stat-label">Total Earnings</div>
               </div>
             </div>
