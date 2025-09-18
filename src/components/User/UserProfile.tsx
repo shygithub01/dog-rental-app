@@ -423,101 +423,84 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
   const { dogs, recentRentals, reviews } = profile;
 
   return (
-    <div style={{
-      background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-      padding: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '40px',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-        maxWidth: '1000px',
-        width: '100%',
-        maxHeight: '90vh',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
-        {/* Header */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '30px',
-          paddingBottom: '20px',
-          borderBottom: '2px solid #f7fafc'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px'
-          }}>
-            <div style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              background: user.photoURL ? `url(${user.photoURL})` : '#e2e8f0',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '2rem',
-              color: '#4a5568',
-              border: '3px solid #6A32B0'
-            }}>
-              {!user.photoURL && '👤'}
-            </div>
-            <div>
-              <h1 style={{
-                fontSize: '2rem',
-                color: '#2d3748',
-                margin: '0 0 5px 0',
-                fontWeight: 'bold'
-              }}>
-                {user.displayName}
-              </h1>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                fontSize: '0.9rem',
-                color: '#4a5568'
-              }}>
-                <span>⭐ {user.rating.toFixed(1)} ({user.totalReviews} reviews)</span>
-                <span>📅 Member since {formatDate(user.joinDate)}</span>
-                {user.isVerified && <span style={{ color: '#6A32B0' }}>✅ Verified</span>}
+    <div style={{ minHeight: '100vh', background: 'white' }}>
+      {/* Modern Header - Same as App.tsx */}
+      <header className="modern-header fade-in">
+        <div className="header-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <a href="#" className="logo">
+              DogRental
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section - Matching App.tsx Pattern */}
+      <section className="hero-section">
+        <div className="hero-content fade-in">
+          {/* Hero Text */}
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Your Profile & Dashboard
+            </h1>
+            <p className="hero-subtitle">
+              Manage your account, view your dogs, track rentals, and build your reputation in our trusted community.
+            </p>
+            
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-number">{profile?.dogsOwned || 0}</div>
+                <div className="hero-stat-label">Dogs Owned</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat-number">{profile?.totalRentals || 0}</div>
+                <div className="hero-stat-label">Total Rentals</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat-number">${profile?.totalEarnings || 0}</div>
+                <div className="hero-stat-label">Total Earnings</div>
               </div>
             </div>
           </div>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="btn-glass"
-            >
-              ← Back to Dashboard
-            </button>
-          )}
-        </div>
+
+          {/* Profile Card - Same Style as Search Card in App.tsx */}
+          <div className="search-card slide-up" style={{ minHeight: '600px', maxWidth: '900px' }}>
+            <h3 className="search-title">
+              User Profile
+            </h3>
+            <p className="search-subtitle">
+              Manage your account settings and view your activity
+            </p>
+
+            {/* Back to Dashboard Button */}
+            {onClose && (
+              <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                <button
+                  onClick={onClose}
+                  className="btn-glass-primary"
+                  style={{
+                    padding: '12px 24px',
+                    fontSize: '1rem'
+                  }}
+                >
+                  ← Back to Dashboard
+                </button>
+              </div>
+            )}
 
         {/* User Info */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: '30px',
-          marginBottom: '30px'
+          marginTop: '20px',
+          marginBottom: '30px',
+          alignItems: 'stretch'
         }}>
           <div>
             <h3 style={{
               fontSize: '1.2rem',
-              color: '#2d3748',
+              color: 'white',
               margin: '0 0 15px 0',
               fontWeight: 'bold'
             }}>
@@ -527,7 +510,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               background: '#f7fafc',
               padding: '20px',
               borderRadius: '10px',
-              border: '1px solid #e2e8f0'
+              border: '1px solid #e2e8f0',
+              minHeight: '120px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center'
             }}>
               <p style={{ margin: '0 0 8px 0', color: '#4a5568' }}>
                 <strong>Email:</strong> {user.email}
@@ -551,10 +538,19 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
           </div>
 
           {/* Statistics Section */}
-          <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+          <div style={{ 
+            flex: 1, 
+            padding: '20px', 
+            backgroundColor: '#f8f9fa', 
+            borderRadius: '8px',
+            minHeight: '120px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <span style={{ fontSize: '18px', marginRight: '8px' }}>📊</span>
-              <h3 style={{ margin: 0, color: '#333' }}>Statistics</h3>
+              <h3 style={{ margin: 0, color: '#1f2937' }}>Statistics</h3>
             </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -602,11 +598,30 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             <button
               key={key}
               onClick={() => setActiveTab(key as any)}
-              className={`px-5 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${
-                activeTab === key 
-                  ? 'bg-primary-600/30 text-primary-900 border border-primary-400/30' 
-                  : 'text-gray-600 hover:bg-white/10 hover:text-primary-800'
-              }`}
+              style={{
+                padding: '12px 20px',
+                borderRadius: '10px',
+                fontWeight: '600',
+                fontSize: '0.9rem',
+                transition: 'all 0.2s',
+                backgroundColor: activeTab === key ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                color: activeTab === key ? '#1f2937' : '#6b7280',
+                border: activeTab === key ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)',
+                cursor: 'pointer'
+              }}
+              onMouseOver={(e) => {
+                if (activeTab !== key) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.color = '#374151';
+                }
+              }}
+              onMouseOut={(e) => {
+                if (activeTab !== key) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = '#6b7280';
+                }
+              }}
             >
               {icon} {label}
             </button>
@@ -617,7 +632,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          paddingRight: '10px'
+          paddingRight: '10px',
+          minHeight: '500px',
+          maxHeight: '600px',
+          height: '500px'
         }}>
           {activeTab === 'overview' && (
             <div>
@@ -1932,8 +1950,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               </div>
             </div>
           )}
+          </div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

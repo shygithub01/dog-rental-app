@@ -23,12 +23,10 @@ import UserProfile from "./components/User/UserProfile";
 import FavoritesModal from "./components/User/FavoritesModal";
 import MessagingCenter from "./components/Messaging/MessagingCenter";
 import MapsView from "./components/Maps/MapsView";
-import FindDogsNearYou from "./components/Maps/FindDogsNearYou";
 import OwnerDashboard from "./components/Dashboard/OwnerDashboard";
 import RenterDashboard from "./components/Dashboard/RenterDashboard";
 import HybridDashboard from "./components/Dashboard/HybridDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
-import EarningsReport from "./components/Dashboard/EarningsReport";
 import { FirebaseProvider } from "./contexts/FirebaseContext";
 
 function AppContent() {
@@ -652,22 +650,97 @@ function AppContent() {
 
   if (showMaps) {
     return (
-      <FindDogsNearYou
-        dogs={dogs}
-        onRentDog={handleRentDog}
-        onMessageOwner={handleMessageDogOwner}
-        onBack={() => setShowMaps(false)}
-        currentUserId={user?.uid || ''}
-      />
+      <div style={{
+        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '40px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <MapsView
+          dogs={dogs}
+          onRentDog={handleRentDog}
+          onMessageOwner={handleMessageDogOwner}
+          onBack={() => setShowMaps(false)}
+          currentUserId={user?.uid || ''}
+        />
+      </div>
     )
   }
 
   if (showEarningsReport) {
     return (
-      <EarningsReport 
-        ownerEarnings={ownerEarnings}
-        onClose={() => setShowEarningsReport(false)}
-      />
+      <div className="dashboard-section" style={{
+        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: '40px 20px'
+      }}>
+        <div className="section-container">
+          <div className="card card-elevated" style={{ 
+            maxWidth: '1000px', 
+            width: '90%',
+            margin: '0 auto',
+            background: '#ffffff',
+            borderRadius: '20px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e2e8f0'
+          }}>
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '40px',
+              paddingBottom: '24px',
+              borderBottom: '1px solid #f1f5f9'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '16px' }}>💰</div>
+              <h2 className="section-title" style={{ marginBottom: '8px' }}>
+                Earnings Report
+              </h2>
+              <p className="section-subtitle" style={{ margin: 0 }}>
+                Your complete earnings overview and rental income details
+              </p>
+            </div>
+
+            <div className="flex justify-center mb-8">
+              <button
+                onClick={() => setShowEarningsReport(false)}
+                className="btn-glass"
+              >
+                ← Back to Dashboard
+              </button>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: '20px',
+              marginBottom: '30px'
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #8A52D0 0%, #6A32B0 100%)',
+                color: 'white',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>
+                  ${(() => {
+                    const pastEarnings = ownerEarnings
+                      .filter(rental => rental.status === 'completed')
+                      .reduce((sum: number, rental: any) => sum + (rental.totalCost || 0), 0);
+                    return pastEarnings;
+                  })()}
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Past Earnings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 

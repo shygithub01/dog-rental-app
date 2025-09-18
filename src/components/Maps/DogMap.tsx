@@ -170,9 +170,12 @@ const DogMap: React.FC<DogMapProps> = ({
 
   // Filter dogs for display
   const getFilteredDogs = useCallback(() => {
-    if (!currentLocation) return dogs;
+    if (!currentLocation) return dogs.filter(dog => dog.ownerId !== currentUserId);
 
     return dogs.filter(dog => {
+      // Don't show user's own dogs
+      if (dog.ownerId === currentUserId) return false;
+      
       // Check availability
       if (filters.availableOnly && !dog.isAvailable) return false;
       
@@ -189,9 +192,24 @@ const DogMap: React.FC<DogMapProps> = ({
       
       return true;
     });
-  }, [dogs, currentLocation, filters, mapsService, useMiles]);
+  }, [dogs, currentLocation, filters, mapsService, useMiles, currentUserId]);
 
   const filteredDogs = getFilteredDogs();
+
+  // Debug logging
+  console.log('🔍 DEBUG DogMap:', {
+    totalDogs: dogs.length,
+    currentUserId: currentUserId,
+    filteredDogsCount: filteredDogs.length,
+    currentLocation: currentLocation,
+    filters: filters,
+    allDogs: dogs.map(dog => ({ 
+      id: dog.id, 
+      name: dog.name, 
+      ownerId: dog.ownerId, 
+      isAvailable: dog.isAvailable 
+    }))
+  });
 
   if (loading) {
     return (
