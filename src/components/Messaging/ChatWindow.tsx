@@ -134,8 +134,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           }
         }
       );
-
-      console.log('Message sent successfully');
     } catch (error) {
       console.error('Error sending message:', error);
       setError('Failed to send message');

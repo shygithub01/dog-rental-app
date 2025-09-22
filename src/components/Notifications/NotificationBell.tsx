@@ -113,7 +113,6 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
       await notificationService.deleteNotification(notificationId);
       setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
       setUnreadCount(prev => Math.max(0, prev - 1));
-      console.log('Notification deleted successfully');
     } catch (error) {
       console.error('Error deleting notification:', error);
     }
@@ -407,7 +406,6 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) => {
                           }}>
                             <button
                               onClick={(e) => {
-                                console.log('Delete button clicked for notification:', notification.id);
                                 handleDeleteNotification(notification.id, e);
                               }}
                               style={{

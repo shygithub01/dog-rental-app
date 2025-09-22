@@ -68,17 +68,12 @@ function AppContent() {
   const messageService = useMessageService();
 
   useEffect(() => {
-    console.log('Firebase Auth initialized:', auth)
-    console.log('Current user:', auth.currentUser)
-
     // Listen for auth state changes
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log('Auth state changed:', user)
       setUser(user)
       setProfileLoading(true)
       
       if (user) {
-        console.log('User authenticated, loading profile and dogs...')
         
         try {
           // First, load user profile to get their role
@@ -106,12 +101,10 @@ function AppContent() {
 
   const loadUserProfile = async (currentUser: any) => {
     try {
-      console.log('Loading user profile for:', currentUser.uid);
       const userRef = doc(db, "users", currentUser.uid);
       const userDoc = await getDoc(userRef);
 
       if (userDoc.exists()) {
-        console.log('Existing profile found, loading...');
         const data = userDoc.data();
         const updatedProfile = { ...data, id: currentUser.uid };
         await updateDoc(userRef, { lastActive: new Date() });
@@ -121,7 +114,6 @@ function AppContent() {
         await createWelcomeNotificationIfNeeded(currentUser, false);
         
       } else {
-        console.log('No existing profile found - user needs to select role first');
         // Don't create profile yet - wait for role selection
         setUserProfile(null);
       }
@@ -132,7 +124,6 @@ function AppContent() {
 
   const createUserProfileWithRole = async (currentUser: any, role: 'renter' | 'owner') => {
     try {
-      console.log('Creating user profile with role:', role)
       const userRef = doc(db, 'users', currentUser.uid);
       
       const newUserProfile = {
@@ -179,8 +170,6 @@ function AppContent() {
       
       // Create welcome notification for new users
       await createWelcomeNotificationIfNeeded(currentUser, true);
-      
-      console.log('User profile created successfully with role:', role)
     } catch (error) {
       console.error('Error creating user profile:', error);
       throw error;
@@ -203,7 +192,6 @@ function AppContent() {
             }
           }
         );
-        console.log('Welcome notification created for new user');
       } else {
         // Remove any duplicate welcome notifications for existing users
         await notificationService.removeDuplicateWelcomeNotifications(currentUser.uid);
@@ -263,95 +251,50 @@ function AppContent() {
   }, [showEarningsReport, user?.uid, db]);
 
   const loadDogsWithUser = async (currentUser: any) => {
-    console.log('=== loadDogsWithUser START ===')
-    console.log('loadDogsWithUser called, user:', currentUser)
-    console.log('user type:', typeof currentUser)
-    console.log('user truthy:', !!currentUser)
-    
     if (!currentUser) {
-      console.log('No user, skipping loadDogsWithUser')
       return
     }
     
-    console.log('About to set loading...')
     setLoading(true)
     
     try {
-      console.log('Loading dogs from database...')
-      console.log('Current user:', currentUser.uid)
-      console.log('About to call getDocs...')
-      
       const querySnapshot = await getDocs(collection(db, 'dogs'))
-      console.log('Query snapshot size:', querySnapshot.size)
       
       const allDogs = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }))
-      console.log('Dogs loaded:', allDogs)
-      console.log('Number of dogs:', allDogs.length)
       
-      // Debug: Check ownerId values
-      console.log('DEBUG Dog ownerIds:', allDogs.map((dog: any) => ({
-        id: dog.id,
-        name: dog.name,
-        ownerId: dog.ownerId,
-        hasOwnerId: !!dog.ownerId,
-        fullDog: dog // Show the complete dog object
-      })))
-      
-      console.log('About to setDogs...')
       setDogs(allDogs)
-      console.log('setDogs called')
       
     } catch (error) {
       console.error('Error loading dogs:', error)
     } finally {
-      console.log('Setting loading to false...')
       setLoading(false)
-      console.log('=== loadDogsWithUser END ===')
     }
   }
 
   const loadDogs = async () => {
-    console.log('=== loadDogs START ===')
-    console.log('loadDogs called, user:', user)
-    console.log('user type:', typeof user)
-    console.log('user truthy:', !!user)
-    
     if (!user) {
-      console.log('No user, skipping loadDogs')
       return
     }
     
-    console.log('About to set loading...')
     setLoading(true)
     
     try {
-      console.log('Loading dogs from database...')
-      console.log('Current user:', user.uid)
-      console.log('About to call getDocs...')
-      
       const querySnapshot = await getDocs(collection(db, 'dogs'))
-      console.log('Query snapshot size:', querySnapshot.size)
       
       const allDogs = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }))
-      console.log('Dogs loaded:', allDogs)
-      console.log('Number of dogs:', allDogs.length)
       
-      console.log('About to setDogs...')
       setDogs(allDogs)
-      console.log('setDogs called')
       
     } catch (error) {
       console.error('Error loading dogs:', error)
     } finally {
-      console.log('Setting loading to false...')
       setLoading(false)
-      console.log('=== loadDogs END ===')
     }
   }
 
@@ -376,7 +319,6 @@ function AppContent() {
   }
 
   const handleRentDog = (dog: any) => {
-    console.log('handleRentDog called with dog:', dog);
     setRentingDog(dog)
     setShowRentDog(true)
   }
@@ -385,8 +327,6 @@ function AppContent() {
     if (!user) return;
     
     try {
-      console.log('Starting conversation with dog owner:', dog.ownerId, 'about dog:', dog.id);
-      
       // Check if conversation already exists for this specific dog
       const conversationExists = await messageService.conversationExists(user.uid, dog.ownerId, dog.id);
       
@@ -404,7 +344,6 @@ function AppContent() {
             rentalId: undefined
           }
         );
-        console.log('Initial message sent successfully');
       }
       
       // Create notification for the dog owner (for all messages, not just new conversations)
@@ -1347,10 +1286,7 @@ function AppContent() {
       {/* Role-Based Dashboard Content */}
       {user && userProfile && (
         <>
-          {console.log('DEBUG: userProfile.role =', userProfile.role, 'effectiveUserRole =', effectiveUserRole, 'userProfile =', userProfile)}
           {(() => {
-            console.log('DEBUG: Final user role =', effectiveUserRole);
-            
             if (effectiveUserRole === 'owner') {
               return (
                 <div className="fade-in">

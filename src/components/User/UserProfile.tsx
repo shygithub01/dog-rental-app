@@ -776,7 +776,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                           fontSize: '1.5rem',
                           position: 'relative'
                         }}>
-                          {!(dog.imageUrls?.length > 0 || dog.imageUrl) && '🐕'}
+                          {!((dog.imageUrls && dog.imageUrls.length > 0) || dog.imageUrl) && '🐕'}
                           {/* Photo count indicator */}
                           {dog.imageUrls && dog.imageUrls.length > 1 && (
                             <div style={{

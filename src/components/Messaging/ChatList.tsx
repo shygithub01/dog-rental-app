@@ -27,27 +27,13 @@ const ChatList: React.FC<ChatListProps> = ({
       return;
     }
 
-    console.log('ChatList: Starting to load conversations for user:', currentUserId);
-    
-    // Add a timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      if (loading) {
-        console.log('ChatList: Loading timeout reached, showing no conversations');
-        setLoading(false);
-        setError('Loading timeout - please refresh the page');
-      }
-    }, 10000); // 10 second timeout
-
     const unsubscribe = messageService.subscribeToConversations(currentUserId, (conversations) => {
-      console.log('ChatList: Received conversations:', conversations);
-      clearTimeout(timeoutId);
       setConversations(conversations);
       setLoading(false);
       setError('');
     });
 
     return () => {
-      clearTimeout(timeoutId);
       unsubscribe();
     };
   }, [currentUserId]);

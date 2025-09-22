@@ -43,19 +43,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
   const requestedDogs = myDogs.filter(dog => !dog.isAvailable && dog.status === 'requested');
   const rentedDogs = myDogs.filter(dog => !dog.isAvailable && dog.status === 'rented');
 
-  // Debug logging
-  console.log('🔍 DEBUG OwnerDashboard:', {
-    totalDogs: dogs.length,
-    userId: user?.id,
-    userUid: user?.uid,
-    user: user,
-    myDogs: myDogs.length,
-    availableDogs: availableDogs.length,
-    requestedDogs: requestedDogs.length,
-    rentedDogs: rentedDogs.length,
-    allDogs: dogs.map(dog => ({ id: dog.id, name: dog.name, ownerId: dog.ownerId, status: dog.status })),
-    myDogsDetails: myDogs.map(dog => ({ id: dog.id, name: dog.name, ownerId: dog.ownerId, status: dog.status }))
-  });
+
 
   // Fetch user's rentals from the rentals collection
   useEffect(() => {

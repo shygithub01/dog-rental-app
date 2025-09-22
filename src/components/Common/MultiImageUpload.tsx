@@ -79,7 +79,6 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         await deleteObject(imageRef);
       }
     } catch (error) {
-      console.log('Could not delete image from storage:', error);
       // Continue anyway - the image might not exist in storage
     }
 

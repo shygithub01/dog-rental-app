@@ -71,11 +71,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
       // Upload the file
       const snapshot = await uploadBytes(storageRef, blob);
-      console.log('Image uploaded successfully:', snapshot);
 
       // Get the download URL
       const downloadURL = await getDownloadURL(snapshot.ref);
-      console.log('Download URL:', downloadURL);
 
       // Call the callback with the new image URL
       onImageUploaded(downloadURL);

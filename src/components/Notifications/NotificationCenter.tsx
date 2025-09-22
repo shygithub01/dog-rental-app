@@ -52,7 +52,6 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
         setNotifications(notificationsData);
         setUnreadCount(unread);
         setLoading(false);
-        console.log(`Real-time update: ${notificationsData.length} notifications, ${unread} unread`);
       }, (error) => {
         console.error('Error listening to notifications:', error);
         setLoading(false);
@@ -90,10 +89,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
 
   const handleDeleteNotification = async (notificationId: string, event: React.MouseEvent) => {
     event.stopPropagation(); // Prevent marking as read when clicking delete
-    console.log('handleDeleteNotification called with ID:', notificationId);
     try {
       await notificationService.deleteNotification(notificationId);
-      console.log('Notification deleted successfully');
       setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
       // Update unread count if the deleted notification was unread
       const deletedNotification = notifications.find(n => n.id === notificationId);
@@ -239,7 +236,6 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
           }}>
             <button
               onClick={() => {
-                console.log('Test delete button clicked');
                 if (notifications.length > 0) {
                   handleDeleteNotification(notifications[0].id, {} as React.MouseEvent);
                 }
@@ -384,7 +380,6 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                       }}>
                         <button
                           onClick={(e) => {
-                            console.log('Delete button clicked for notification:', notification.id);
                             handleDeleteNotification(notification.id, e);
                           }}
                           style={{

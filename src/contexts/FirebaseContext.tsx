@@ -32,7 +32,6 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
   };
 
   useEffect(() => {
-    console.log('🔥 Firebase Provider initialized');
     console.log('Auth:', auth);
     console.log('Firestore:', db);
     console.log('Storage:', storage);

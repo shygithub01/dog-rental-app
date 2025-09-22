@@ -103,6 +103,32 @@ To enable the maps feature:
 - Responsive grid layouts
 - Interactive button states with hover effects
 
+## ⚠️ Known Issues & Technical Debt
+
+### 🚨 Critical Issues (Fix Immediately)
+- [x] **Remove Debug Logging**: Excessive `console.log` statements throughout codebase ✅
+- [x] **Fix JSX Console Logging**: Remove inline console.log in App.tsx render method (performance issue) ✅
+- [x] **Remove Hardcoded User Logic**: Eliminate hardcoded "Lucy" detection in role management ✅
+- [x] **Clean Up Utility Functions**: Move or remove `addCoordinatesToDog` from main service ✅
+
+### 🔧 Code Quality Issues
+- [ ] **Implement Proper Error Handling**: Replace silent error catching with user-friendly error displays
+- [ ] **Fix Timeout-based Loading**: Replace setTimeout loading patterns with proper async handling
+- [ ] **Separate Concerns**: Split components that mix UI and business logic
+- [ ] **Add Input Validation**: Implement consistent form validation across all components
+- [ ] **Remove Dead Code**: Clean up unused imports and commented code
+
+### 🛡️ Security & Performance
+- [ ] **Implement Logging System**: Replace console.log with proper logging (development vs production)
+- [ ] **Add Error Boundaries**: Implement React error boundaries for better error handling
+- [ ] **Optimize Re-renders**: Fix components that re-render unnecessarily
+- [ ] **Add Loading States**: Implement proper loading indicators instead of timeouts
+
+### 📋 Data Consistency Issues
+- [ ] **Fix Role Management**: Implement proper role assignment without hardcoded logic
+- [ ] **Validate Data Integrity**: Add validation for dog data, user profiles, and relationships
+- [ ] **Handle Edge Cases**: Address scenarios like deleted users, missing images, etc.
+
 ## 🚀 Roadmap & Future Enhancements
 
 ### 🎯 High Priority Features
