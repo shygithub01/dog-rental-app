@@ -29,6 +29,7 @@ import RenterDashboard from "./components/Dashboard/RenterDashboard";
 import HybridDashboard from "./components/Dashboard/HybridDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import EarningsReport from "./components/Dashboard/EarningsReport";
+import SearchPage from "./components/Search/SearchPage";
 import { FirebaseProvider } from "./contexts/FirebaseContext";
 
 function AppContent() {
@@ -41,12 +42,13 @@ function AppContent() {
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
   const [showMessaging, setShowMessaging] = useState(false);
-  const [showMaps, setShowMaps] = useState(false);
+
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showEarningsReport, setShowEarningsReport] = useState(false);
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
   const [showRoleSwitchModal, setShowRoleSwitchModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [userRentals, setUserRentals] = useState<any[]>([]);
   const [ownerEarnings, setOwnerEarnings] = useState<any[]>([]);
 
@@ -562,7 +564,7 @@ function AppContent() {
         onClose={() => setShowFavorites(false)}
         onBrowseDogs={() => {
           setShowFavorites(false);
-          setShowMaps(true);
+          setShowSearch(true);
         }}
       />
     )
@@ -589,14 +591,18 @@ function AppContent() {
     )
   }
 
-  if (showMaps) {
+
+
+  if (showSearch) {
     return (
-      <FindDogsNearYou
-        dogs={dogs}
+      <SearchPage
+        onDogSelect={(dog) => {
+          // Handle dog selection - could show details modal
+          setShowSearch(false);
+        }}
         onRentDog={handleRentDog}
         onMessageOwner={handleMessageDogOwner}
-        onBack={() => setShowMaps(false)}
-        currentUserId={user?.uid || ''}
+        onBack={() => setShowSearch(false)}
       />
     )
   }
@@ -960,7 +966,7 @@ function AppContent() {
                       
                       <button
                         onClick={() => {
-                          setShowMaps(true);
+                          setShowSearch(true);
                           setShowUserDropdown(false);
                         }}
                         className="dropdown-item"
@@ -998,7 +1004,7 @@ function AppContent() {
                           setShowUserProfile(false);
                           setShowFavorites(false);
                           setShowMessaging(false);
-                          setShowMaps(false);
+                          setShowSearch(false);
                           setShowEarningsReport(false);
                           setShowPaymentHistory(false);
                         }}
@@ -1241,10 +1247,10 @@ function AppContent() {
                       return (
                         <>
                           <button
-                            onClick={() => setShowMaps(true)}
+                            onClick={() => setShowSearch(true)}
                             className="btn-glass-primary w-full mb-4"
                           >
-                            Browse All Dogs
+                            🔍 Find Dogs
                           </button>
                           <button
                             onClick={() => setShowUserProfile(true)}
@@ -1305,7 +1311,6 @@ function AppContent() {
                 <div className="fade-in">
                   <RenterDashboard
                     dogs={dogs}
-                    onBrowseDogs={() => setShowMaps(true)}
                     onViewMyRentals={() => setShowUserProfile(true)}
                     onViewFavorites={() => setShowFavorites(true)}
                     onRentDog={handleRentDog}
@@ -1358,7 +1363,7 @@ function AppContent() {
             {dogs.length > 6 && (
               <div style={{ textAlign: 'center', marginTop: '40px' }}>
                 <button
-                  onClick={() => setShowMaps(true)}
+                  onClick={() => setShowSearch(true)}
                   className="btn-primary"
                 >
                   View All Dogs

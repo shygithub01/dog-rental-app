@@ -4,7 +4,6 @@ import { useFirebase } from '../../contexts/FirebaseContext';
 
 interface RenterDashboardProps {
   dogs: any[];
-  onBrowseDogs: () => void;
   onViewMyRentals: () => void;
   onViewFavorites: () => void;
   onRentDog: (dog: any) => void;
@@ -30,7 +29,6 @@ interface Rental {
 
 const RenterDashboard: React.FC<RenterDashboardProps> = ({
   dogs,
-  onBrowseDogs,
   onViewMyRentals,
   onViewFavorites,
   onRentDog,
@@ -172,24 +170,14 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                 }}>
                   Start exploring and rent your first dog companion
                 </p>
-                <button
-                  onClick={onBrowseDogs}
-                  style={{
-                    padding: '15px 30px',
-                    backgroundColor: '#FF6B35',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
-                >
-                  Browse Dogs
-                </button>
+                <p style={{
+                  fontSize: '1rem',
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  margin: '16px 0'
+                }}>
+                  Use the "Find Dogs" button in the action panel to start your search!
+                </p>
               </div>
             ) : (
               <div style={{

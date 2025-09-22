@@ -9,6 +9,7 @@ interface FindDogsNearYouProps {
   onMessageOwner: (dog: Dog) => void;
   onBack: () => void;
   currentUserId: string;
+  embedded?: boolean;
 }
 
 const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
@@ -16,7 +17,8 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
   onRentDog,
   onMessageOwner,
   onBack,
-  currentUserId
+  currentUserId,
+  embedded = false
 }) => {
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [userLocation, setUserLocation] = useState<Location | null>(null);
@@ -58,20 +60,23 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
   });
 
   return (
-    <div style={{ minHeight: '100vh', background: 'white' }}>
-      {/* Modern Header - Same as App.tsx */}
-      <header className="modern-header fade-in">
-        <div className="header-content">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-            <a href="#" className="logo">
-              DogRental
-            </a>
+    <div style={{ minHeight: embedded ? 'auto' : '100vh', background: embedded ? 'transparent' : 'white' }}>
+      {/* Modern Header - Only show when not embedded */}
+      {!embedded && (
+        <header className="modern-header fade-in">
+          <div className="header-content">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+              <a href="#" className="logo">
+                DogRental
+              </a>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
-      {/* Hero Section - Matching App.tsx Pattern */}
-      <section className="hero-section">
+      {/* Hero Section - Only show when not embedded */}
+      {!embedded && (
+        <section className="hero-section">
         <div className="hero-content fade-in">
           {/* Hero Text */}
           <div className="hero-text">
@@ -107,19 +112,21 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
               Click on dog markers to view details, or use the filters to find exactly what you're looking for
             </p>
 
-            {/* Back to Dashboard Button */}
-            <div style={{ marginTop: '20px', textAlign: 'center' }}>
-              <button
-                onClick={onBack}
-                className="btn-glass-primary"
-                style={{
-                  padding: '12px 24px',
-                  fontSize: '1rem'
-                }}
-              >
-                ← Back to Dashboard
-              </button>
-            </div>
+            {/* Back to Dashboard Button - Only show when not embedded */}
+            {!embedded && (
+              <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                <button
+                  onClick={onBack}
+                  className="btn-glass-primary"
+                  style={{
+                    padding: '12px 24px',
+                    fontSize: '1rem'
+                  }}
+                >
+                  ← Back to Dashboard
+                </button>
+              </div>
+            )}
 
             {/* Map Content - Simplified and Clean */}
             <div style={{ marginTop: '32px' }}>
@@ -411,6 +418,21 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
           </div>
         </div>
       </section>
+      )}
+
+      {/* Embedded Map View */}
+      {embedded && (
+        <div style={{ height: '100%', width: '100%' }}>
+          <DogMap
+            dogs={availableDogs}
+            onDogClick={handleDogClick}
+            onRentDog={handleRentFromMap}
+            onMessageOwner={onMessageOwner}
+            currentUserId={currentUserId}
+            userLocation={userLocation || undefined}
+          />
+        </div>
+      )}
     </div>
   );
 };
