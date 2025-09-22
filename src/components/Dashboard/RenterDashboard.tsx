@@ -83,7 +83,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
     <div style={{ 
       minHeight: '100vh', 
       padding: '0',
-      background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'
@@ -176,7 +176,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                   onClick={onBrowseDogs}
                   style={{
                     padding: '15px 30px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '10px',
@@ -185,8 +185,8 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                     fontSize: '1rem',
                     transition: 'all 0.2s'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                 >
                   Browse Dogs
                 </button>
@@ -250,7 +250,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                           {rental.dogBreed}
                         </p>
                         <p style={{
-                          color: '#6A32B0',
+                          color: '#FF6B35',
                           margin: '0 0 5px 0',
                           fontSize: '0.9rem'
                         }}>
@@ -297,7 +297,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                         style={{
                           flex: 1,
                           padding: '12px',
-                          backgroundColor: '#6A32B0',
+                          backgroundColor: '#FF6B35',
                           color: 'white',
                           border: 'none',
                           borderRadius: '8px',
@@ -306,8 +306,8 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                           fontSize: '0.9rem',
                           transition: 'all 0.2s'
                         }}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                       >
                         💬 Message Owner
                       </button>
@@ -388,7 +388,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
               marginBottom: '30px'
             }}>
               <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -400,7 +400,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Paid</div>
               </div>
               <div style={{
-                background: 'linear-gradient(135deg, #8A52D0 0%, #6A32B0 100%)',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -412,7 +412,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Rentals</div>
               </div>
               <div style={{
-                background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                background: 'linear-gradient(135deg, #2DD4BF 0%, #67E8F9 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -500,7 +500,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                           <div style={{
                             fontSize: '1.5rem',
                             fontWeight: 'bold',
-                            color: '#667eea',
+                            color: '#FF6B35',
                             marginBottom: '5px'
                           }}>
                             ${rental.totalCost}
@@ -568,7 +568,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                 onClick={() => setShowRentalModal(false)}
                 style={{
                   padding: '15px 30px',
-                  backgroundColor: '#667eea',
+                  backgroundColor: '#FF6B35',
                   color: 'white',
                   border: 'none',
                   borderRadius: '10px',
@@ -578,7 +578,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
                   transition: 'all 0.2s'
                 }}
                 onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a67d8'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#667eea'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
               >
                 Close Report
               </button>

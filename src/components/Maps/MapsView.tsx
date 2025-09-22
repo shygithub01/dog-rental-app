@@ -142,7 +142,7 @@ const MapsView: React.FC<MapsViewProps> = ({
                 style={{
                   flex: 1,
                   padding: '10px',
-                  backgroundColor: selectedDog.isAvailable ? '#6A32B0' : '#6c757d',
+                  backgroundColor: selectedDog.isAvailable ? '#FF6B35' : '#6c757d',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',

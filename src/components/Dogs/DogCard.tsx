@@ -152,8 +152,8 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
         borderRadius: '20px',
         fontSize: '0.8rem',
         fontWeight: 'bold',
-        backgroundColor: dog.isAvailable ? '#6A32B0' : 
-                       dog.status === 'requested' ? '#ed8936' : '#e53e3e',
+        backgroundColor: dog.isAvailable ? '#FF6B35' : 
+                       dog.status === 'requested' ? '#2DD4BF' : '#e53e3e',
         color: 'white',
         zIndex: 10
       }} className="mobile-status-badge">
@@ -217,7 +217,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
             left: '10px',
             right: '10px',
             textAlign: 'center',
-            color: '#6A32B0',
+            color: '#FF6B35',
             fontSize: '0.9rem',
             fontWeight: 'bold'
           }}>
@@ -249,7 +249,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
             {dog.breed} • {dog.age} year{dog.age !== 1 ? 's' : ''} old
           </p>
           <p style={{
-            color: '#6A32B0',
+            color: '#FF6B35',
             margin: '0 0 8px 0',
             fontSize: '0.9rem',
             textTransform: 'capitalize'
@@ -327,7 +327,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 disabled={loading || dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable}
                 style={{
                   padding: '8px 16px',
-                  backgroundColor: (dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? '#cbd5e0' : '#6A32B0',
+                  backgroundColor: (dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? '#cbd5e0' : '#FF6B35',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -338,10 +338,10 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 }}
                 className="mobile-action-btn"
                 onMouseOver={(e) => {
-                  if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#8A52D0';
+                  if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#FF8E53';
                 }}
                 onMouseOut={(e) => {
-                  if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#6A32B0';
+                  if (!loading && dog.status !== 'requested' && dog.status !== 'rented' && dog.isAvailable) e.currentTarget.style.backgroundColor = '#FF6B35';
                 }}
                 title={(dog.status === 'requested' || dog.status === 'rented' || !dog.isAvailable) ? 'Cannot edit while dog is rented or has pending requests' : 'Edit dog details'}
               >
@@ -379,7 +379,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 onClick={() => onMessage?.(dog)}
                 style={{
                   padding: '8px 16px',
-                  backgroundColor: '#6A32B0',
+                  backgroundColor: '#FF6B35',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -389,8 +389,8 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                   transition: 'all 0.2s'
                 }}
                 className="mobile-action-btn"
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                 title="Message the dog owner"
               >
                 💬 Message
@@ -400,7 +400,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 disabled={favoritesLoading}
                 style={{
                   padding: '8px 16px',
-                  backgroundColor: isFavorite ? '#e53e3e' : '#ed8936',
+                  backgroundColor: isFavorite ? '#e53e3e' : '#2DD4BF',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -412,11 +412,11 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 className="mobile-action-btn"
                 onMouseOver={(e) => {
                   if (!favoritesLoading) {
-                    e.currentTarget.style.backgroundColor = isFavorite ? '#c53030' : '#dd6b20';
+                    e.currentTarget.style.backgroundColor = isFavorite ? '#c53030' : '#67E8F9';
                   }
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = isFavorite ? '#e53e3e' : '#ed8936';
+                  e.currentTarget.style.backgroundColor = isFavorite ? '#e53e3e' : '#2DD4BF';
                 }}
                 title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
               >
@@ -431,7 +431,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 disabled={!dog.isAvailable}
                 style={{
                   padding: '10px 20px',
-                  backgroundColor: dog.isAvailable ? '#ed8936' : '#cbd5e0',
+                  backgroundColor: dog.isAvailable ? '#2DD4BF' : '#cbd5e0',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -442,10 +442,10 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
                 }}
                 className="mobile-action-btn"
                 onMouseOver={(e) => {
-                  if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#dd6b20';
+                  if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#67E8F9';
                 }}
                 onMouseOut={(e) => {
-                  if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#ed8936';
+                  if (dog.isAvailable) e.currentTarget.style.backgroundColor = '#2DD4BF';
                 }}
               >
                 {dog.isAvailable ? '📝 Request This Dog' : 

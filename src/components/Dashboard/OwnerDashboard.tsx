@@ -98,7 +98,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
     <div style={{ 
       minHeight: '100vh', 
       padding: '0',
-      background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'
@@ -285,14 +285,14 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                                 🏠 Rented by: {dogRental.renterName}
                               </p>
                               <p style={{
-                                color: '#6A32B0',
+                                color: '#FF6B35',
                                 margin: '0 0 5px 0',
                                 fontSize: '0.8rem'
                               }}>
                                 💰 Total Cost: ${dogRental.totalCost}
                               </p>
                               <p style={{
-                                color: '#6A32B0',
+                                color: '#FF6B35',
                                 margin: '0',
                                 fontSize: '0.8rem'
                               }}>
@@ -340,7 +340,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                               style={{
                                 flex: 1,
                                 padding: '12px',
-                                backgroundColor: '#6A32B0',
+                                backgroundColor: '#FF6B35',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '8px',
@@ -349,8 +349,8 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                                 fontSize: '0.9rem',
                                 transition: 'all 0.2s'
                               }}
-                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                             >
                               ✏️ Edit
                             </button>
@@ -380,7 +380,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                             style={{
                               flex: 1,
                               padding: '12px',
-                              backgroundColor: '#ed8936',
+                              backgroundColor: '#2DD4BF',
                               color: 'white',
                               border: 'none',
                               borderRadius: '8px',
@@ -389,8 +389,8 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                               fontSize: '0.9rem',
                               transition: 'all 0.2s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dd6b20'}
-                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ed8936'}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#67E8F9'}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2DD4BF'}
                           >
                             📋 Review Request
                           </button>

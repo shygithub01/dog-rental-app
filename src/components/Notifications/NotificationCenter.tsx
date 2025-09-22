@@ -180,7 +180,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
             </h3>
             {unreadCount > 0 && (
               <span style={{
-                backgroundColor: '#6A32B0',
+                backgroundColor: '#FF6B35',
                 color: 'white',
                 padding: '4px 8px',
                 borderRadius: '12px',
@@ -200,7 +200,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                 onClick={handleMarkAllAsRead}
                 style={{
                   padding: '6px 12px',
-                  backgroundColor: '#6A32B0',
+                  backgroundColor: '#FF6B35',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',
@@ -216,7 +216,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
               onClick={onClose}
               style={{
                 padding: '8px 16px',
-                backgroundColor: '#6A32B0',
+                backgroundColor: '#FF6B35',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
@@ -310,7 +310,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                   style={{
                     padding: '15px',
                     borderRadius: '10px',
-                    border: notification.read ? '1px solid #e2e8f0' : '2px solid #6A32B0',
+                    border: notification.read ? '1px solid #e2e8f0' : '2px solid #FF6B35',
                     backgroundColor: notification.read ? '#f7fafc' : 'white',
                     cursor: 'pointer',
                     transition: 'all 0.2s'
@@ -356,7 +356,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, isOpen,
                             <div style={{
                               width: '8px',
                               height: '8px',
-                              backgroundColor: '#6A32B0',
+                              backgroundColor: '#FF6B35',
                               borderRadius: '50%'
                             }} />
                           )}

@@ -91,7 +91,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                 style={{
                   padding: '12px 24px',
                   fontSize: '1rem',
-                  backgroundColor: 'rgba(139, 92, 246, 0.9)',
+                  backgroundColor: 'rgba(255, 107, 53, 0.9)',
                   border: '2px solid rgba(255, 255, 255, 0.3)',
                   color: 'white',
                   borderRadius: '12px',
@@ -99,7 +99,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                   transition: 'all 0.3s ease',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
-                  boxShadow: '0 8px 32px rgba(139, 92, 246, 0.3)',
+                  boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)',
                   fontWeight: '700',
                   minHeight: '48px',
                   display: 'flex',
@@ -108,14 +108,14 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                   textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 1)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 107, 53, 1)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(139, 92, 246, 0.4)';
+                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 107, 53, 0.4)';
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.9)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 107, 53, 0.9)';
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(139, 92, 246, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 107, 53, 0.3)';
                 }}
               >
                 ← Back to Dashboard
@@ -154,13 +154,13 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                     </h4>
                   </div>
                   <div style={{
-                    background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                    background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                     color: 'white',
                     padding: '8px 16px',
                     borderRadius: '20px',
                     fontSize: '0.875rem',
                     fontWeight: '600',
-                    boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)'
+                    boxShadow: '0 4px 12px rgba(255, 107, 53, 0.3)'
                   }}>
                     {selectedConversation ? 'Active Chat' : 'Message Center'}
                   </div>

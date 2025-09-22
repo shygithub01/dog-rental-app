@@ -123,7 +123,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
 
   return (
     <div style={{
-      background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/image1.png")',
+      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       minHeight: '100vh',
@@ -243,7 +243,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -275,7 +275,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -315,7 +315,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -345,7 +345,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     backgroundColor: 'white',
                     cursor: 'pointer'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 >
                   <option value="small">Small (under 20 lbs)</option>
@@ -396,7 +396,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                 resize: 'vertical',
                 fontFamily: 'inherit'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+              onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
@@ -447,7 +447,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -478,7 +478,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                     transition: 'all 0.2s',
                     backgroundColor: 'white'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#6A32B0'}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 />
               </div>
@@ -629,7 +629,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                 onClick={onCancel}
                 style={{
                   padding: '15px 30px',
-                  backgroundColor: '#6A32B0',
+                  backgroundColor: '#FF6B35',
                   color: 'white',
                   border: 'none',
                   borderRadius: '10px',
@@ -639,8 +639,8 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                   transition: 'all 0.2s',
                   minWidth: '120px'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
               >
                 ← Cancel
               </button>
@@ -650,7 +650,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
               disabled={loading}
               style={{
                 padding: '15px 30px',
-                backgroundColor: loading ? '#cbd5e0' : '#6A32B0',
+                backgroundColor: loading ? '#cbd5e0' : '#FF6B35',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -661,10 +661,10 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                 minWidth: '120px'
               }}
               onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#8A52D0';
+                if (!loading) e.currentTarget.style.backgroundColor = '#FF8E53';
               }}
               onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#6A32B0';
+                if (!loading) e.currentTarget.style.backgroundColor = '#FF6B35';
               }}
             >
               {loading ? '✏️ Updating...' : '✅ Update Dog'}

@@ -174,7 +174,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         cursor: 'pointer',
         transition: 'all 0.2s'
       }}
-      onMouseOver={(e) => e.currentTarget.style.borderColor = '#6A32B0'}
+      onMouseOver={(e) => e.currentTarget.style.borderColor = '#FF6B35'}
       onMouseOut={(e) => e.currentTarget.style.borderColor = '#cbd5e0'}
       onClick={() => fileInputRef.current?.click()}
       >
@@ -198,10 +198,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <p style={{ margin: '0 0 5px 0', color: '#2d3748', fontWeight: 'bold' }}>
               {previewUrl ? 'Change Photo' : 'Click to Upload Photo'}
             </p>
-            <p style={{ margin: 0, color: '#6A32B0', fontSize: '0.9rem' }}>
+            <p style={{ margin: 0, color: '#FF6B35', fontSize: '0.9rem' }}>
               JPEG, PNG up to 5MB
             </p>
-            <p style={{ margin: '5px 0 0 0', color: '#6A32B0', fontSize: '0.8rem', fontStyle: 'italic' }}>
+            <p style={{ margin: '5px 0 0 0', color: '#FF6B35', fontSize: '0.8rem', fontStyle: 'italic' }}>
               ✂️ Crop & position your photo for the perfect fit!
             </p>
           </div>

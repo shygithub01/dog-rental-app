@@ -127,12 +127,12 @@ const EarningsReport: React.FC<EarningsReportProps> = ({ ownerEarnings, onClose 
               }}>
                 {/* Past Earnings Card */}
                 <div style={{
-                  background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                  background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                   color: 'white',
                   padding: '24px',
                   borderRadius: '16px',
                   textAlign: 'center',
-                  boxShadow: '0 8px 32px rgba(139, 92, 246, 0.3)',
+                  boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)',
                   border: '1px solid rgba(255, 255, 255, 0.2)'
                 }}>
                   <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>💰</div>

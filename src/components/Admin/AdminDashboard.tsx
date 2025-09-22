@@ -674,7 +674,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
               onClick={() => setActiveTab(tab.key as any)}
               style={{
                 padding: '12px 20px',
-                background: activeTab === tab.key ? '#6A32B0' : 'transparent',
+                background: activeTab === tab.key ? '#FF6B35' : 'transparent',
                 color: activeTab === tab.key ? 'white' : '#4a5568',
                 border: 'none',
                 borderRadius: '8px 8px 0 0',
@@ -699,7 +699,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
               marginBottom: '30px'
             }}>
               <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -711,7 +711,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Users</div>
               </div>
               <div style={{
-                background: 'linear-gradient(135deg, #8A52D0 0%, #6A32B0 100%)',
+                background: 'linear-gradient(135deg, #FF8E53 0%, #FF6B35 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -723,7 +723,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                 <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Dogs</div>
               </div>
               <div style={{
-                background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                background: 'linear-gradient(135deg, #2DD4BF 0%, #67E8F9 100%)',
                 color: 'white',
                 padding: '25px',
                 borderRadius: '15px',
@@ -809,7 +809,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                   onClick={fixDogStatuses}
                   style={{
                     padding: '15px 30px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '10px',
@@ -820,11 +820,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
                     transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#8A52D0';
+                    e.currentTarget.style.backgroundColor = '#FF8E53';
                     e.currentTarget.style.transform = 'translateY(-2px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#6A32B0';
+                    e.currentTarget.style.backgroundColor = '#FF6B35';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
@@ -906,7 +906,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                   onClick={updateAllUserSafetyStatus}
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
@@ -924,7 +924,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                     disabled={isVerifying}
                     style={{
                       padding: '8px 16px',
-                      backgroundColor: isVerifying ? '#cbd5e0' : '#6A32B0',
+                      backgroundColor: isVerifying ? '#cbd5e0' : '#FF6B35',
                       color: 'white',
                       border: 'none',
                       borderRadius: '6px',
@@ -1034,8 +1034,8 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                         {/* Overall Score */}
                         <div style={{
                           padding: '8px 16px',
-                          backgroundColor: user.verificationScore.percentage >= 80 ? '#6A32B0' : 
-                                         user.verificationScore.percentage >= 60 ? '#ed8936' : '#e53e3e',
+                          backgroundColor: user.verificationScore.percentage >= 80 ? '#FF6B35' : 
+                                         user.verificationScore.percentage >= 60 ? '#2DD4BF' : '#e53e3e',
                           color: 'white',
                           border: 'none',
                           borderRadius: '6px',
@@ -1102,7 +1102,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                                   border: `1px solid ${isMaxScore ? '#9ae6b4' : '#fed7d7'}`
                                 }}>
                                   <span style={{ 
-                                    color: isMaxScore ? '#6A32B0' : '#e53e3e',
+                                    color: isMaxScore ? '#FF6B35' : '#e53e3e',
                                     fontWeight: isMaxScore ? 'bold' : 'normal',
                                     fontSize: '9px'
                                   }}>
@@ -1110,7 +1110,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                                   </span>
                                   <span style={{ 
                                     fontWeight: 'bold',
-                                    color: isMaxScore ? '#6A32B0' : '#e53e3e',
+                                    color: isMaxScore ? '#FF6B35' : '#e53e3e',
                                     fontSize: '9px'
                                   }}>
                                     {data.score}/{data.maxScore}
@@ -1124,7 +1124,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                     ) : (
                       <div style={{
                         padding: '8px 16px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
@@ -1141,7 +1141,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                         onClick={() => handleUserAction(user.id, 'suspend')}
                         style={{
                           padding: '8px 16px',
-                          backgroundColor: '#ed8936',
+                          backgroundColor: '#2DD4BF',
                           color: 'white',
                           border: 'none',
                           borderRadius: '6px',
@@ -1177,7 +1177,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                     {user.role === 'admin' && (
                       <div style={{
                         padding: '8px 16px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
@@ -1194,7 +1194,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                     {user.role === 'admin' && user.verificationScore && (
                       <div style={{
                         padding: '8px 16px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
@@ -1239,7 +1239,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
                       onClick={() => handleDogApproval(dog.id, true)}
                       style={{
                         padding: '10px 20px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '6px',
@@ -1292,7 +1292,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
               }}>
                 <h3 style={{ margin: '0 0 15px 0', color: '#2d3748' }}>User Growth</h3>
                 <div style={{ textAlign: 'center', padding: '20px' }}>
-                  <div style={{ fontSize: '2rem', color: '#6A32B0', marginBottom: '10px' }}>
+                  <div style={{ fontSize: '2rem', color: '#FF6B35', marginBottom: '10px' }}>
                     📈
                   </div>
                   <p style={{ color: '#4a5568' }}>User analytics coming soon</p>
@@ -1306,7 +1306,7 @@ If the reset button above doesn't work, use these commands in Firebase Console:
               }}>
                 <h3 style={{ margin: '0 0 15px 0', color: '#2d3748' }}>Rental Trends</h3>
                 <div style={{ textAlign: 'center', padding: '20px' }}>
-                  <div style={{ fontSize: '2rem', color: '#6A32B0', marginBottom: '10px' }}>
+                  <div style={{ fontSize: '2rem', color: '#FF6B35', marginBottom: '10px' }}>
                     📊
                   </div>
                   <p style={{ color: '#4a5568' }}>Rental analytics coming soon</p>

@@ -138,7 +138,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       display: 'flex',
@@ -305,7 +305,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
                   marginBottom: '15px'
                 }}>
                   <span style={{
-                    color: '#6A32B0',
+                    color: '#FF6B35',
                     fontSize: '1.1rem',
                     fontWeight: 'bold'
                   }}>

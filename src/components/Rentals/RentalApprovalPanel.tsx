@@ -272,7 +272,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                   width: '50px',
                   height: '50px',
                   border: '4px solid #e2e8f0',
-                  borderTop: '4px solid #6A32B0',
+                  borderTop: '4px solid #FF6B35',
                   borderRadius: '50%',
                   animation: 'spin 1s linear infinite',
                   margin: '0 auto 20px'

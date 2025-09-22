@@ -297,7 +297,7 @@ const DogMap: React.FC<DogMapProps> = ({
           onClick={() => setUseMiles(!useMiles)}
           style={{
             padding: '6px 12px',
-            backgroundColor: '#6A32B0',
+            backgroundColor: '#FF6B35',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -312,7 +312,7 @@ const DogMap: React.FC<DogMapProps> = ({
           onClick={handleUseMyLocation}
           style={{
             padding: '6px 12px',
-            backgroundColor: '#6A32B0',
+            backgroundColor: '#FF6B35',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -409,7 +409,7 @@ const DogMap: React.FC<DogMapProps> = ({
                       style={{
                         flex: 1,
                         padding: '8px 12px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',
@@ -418,10 +418,10 @@ const DogMap: React.FC<DogMapProps> = ({
                         transition: 'background-color 0.2s'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8A52D0';
+                        e.currentTarget.style.backgroundColor = '#FF8E53';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#6A32B0';
+                        e.currentTarget.style.backgroundColor = '#FF6B35';
                       }}
                     >
                       Rent
@@ -436,7 +436,7 @@ const DogMap: React.FC<DogMapProps> = ({
                       style={{
                         flex: 1,
                         padding: '8px 12px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',
@@ -445,10 +445,10 @@ const DogMap: React.FC<DogMapProps> = ({
                         transition: 'background-color 0.2s'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8A52D0';
+                        e.currentTarget.style.backgroundColor = '#FF8E53';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#6A32B0';
+                        e.currentTarget.style.backgroundColor = '#FF6B35';
                       }}
                     >
                       Message
@@ -462,7 +462,7 @@ const DogMap: React.FC<DogMapProps> = ({
                     disabled={favoritesLoading.has(dog.id)}
                     style={{
                       padding: '8px 12px',
-                      backgroundColor: favorites.has(dog.id) ? '#e53e3e' : '#ed8936',
+                      backgroundColor: favorites.has(dog.id) ? '#e53e3e' : '#2DD4BF',
                       color: 'white',
                       border: 'none',
                       borderRadius: '4px',
@@ -473,11 +473,11 @@ const DogMap: React.FC<DogMapProps> = ({
                     }}
                     onMouseEnter={(e) => {
                       if (!favoritesLoading.has(dog.id)) {
-                        e.currentTarget.style.backgroundColor = favorites.has(dog.id) ? '#c53030' : '#dd6b20';
+                        e.currentTarget.style.backgroundColor = favorites.has(dog.id) ? '#c53030' : '#67E8F9';
                       }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = favorites.has(dog.id) ? '#e53e3e' : '#ed8936';
+                      e.currentTarget.style.backgroundColor = favorites.has(dog.id) ? '#e53e3e' : '#2DD4BF';
                     }}
                     title={favorites.has(dog.id) ? 'Remove from favorites' : 'Add to favorites'}
                   >

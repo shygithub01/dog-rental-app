@@ -353,7 +353,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
   if (loading) {
     return (
       <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/image1.png")',
+        background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -382,7 +382,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
   if (error || !profile) {
     return (
       <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/image1.png")',
+        background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -604,9 +604,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                 fontWeight: '600',
                 fontSize: '0.9rem',
                 transition: 'all 0.2s',
-                backgroundColor: activeTab === key ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: activeTab === key ? 'rgba(255, 107, 53, 0.2)' : 'rgba(255, 255, 255, 0.1)',
                 color: activeTab === key ? '#1f2937' : '#6b7280',
-                border: activeTab === key ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
+                border: activeTab === key ? '1px solid rgba(255, 107, 53, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
                 backdropFilter: 'blur(10px)',
                 cursor: 'pointer'
               }}
@@ -801,7 +801,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                             <span style={{
                               padding: '2px 8px',
                               borderRadius: '12px',
-                              backgroundColor: dog.isAvailable ? '#6A32B0' : '#e53e3e',
+                              backgroundColor: dog.isAvailable ? '#FF6B35' : '#e53e3e',
                               color: 'white',
                               fontWeight: 'bold'
                             }}>
@@ -890,8 +890,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                           borderRadius: '12px',
                           fontSize: '0.8rem',
                           fontWeight: 'bold',
-                          backgroundColor: rental.status === 'completed' ? '#6A32B0' : 
-                                         rental.status === 'active' ? '#6A32B0' : '#e53e3e',
+                          backgroundColor: rental.status === 'completed' ? '#FF6B35' : 
+                                         rental.status === 'active' ? '#FF6B35' : '#e53e3e',
                           color: 'white'
                         }}>
                           {rental.status.toUpperCase()}

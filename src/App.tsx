@@ -523,7 +523,7 @@ function AppContent() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #6A32B0 0%, #8A52D0 100%)'
+        background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)'
       }}>
         <div style={{
           background: 'white',
@@ -536,7 +536,7 @@ function AppContent() {
             width: '50px',
             height: '50px',
             border: '4px solid #e2e8f0',
-            borderTop: '4px solid #6A32B0',
+            borderTop: '4px solid #FF6B35',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
@@ -632,7 +632,7 @@ function AppContent() {
   if (showMessaging) {
     return (
       <div style={{
-        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+        background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -674,7 +674,7 @@ function AppContent() {
   if (showPaymentHistory) {
     return (
       <div className="dashboard-section" style={{
-        background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+        background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -744,12 +744,12 @@ function AppContent() {
                     marginBottom: '32px'
                   }}>
                     <div style={{
-                      background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                      background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                       color: 'white',
                       padding: '24px',
                       borderRadius: '16px',
                       textAlign: 'center',
-                      boxShadow: '0 8px 32px rgba(139, 92, 246, 0.3)'
+                      boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)'
                     }}>
                       <div style={{ fontSize: '2rem', marginBottom: '8px' }}>💳</div>
                       <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '4px' }}>
@@ -1031,6 +1031,8 @@ function AppContent() {
 
                       <div className="dropdown-divider" />
                       
+                      {/* Hide Switch Role for admin users */}
+                      {effectiveUserRole !== 'admin' && (
                       <button
                         onClick={() => {
                           setShowRoleSwitchModal(true);
@@ -1040,6 +1042,7 @@ function AppContent() {
                       >
                         Switch Role
                       </button>
+                      )}
                       
                       <button
                         onClick={() => {
@@ -1538,7 +1541,7 @@ function AppContent() {
         </div>
       )}
       
-      {/* Role Switch Modal */}
+{/* Role Switch Modal */}
       {showRoleSwitchModal && (
         <div style={{
           position: 'fixed',
@@ -1576,38 +1579,48 @@ function AppContent() {
               Choose how you want to use DogRental
             </p>
             
-            <div style={{ marginBottom: 'var(--space-8)' }}>
-              <button
-                onClick={() => {
-                  // Update user role in Firestore
-                  const userRef = doc(db, "users", user.uid);
-                  updateDoc(userRef, { role: 'renter' }).then(() => {
-                    setUserProfile((prev: any) => ({ ...prev, role: 'renter' }));
-                    setShowRoleSwitchModal(false);
-                  });
-                }}
-                className="btn btn-success btn-lg"
-                style={{ marginBottom: 'var(--space-3)' }}
-              >
-                <span style={{ fontSize: '1.2rem' }}>🐾</span>
-                Continue as Renter
-              </button>
-              
-              <button
-                onClick={() => {
-                  // Update user role in Firestore
-                  const userRef = doc(db, "users", user.uid);
-                  updateDoc(userRef, { role: 'owner' }).then(() => {
-                    setUserProfile((prev: any) => ({ ...prev, role: 'owner' }));
-                    setShowRoleSwitchModal(false);
-                  });
-                }}
-                className="btn btn-success btn-lg"
-              >
-                <span style={{ fontSize: '1.2rem' }}>🏠</span>
-                Switch to Owner
-              </button>
-            </div>
+            {/* Only show role switching for non-admin users */}
+            {effectiveUserRole !== 'admin' && (
+              <div style={{ marginBottom: 'var(--space-8)' }}>
+                <button
+                  onClick={() => {
+                    const userRef = doc(db, "users", user.uid);
+                    updateDoc(userRef, { role: 'renter' }).then(() => {
+                      setUserProfile((prev: any) => ({ ...prev, role: 'renter' }));
+                      setShowRoleSwitchModal(false);
+                    });
+                  }}
+                  className="btn btn-success btn-lg"
+                  style={{ marginBottom: 'var(--space-3)' }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>🐾</span>
+                  Continue as Renter
+                </button>
+                
+                <button
+                  onClick={() => {
+                    const userRef = doc(db, "users", user.uid);
+                    updateDoc(userRef, { role: 'owner' }).then(() => {
+                      setUserProfile((prev: any) => ({ ...prev, role: 'owner' }));
+                      setShowRoleSwitchModal(false);
+                    });
+                  }}
+                  className="btn btn-success btn-lg"
+                >
+                  <span style={{ fontSize: '1.2rem' }}>🏠</span>
+                  Switch to Owner
+                </button>
+              </div>
+            )}
+            
+            {/* Show message for admin users */}
+            {effectiveUserRole === 'admin' && (
+              <div style={{ marginBottom: 'var(--space-8)' }}>
+                <p style={{ color: '#6B32B0', fontWeight: 'bold' }}>
+                  🛡️ Admin accounts cannot switch roles for security reasons.
+                </p>
+              </div>
+            )}
             
             <button
               onClick={() => setShowRoleSwitchModal(false)}
@@ -1626,6 +1639,12 @@ function AppContent() {
     </div>
   )
 }
+
+
+
+
+
+
 
 function App() {
   return (

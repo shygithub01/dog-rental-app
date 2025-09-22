@@ -154,13 +154,13 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
                     </h4>
                   </div>
                   <div style={{
-                    background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                    background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
                     color: 'white',
                     padding: '8px 16px',
                     borderRadius: '20px',
                     fontSize: '0.875rem',
                     fontWeight: '600',
-                    boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)'
+                    boxShadow: '0 4px 12px rgba(255, 107, 53, 0.3)'
                   }}>
                     {availableDogs.length} Available
                   </div>

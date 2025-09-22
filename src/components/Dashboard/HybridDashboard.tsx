@@ -96,7 +96,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
     <div style={{ 
       minHeight: '100vh', 
       padding: '0',
-      background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/image1.png")',
+      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'
@@ -147,7 +147,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
               onClick={() => setActiveMode('owner')}
               style={{
                 padding: '15px 30px',
-                backgroundColor: activeMode === 'owner' ? '#6A32B0' : 'rgba(255,255,255,0.2)',
+                backgroundColor: activeMode === 'owner' ? '#FF6B35' : 'rgba(255,255,255,0.2)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -166,7 +166,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
               onClick={() => setActiveMode('renter')}
               style={{
                 padding: '15px 30px',
-                backgroundColor: activeMode === 'renter' ? '#6A32B0' : 'rgba(255,255,255,0.2)',
+                backgroundColor: activeMode === 'renter' ? '#FF6B35' : 'rgba(255,255,255,0.2)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -250,7 +250,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   onClick={onAddDog}
                   style={{
                     padding: '25px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '15px',
@@ -280,7 +280,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   onClick={onViewRequests}
                   style={{
                     padding: '25px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '15px',
@@ -310,7 +310,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   onClick={onViewEarnings}
                   style={{
                     padding: '25px',
-                    backgroundColor: '#ed8936',
+                    backgroundColor: '#2DD4BF',
                     color: 'white',
                     border: 'none',
                     borderRadius: '15px',
@@ -377,7 +377,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                       onClick={onAddDog}
                       style={{
                         padding: '15px 30px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '10px',
@@ -386,8 +386,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                         fontSize: '1rem',
                         transition: 'all 0.2s'
                       }}
-                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
+                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
                     >
                       Add Your First Dog
                     </button>
@@ -488,7 +488,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                                 style={{
                                   flex: 1,
                                   padding: '12px',
-                                  backgroundColor: '#6A32B0',
+                                  backgroundColor: '#FF6B35',
                                   color: 'white',
                                   border: 'none',
                                   borderRadius: '8px',
@@ -497,8 +497,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                                   fontSize: '0.9rem',
                                   transition: 'all 0.2s'
                                 }}
-                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                               >
                                 ✏️ Edit
                               </button>
@@ -563,7 +563,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   onClick={onBrowseDogs}
                   style={{
                     padding: '25px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '15px',
@@ -593,7 +593,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   onClick={onViewMyRentals}
                   style={{
                     padding: '25px',
-                    backgroundColor: '#6A32B0',
+                    backgroundColor: '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '15px',
@@ -623,7 +623,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                   onClick={onViewFavorites}
                   style={{
                     padding: '25px',
-                    backgroundColor: '#ed8936',
+                    backgroundColor: '#2DD4BF',
                     color: 'white',
                     border: 'none',
                     borderRadius: '15px',
@@ -700,7 +700,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                       onClick={onBrowseDogs}
                       style={{
                         padding: '15px 30px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '10px',
@@ -709,8 +709,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                         fontSize: '1rem',
                         transition: 'all 0.2s'
                       }}
-                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
+                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
                     >
                       Browse Dogs
                     </button>
@@ -774,7 +774,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                               {rental.dogBreed}
                             </p>
                             <p style={{
-                              color: '#6A32B0',
+                              color: '#FF6B35',
                               margin: '0 0 5px 0',
                               fontSize: '0.9rem'
                             }}>
@@ -821,7 +821,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                             style={{
                               flex: 1,
                               padding: '12px',
-                              backgroundColor: '#6A32B0',
+                              backgroundColor: '#FF6B35',
                               color: 'white',
                               border: 'none',
                               borderRadius: '8px',
@@ -830,8 +830,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                               fontSize: '0.9rem',
                               transition: 'all 0.2s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                           >
                             💬 Message Owner
                           </button>
@@ -882,7 +882,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                       onClick={onBrowseDogs}
                       style={{
                         padding: '15px 30px',
-                        backgroundColor: '#6A32B0',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '10px',
@@ -891,8 +891,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                         fontSize: '1rem',
                         transition: 'all 0.2s'
                       }}
-                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
+                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
+                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
                     >
                       Browse All Dogs
                     </button>
@@ -958,7 +958,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                               {dog.breed}
                             </p>
                             <p style={{
-                              color: '#6A32B0',
+                              color: '#FF6B35',
                               margin: '0 0 5px 0',
                               fontSize: '0.9rem'
                             }}>
@@ -999,7 +999,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                             style={{
                               flex: 1,
                               padding: '12px',
-                              backgroundColor: '#6A32B0',
+                              backgroundColor: '#FF6B35',
                               color: 'white',
                               border: 'none',
                               borderRadius: '8px',
@@ -1008,8 +1008,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                               fontSize: '0.9rem',
                               transition: 'all 0.2s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                           >
                             🏠 Rent
                           </button>
@@ -1018,7 +1018,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                             style={{
                               flex: 1,
                               padding: '12px',
-                              backgroundColor: '#6A32B0',
+                              backgroundColor: '#FF6B35',
                               color: 'white',
                               border: 'none',
                               borderRadius: '8px',
@@ -1027,8 +1027,8 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                               fontSize: '0.9rem',
                               transition: 'all 0.2s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#8A52D0'}
-                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6A32B0'}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FF8E53'}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                           >
                             💬 Message
                           </button>
@@ -1047,7 +1047,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                       onClick={onBrowseDogs}
                       style={{
                         padding: '15px 30px',
-                        backgroundColor: '#667eea',
+                        backgroundColor: '#FF6B35',
                         color: 'white',
                         border: 'none',
                         borderRadius: '10px',
@@ -1057,7 +1057,7 @@ const HybridDashboard: React.FC<HybridDashboardProps> = ({
                         transition: 'all 0.2s'
                       }}
                       onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a67d8'}
-                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#667eea'}
+                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#FF6B35'}
                     >
                       View All {availableDogs.length} Dogs
                     </button>

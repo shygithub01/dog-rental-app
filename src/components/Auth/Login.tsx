@@ -103,7 +103,7 @@ const Login: React.FC = () => {
         textAlign: 'center', 
         marginTop: '25px', 
         fontSize: '0.9rem', 
-        color: '#6A32B0',
+        color: '#FF6B35',
         lineHeight: '1.5'
       }}>
         By signing in, you agree to our terms of service and privacy policy
