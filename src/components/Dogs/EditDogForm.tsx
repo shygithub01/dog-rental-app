@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
-import ImageUpload from '../Common/ImageUpload';
+import MultiImageUpload from '../Common/MultiImageUpload';
 import type { Location } from '../../types/Location';
 
 interface Dog {
@@ -14,13 +14,19 @@ interface Dog {
   pricePerDay: number;
   location: string;
   coordinates?: Location;
-  imageUrl?: string;
+  imageUrl?: string; // Keep for backward compatibility
+  imageUrls?: string[]; // New multiple images field
   ownerId: string;
   ownerName: string;
   isAvailable: boolean;
   status?: 'available' | 'requested' | 'rented';
   createdAt: any;
   updatedAt: any;
+  // Personality fields
+  temperament?: string[];
+  goodWith?: string[];
+  activityLevel?: string;
+  specialNotes?: string;
 }
 
 interface EditDogFormProps {
@@ -39,7 +45,13 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
     pricePerDay: dog.pricePerDay,
     location: dog.location,
     imageUrl: dog.imageUrl || '',
-    isAvailable: dog.isAvailable
+    imageUrls: dog.imageUrls || (dog.imageUrl ? [dog.imageUrl] : []),
+    isAvailable: dog.isAvailable,
+    // Personality fields
+    temperament: dog.temperament || [],
+    goodWith: dog.goodWith || [],
+    activityLevel: dog.activityLevel || 'Medium',
+    specialNotes: dog.specialNotes || ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -114,10 +126,11 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
     }));
   };
 
-  const handleImageUploaded = (imageUrl: string) => {
+  const handleImagesUploaded = (imageUrls: string[]) => {
     setFormData(prev => ({
       ...prev,
-      imageUrl
+      imageUrls,
+      imageUrl: imageUrls[0] || '' // Set first image as primary for backward compatibility
     }));
   };
 
@@ -181,19 +194,11 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
             borderRadius: '15px',
             border: '2px dashed #e2e8f0'
           }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              color: '#2d3748',
-              margin: '0 0 15px 0',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}>
-              📸 Update Dog Photo
-            </h3>
-            <ImageUpload 
-              onImageUploaded={handleImageUploaded}
-              currentImageUrl={formData.imageUrl}
-              label="Update Dog Photo"
+            <MultiImageUpload 
+              onImagesUploaded={handleImagesUploaded}
+              currentImages={formData.imageUrls}
+              maxImages={5}
+              label="Update Dog Photos"
             />
           </div>
 
@@ -353,6 +358,203 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                   <option value="large">Large (over 50 lbs)</option>
                 </select>
               </div>
+            </div>
+          </div>
+
+          {/* Personality & Traits Section */}
+          <div style={{ 
+            marginBottom: '32px',
+            padding: '24px',
+            backgroundColor: '#f8fafc',
+            borderRadius: '12px',
+            border: '2px solid #e2e8f0'
+          }}>
+            <h3 style={{
+              fontSize: '1.25rem',
+              fontWeight: '700',
+              color: '#1f2937',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              🌟 Personality & Traits
+            </h3>
+            <p style={{
+              fontSize: '0.875rem',
+              color: '#6b7280',
+              marginBottom: '20px'
+            }}>
+              Help renters find the perfect match by describing your dog's personality!
+            </p>
+
+            {/* Temperament */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                🎭 Temperament
+              </label>
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px'
+              }}>
+                {['Calm', 'Energetic', 'Playful', 'Gentle', 'Protective', 'Social', 'Independent', 'Cuddly'].map((trait) => (
+                  <button
+                    key={trait}
+                    type="button"
+                    onClick={() => {
+                      const currentTraits = formData.temperament || [];
+                      const newTraits = currentTraits.includes(trait)
+                        ? currentTraits.filter(t => t !== trait)
+                        : [...currentTraits, trait];
+                      setFormData(prev => ({ ...prev, temperament: newTraits }));
+                    }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      border: '2px solid',
+                      borderColor: (formData.temperament || []).includes(trait) ? '#FF6B35' : '#d1d5db',
+                      backgroundColor: (formData.temperament || []).includes(trait) ? '#FF6B35' : 'white',
+                      color: (formData.temperament || []).includes(trait) ? 'white' : '#6b7280',
+                      fontSize: '0.875rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {trait}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Good With */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                👨‍👩‍👧‍👦 Good With
+              </label>
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px'
+              }}>
+                {['Kids', 'Other Dogs', 'Cats', 'Strangers', 'Seniors'].map((trait) => (
+                  <button
+                    key={trait}
+                    type="button"
+                    onClick={() => {
+                      const currentTraits = formData.goodWith || [];
+                      const newTraits = currentTraits.includes(trait)
+                        ? currentTraits.filter(t => t !== trait)
+                        : [...currentTraits, trait];
+                      setFormData(prev => ({ ...prev, goodWith: newTraits }));
+                    }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      border: '2px solid',
+                      borderColor: (formData.goodWith || []).includes(trait) ? '#2DD4BF' : '#d1d5db',
+                      backgroundColor: (formData.goodWith || []).includes(trait) ? '#2DD4BF' : 'white',
+                      color: (formData.goodWith || []).includes(trait) ? 'white' : '#6b7280',
+                      fontSize: '0.875rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {trait}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Activity Level */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                ⚡ Activity Level
+              </label>
+              <div style={{
+                display: 'flex',
+                gap: '8px'
+              }}>
+                {[
+                  { level: 'Low', emoji: '😴', desc: 'Couch potato' },
+                  { level: 'Medium', emoji: '🚶', desc: 'Moderate walks' },
+                  { level: 'High', emoji: '🏃', desc: 'Needs lots of exercise' }
+                ].map(({ level, emoji, desc }) => (
+                  <button
+                    key={level}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, activityLevel: level }))}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      borderRadius: '12px',
+                      border: '2px solid',
+                      borderColor: formData.activityLevel === level ? '#FDE047' : '#d1d5db',
+                      backgroundColor: formData.activityLevel === level ? '#FDE047' : 'white',
+                      color: formData.activityLevel === level ? '#92400e' : '#6b7280',
+                      fontSize: '0.875rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      textAlign: 'center'
+                    }}
+                  >
+                    <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>{emoji}</div>
+                    <div style={{ fontWeight: '600' }}>{level}</div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>{desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Special Notes */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                📝 Special Notes (Optional)
+              </label>
+              <textarea
+                name="specialNotes"
+                value={formData.specialNotes || ''}
+                onChange={handleChange}
+                rows={2}
+                placeholder="Any special training, medical needs, or quirks renters should know about..."
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  backgroundColor: 'white',
+                  resize: 'vertical',
+                  fontFamily: 'inherit'
+                }}
+              />
             </div>
           </div>
 

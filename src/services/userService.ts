@@ -138,10 +138,17 @@ export class UserService {
           id: doc.id,
           name: data.name,
           breed: data.breed,
-          imageUrl: data.imageUrl,
+          imageUrl: data.imageUrl, // Keep for backward compatibility
+          imageUrls: data.imageUrls || (data.imageUrl ? [data.imageUrl] : []), // Support multiple images
           isAvailable: data.isAvailable,
           totalRentals: data.totalRentals || 0,
-          averageRating: data.averageRating || 0
+          averageRating: data.averageRating || 0,
+          pricePerDay: data.pricePerDay || 0,
+          // Personality fields
+          temperament: data.temperament || [],
+          goodWith: data.goodWith || [],
+          activityLevel: data.activityLevel,
+          specialNotes: data.specialNotes
         };
       });
 

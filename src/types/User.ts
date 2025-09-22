@@ -82,10 +82,17 @@ export interface DogSummary {
   id: string;
   name: string;
   breed: string;
-  imageUrl?: string;
+  imageUrl?: string; // Keep for backward compatibility
+  imageUrls?: string[]; // New multiple images field
   isAvailable: boolean;
   totalRentals: number;
   averageRating: number;
+  pricePerDay: number;
+  // Personality fields
+  temperament?: string[];
+  goodWith?: string[];
+  activityLevel?: string;
+  specialNotes?: string;
 }
 
 export interface RentalSummary {

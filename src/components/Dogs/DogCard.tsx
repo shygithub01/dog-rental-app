@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, deleteDoc, collection, query, where, getDocs, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import PhotoCarousel from '../Common/PhotoCarousel';
 
 interface Dog {
   id: string;
@@ -10,7 +11,8 @@ interface Dog {
   size: 'small' | 'medium' | 'large';
   description: string;
   pricePerDay: number;
-  imageUrl?: string;
+  imageUrl?: string; // Keep for backward compatibility
+  imageUrls?: string[]; // New multiple images field
   location: string;
   ownerId: string;
   ownerName: string;
@@ -18,6 +20,11 @@ interface Dog {
   status?: 'available' | 'requested' | 'rented';
   createdAt: any;
   updatedAt: any;
+  // Personality fields
+  temperament?: string[];
+  goodWith?: string[];
+  activityLevel?: string;
+  specialNotes?: string;
 }
 
 interface DogCardProps {
@@ -31,7 +38,6 @@ interface DogCardProps {
 
 const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMessage, currentUserId }) => {
   const [loading, setLoading] = useState(false);
-  const [imageError, setImageError] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
   const { db } = useFirebase();
@@ -123,11 +129,9 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
     }
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
 
-  const showImage = dog.imageUrl && !imageError;
+
+
 
   return (
     <div style={{
@@ -161,70 +165,16 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
          dog.status === 'requested' ? 'Requested' : 'Rented'}
       </div>
 
-      {/* Dog Image */}
-      {showImage ? (
-        <div style={{
-          width: '100%',
-          height: '250px',
-          position: 'relative',
-          overflow: 'hidden',
-          backgroundColor: '#f7fafc'
-        }} className="mobile-dog-image">
-          <img
-            src={dog.imageUrl}
-            alt={`${dog.name} the ${dog.breed}`}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center'
-            }}
-            onError={handleImageError}
-            onLoad={() => setImageError(false)}
-          />
-          {/* Image overlay for better text readability */}
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '60px',
-            background: 'linear-gradient(transparent, rgba(0,0,0,0.3))',
-            pointerEvents: 'none'
-          }} />
-        </div>
-      ) : (
-        <div style={{
-          width: '100%',
-          height: '250px',
-          backgroundColor: '#f7fafc',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderBottom: '1px solid #e2e8f0',
-          position: 'relative'
-        }} className="mobile-dog-image">
-          <div style={{
-            fontSize: '4rem',
-            color: '#cbd5e0',
-            textAlign: 'center'
-          }}>
-            🐕
-          </div>
-          <div style={{
-            position: 'absolute',
-            bottom: '10px',
-            left: '10px',
-            right: '10px',
-            textAlign: 'center',
-            color: '#FF6B35',
-            fontSize: '0.9rem',
-            fontWeight: 'bold'
-          }}>
-            {imageError ? 'Image failed to load' : 'No photo uploaded'}
-          </div>
-        </div>
-      )}
+      {/* Dog Photo Carousel */}
+      <div className="mobile-dog-image">
+        <PhotoCarousel
+          images={dog.imageUrls && dog.imageUrls.length > 0 ? dog.imageUrls : (dog.imageUrl ? [dog.imageUrl] : [])}
+          dogName={dog.name}
+          height="250px"
+          showCounter={true}
+          showDots={true}
+        />
+      </div>
 
       {/* Dog Info */}
       <div style={{ 
@@ -264,6 +214,107 @@ const DogCard: React.FC<DogCardProps> = ({ dog, onEdit, onDelete, onRent, onMess
           }} className="mobile-dog-description">
             {dog.description}
           </p>
+
+          {/* Personality Traits */}
+          {((dog.temperament && dog.temperament.length > 0) || (dog.goodWith && dog.goodWith.length > 0) || dog.activityLevel) && (
+            <div style={{ marginBottom: '15px' }}>
+              {/* Temperament */}
+              {dog.temperament && dog.temperament.length > 0 && (
+                <div style={{ marginBottom: '8px' }}>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '4px'
+                  }}>
+                    {dog.temperament.slice(0, 3).map((trait: string) => (
+                      <span
+                        key={trait}
+                        style={{
+                          padding: '4px 8px',
+                          borderRadius: '12px',
+                          backgroundColor: '#FF6B35',
+                          color: 'white',
+                          fontSize: '0.75rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {trait}
+                      </span>
+                    ))}
+                    {dog.temperament.length > 3 && (
+                      <span style={{
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        backgroundColor: '#e2e8f0',
+                        color: '#6b7280',
+                        fontSize: '0.75rem',
+                        fontWeight: '500'
+                      }}>
+                        +{dog.temperament.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Good With (show max 2) */}
+              {dog.goodWith && dog.goodWith.length > 0 && (
+                <div style={{ marginBottom: '8px' }}>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '4px'
+                  }}>
+                    {dog.goodWith.slice(0, 2).map((trait: string) => (
+                      <span
+                        key={trait}
+                        style={{
+                          padding: '4px 8px',
+                          borderRadius: '12px',
+                          backgroundColor: '#2DD4BF',
+                          color: 'white',
+                          fontSize: '0.75rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        👨‍👩‍👧‍👦 {trait}
+                      </span>
+                    ))}
+                    {dog.goodWith.length > 2 && (
+                      <span style={{
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        backgroundColor: '#e2e8f0',
+                        color: '#6b7280',
+                        fontSize: '0.75rem',
+                        fontWeight: '500'
+                      }}>
+                        +{dog.goodWith.length - 2} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Activity Level */}
+              {dog.activityLevel && (
+                <div>
+                  <span
+                    style={{
+                      padding: '4px 8px',
+                      borderRadius: '12px',
+                      backgroundColor: '#FDE047',
+                      color: '#92400e',
+                      fontSize: '0.75rem',
+                      fontWeight: '500'
+                    }}
+                  >
+                    ⚡ {dog.activityLevel} Energy
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Price */}

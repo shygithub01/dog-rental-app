@@ -766,15 +766,38 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                           width: '60px',
                           height: '60px',
                           borderRadius: '10px',
-                          background: dog.imageUrl ? `url(${dog.imageUrl})` : '#e2e8f0',
+                          background: (dog.imageUrls && dog.imageUrls.length > 0) ? `url(${dog.imageUrls[0]})` : 
+                                     dog.imageUrl ? `url(${dog.imageUrl})` : '#e2e8f0',
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          fontSize: '1.5rem'
+                          fontSize: '1.5rem',
+                          position: 'relative'
                         }}>
-                          {!dog.imageUrl && '🐕'}
+                          {!(dog.imageUrls?.length > 0 || dog.imageUrl) && '🐕'}
+                          {/* Photo count indicator */}
+                          {dog.imageUrls && dog.imageUrls.length > 1 && (
+                            <div style={{
+                              position: 'absolute',
+                              bottom: '-2px',
+                              right: '-2px',
+                              backgroundColor: '#FF6B35',
+                              color: 'white',
+                              borderRadius: '50%',
+                              width: '18px',
+                              height: '18px',
+                              fontSize: '0.7rem',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              border: '2px solid white'
+                            }}>
+                              {dog.imageUrls.length}
+                            </div>
+                          )}
                         </div>
                         <div>
                           <h4 style={{
@@ -813,6 +836,93 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                           </div>
                         </div>
                       </div>
+                      
+                      {/* Personality Traits */}
+                      {((dog.temperament && dog.temperament.length > 0) || (dog.goodWith && dog.goodWith.length > 0) || dog.activityLevel) && (
+                        <div style={{ marginBottom: '15px' }}>
+                          <h5 style={{
+                            fontSize: '0.9rem',
+                            fontWeight: '600',
+                            color: '#374151',
+                            marginBottom: '8px'
+                          }}>
+                            🌟 Personality
+                          </h5>
+                          
+                          {/* Temperament */}
+                          {dog.temperament && dog.temperament.length > 0 && (
+                            <div style={{ marginBottom: '8px' }}>
+                              <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '4px'
+                              }}>
+                                {dog.temperament.map((trait: string) => (
+                                  <span
+                                    key={trait}
+                                    style={{
+                                      padding: '4px 8px',
+                                      borderRadius: '12px',
+                                      backgroundColor: '#FF6B35',
+                                      color: 'white',
+                                      fontSize: '0.75rem',
+                                      fontWeight: '500'
+                                    }}
+                                  >
+                                    {trait}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Good With */}
+                          {dog.goodWith && dog.goodWith.length > 0 && (
+                            <div style={{ marginBottom: '8px' }}>
+                              <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '4px'
+                              }}>
+                                {dog.goodWith.map((trait: string) => (
+                                  <span
+                                    key={trait}
+                                    style={{
+                                      padding: '4px 8px',
+                                      borderRadius: '12px',
+                                      backgroundColor: '#2DD4BF',
+                                      color: 'white',
+                                      fontSize: '0.75rem',
+                                      fontWeight: '500'
+                                    }}
+                                  >
+                                    👨‍👩‍👧‍👦 {trait}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Activity Level */}
+                          {dog.activityLevel && (
+                            <div style={{ marginBottom: '8px' }}>
+                              <span
+                                style={{
+                                  padding: '4px 8px',
+                                  borderRadius: '12px',
+                                  backgroundColor: '#FDE047',
+                                  color: '#92400e',
+                                  fontSize: '0.75rem',
+                                  fontWeight: '500'
+                                }}
+                              >
+                                ⚡ {dog.activityLevel} Energy
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -820,6 +930,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                       }}>
                         <div style={{ fontSize: '0.9rem', color: '#4a5568' }}>
                           Rating: {getRatingStars(dog.averageRating)}
+                        </div>
+                        <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#FF6B35' }}>
+                          ${dog.pricePerDay}/day
                         </div>
                       </div>
                     </div>
