@@ -118,58 +118,81 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '20px',
-        padding: '40px',
-        maxWidth: '1000px',
-        width: '90%',
-        maxHeight: '90vh',
-        overflow: 'auto'
-      }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '16px' }}>❤️</div>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#2d3748',
-            margin: '0 0 10px 0',
-            fontWeight: 'bold'
-          }}>
-            Your Favorite Dogs
-          </h2>
-          <p style={{
-            color: '#4a5568',
-            fontSize: '1.1rem',
-            margin: 0
-          }}>
-            Dogs you've marked as favorites for future rentals
-          </p>
+    <div style={{ minHeight: '100vh', background: 'white' }}>
+      {/* Modern Header - Same as App.tsx */}
+      <header className="modern-header fade-in">
+        <div className="header-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <button
+              onClick={onClose}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: '#FF6B35',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '1rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF8E53';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF6B35';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              ← Back to Dashboard
+            </button>
+            <a href="#" className="logo">
+              DogRental
+            </a>
+          </div>
         </div>
+      </header>
 
-        {/* Close Button */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
-          <button
-            onClick={onClose}
-            className="btn-glass"
-          >
-            ← Back to Dashboard
-          </button>
-        </div>
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(45, 212, 191, 0.1) 25%, rgba(253, 224, 71, 0.1) 50%, rgba(132, 204, 22, 0.1) 75%, rgba(255, 142, 83, 0.1) 100%), radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 60%, rgba(253, 224, 71, 0.1) 0%, transparent 30%), radial-gradient(circle at 70% 30%, rgba(132, 204, 22, 0.1) 0%, transparent 30%), #FAFAF9',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: 'calc(100vh - 80px)',
+        padding: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '20px',
+          padding: '40px',
+          maxWidth: '1000px',
+          width: '90%',
+          maxHeight: '90vh',
+          overflow: 'auto'
+        }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>❤️</div>
+            <h2 style={{
+              fontSize: '2.5rem',
+              color: '#2d3748',
+              margin: '0 0 10px 0',
+              fontWeight: 'bold'
+            }}>
+              Your Favorite Dogs
+            </h2>
+            <p style={{
+              color: '#4a5568',
+              fontSize: '1.1rem',
+              margin: 0
+            }}>
+              Dogs you've marked as favorites for future rentals
+            </p>
+          </div>
 
         {/* Favorites Content */}
         {favoriteDogs.length === 0 ? (
@@ -330,6 +353,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

@@ -153,6 +153,33 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
       <header className="modern-header fade-in">
         <div className="header-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            {(onCancel || onClose) && (
+              <button
+                onClick={onCancel || onClose}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#FF6B35',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF8E53';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF6B35';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                ← Back to Dashboard
+              </button>
+            )}
             <a href="#" className="logo">
               DogRental
             </a>

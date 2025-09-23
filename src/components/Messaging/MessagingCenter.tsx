@@ -34,6 +34,31 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
       <header className="modern-header fade-in">
         <div className="header-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <button
+              onClick={onClose}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: '#FF6B35',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '1rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF8E53';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF6B35';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              ← Back to Dashboard
+            </button>
             <a href="#" className="logo">
               DogRental
             </a>
@@ -84,43 +109,6 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
               }
             </p>
 
-            {/* Back to Dashboard Button */}
-            <div style={{ marginTop: '20px', textAlign: 'center' }}>
-              <button
-                onClick={onClose}
-                style={{
-                  padding: '12px 24px',
-                  fontSize: '1rem',
-                  backgroundColor: 'rgba(255, 107, 53, 0.9)',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  color: 'white',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)',
-                  fontWeight: '700',
-                  minHeight: '48px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 107, 53, 1)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 107, 53, 0.4)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 107, 53, 0.9)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 107, 53, 0.3)';
-                }}
-              >
-                ← Back to Dashboard
-              </button>
-            </div>
 
             {/* Messages Content */}
             <div style={{ marginTop: '32px', flex: 1, display: 'flex', flexDirection: 'column' }}>
