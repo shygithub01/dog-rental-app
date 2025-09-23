@@ -109,6 +109,33 @@ const RenterPendingRequests: React.FC<RenterPendingRequestsProps> = ({ currentUs
       <header className="modern-header fade-in">
         <div className="header-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            {onClose && (
+              <button
+                onClick={onClose}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#FF6B35',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF8E53';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF6B35';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                ← Back to Dashboard
+              </button>
+            )}
             <a href="#" className="logo">
               DogRental
             </a>
@@ -338,12 +365,7 @@ const RenterPendingRequests: React.FC<RenterPendingRequestsProps> = ({ currentUs
                   gap: '12px',
                   marginTop: '24px'
                 }}>
-                  <button
-                    onClick={handleBack}
-                    className="btn-glass-primary w-full mb-4"
-                  >
-                    ← Back to Dashboard
-                  </button>
+
                 </div>
               </>
             )}

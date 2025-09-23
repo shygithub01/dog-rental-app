@@ -405,14 +405,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
           <p style={{ color: '#4a5568', margin: '0 0 20px 0' }}>
             {error || 'This user profile could not be loaded'}
           </p>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="btn-glass"
-            >
-              ← Back to Dashboard
-            </button>
-          )}
+
         </div>
       </div>
     );
@@ -428,6 +421,33 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
       <header className="modern-header fade-in">
         <div className="header-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            {onClose && (
+              <button
+                onClick={onClose}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#FF6B35',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF8E53';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF6B35';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                ← Back to Dashboard
+              </button>
+            )}
             <a href="#" className="logo">
               DogRental
             </a>
@@ -472,21 +492,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               Manage your account settings and view your activity
             </p>
 
-            {/* Back to Dashboard Button */}
-            {onClose && (
-              <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                <button
-                  onClick={onClose}
-                  className="btn-glass-primary"
-                  style={{
-                    padding: '12px 24px',
-                    fontSize: '1rem'
-                  }}
-                >
-                  ← Back to Dashboard
-                </button>
-              </div>
-            )}
+
 
         {/* User Info */}
         <div style={{

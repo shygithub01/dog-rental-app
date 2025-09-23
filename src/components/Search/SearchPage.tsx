@@ -86,17 +86,27 @@ const SearchPage: React.FC<SearchPageProps> = ({
               <button
                 onClick={onBack}
                 style={{
-                  padding: '8px 16px',
-                  backgroundColor: 'transparent',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  padding: '12px 24px',
+                  backgroundColor: '#FF6B35',
+                  border: 'none',
                   borderRadius: '8px',
                   color: 'white',
-                  fontSize: '0.875rem',
+                  fontSize: '1rem',
+                  fontWeight: '700',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF8E53';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF6B35';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                ← Back
+                ← Back to Dashboard
               </button>
             )}
             <a href="#" className="logo">
@@ -133,52 +143,64 @@ const SearchPage: React.FC<SearchPageProps> = ({
               </div>
             </div>
 
-            {/* View Mode Toggle */}
+            {/* Action Buttons */}
             <div style={{
               display: 'flex',
               justifyContent: 'center',
-              gap: '12px',
-              marginTop: '32px'
+              alignItems: 'center',
+              gap: '16px',
+              marginTop: '32px',
+              flexWrap: 'wrap'
             }}>
-              <button
-                onClick={() => setViewMode('list')}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: viewMode === 'list' ? '#FF6B35' : 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '8px',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(10px)'
-                }}
-              >
-                📋 Search & Filter
-              </button>
-              <button
-                onClick={() => setViewMode('map')}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: viewMode === 'map' ? '#FF6B35' : 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '8px',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(10px)'
-                }}
-              >
-                🗺️ Explore Map
-              </button>
+
+
+              {/* View Mode Toggle */}
+              <div style={{
+                display: 'flex',
+                gap: '12px'
+              }}>
+                <button
+                  onClick={() => setViewMode('list')}
+                  style={{
+                    padding: '12px 24px',
+                    backgroundColor: viewMode === 'list' ? '#FF6B35' : 'rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    backdropFilter: 'blur(10px)'
+                  }}
+                >
+                  📋 Search & Filter
+                </button>
+                <button
+                  onClick={() => setViewMode('map')}
+                  style={{
+                    padding: '12px 24px',
+                    backgroundColor: viewMode === 'map' ? '#FF6B35' : 'rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    backdropFilter: 'blur(10px)'
+                  }}
+                >
+                  🗺️ Explore Map
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Search Section */}
           <div style={{ width: '100%', maxWidth: '1200px' }}>
+
+
             {viewMode === 'list' ? (
               <>
                 <AdvancedSearch
