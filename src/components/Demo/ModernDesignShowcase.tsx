@@ -131,16 +131,16 @@ const ModernDesignShowcase: React.FC = () => {
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">Gradient Backgrounds</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="gradient-bg-warm p-8 rounded-2xl text-white text-center">
-              <h3 className="text-xl font-bold mb-2">Warm Gradient</h3>
+            <div className="gradient-bg-warm p-8 rounded-2xl" style={{ color: 'white', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '8px' }}>Warm Gradient</h3>
               <p>Perfect for call-to-action elements</p>
             </div>
-            <div className="gradient-bg-cool p-8 rounded-2xl text-white text-center">
-              <h3 className="text-xl font-bold mb-2">Cool Gradient</h3>
+            <div className="gradient-bg-cool p-8 rounded-2xl" style={{ color: 'white', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '8px' }}>Cool Gradient</h3>
               <p>Great for secondary actions</p>
             </div>
-            <div className="gradient-bg-sunset p-8 rounded-2xl text-white text-center">
-              <h3 className="text-xl font-bold mb-2">Sunset Gradient</h3>
+            <div className="gradient-bg-sunset p-8 rounded-2xl" style={{ color: 'white', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '8px' }}>Sunset Gradient</h3>
               <p>Ideal for special features</p>
             </div>
           </div>
