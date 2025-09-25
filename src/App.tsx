@@ -59,6 +59,7 @@ function AppContent() {
   const [selectedRole, setSelectedRole] = useState<'renter' | 'owner' | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [isAdminUser, setIsAdminUser] = useState(false);
   // Role selection / mismatch management
   const [rolePickerOpen, setRolePickerOpen] = useState(false);
   const [pendingUser, setPendingUser] = useState<any>(null);
@@ -111,6 +112,13 @@ function AppContent() {
         const updatedProfile = { ...data, id: currentUser.uid };
         await updateDoc(userRef, { lastActive: new Date() });
         setUserProfile(updatedProfile);
+        
+        // Set admin flag early to prevent flash
+        if (data.role === 'admin' && data.isAdmin === true) {
+          setIsAdminUser(true);
+        } else {
+          setIsAdminUser(false);
+        }
         
         // Create welcome notification only for returning users if they don't have one
         await createWelcomeNotificationIfNeeded(currentUser, false);
@@ -482,8 +490,15 @@ function AppContent() {
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
           }}></div>
-          <h3 style={{ margin: '0 0 10px 0', color: '#2d3748' }}>Loading your profile...</h3>
-          <p style={{ margin: 0, color: '#4a5568' }}>Please wait while we set up your account</p>
+          <h3 style={{ margin: '0 0 10px 0', color: '#2d3748' }}>
+            {isAdminUser ? '🚀 Loading Admin Dashboard...' : 'Loading your profile...'}
+          </h3>
+          <p style={{ margin: 0, color: '#4a5568' }}>
+            {isAdminUser 
+              ? 'Preparing enterprise admin tools...' 
+              : 'Please wait while we set up your account'
+            }
+          </p>
         </div>
       </div>
     );
@@ -1308,17 +1323,14 @@ function AppContent() {
       {user && userProfile && (
         <>
           {(() => {
-            if (effectiveUserRole === 'admin') {
+            // Admin check first - immediate render if admin
+            if (userProfile.role === 'admin' && userProfile.isAdmin === true) {
               return (
-                <div className="fade-in">
-                  <AdminDashboard
-                    onClose={() => {
-                      console.log('Closing admin dashboard');
-                      // Log out the user to exit admin mode
-                      auth.signOut();
-                    }}
-                  />
-                </div>
+                <AdminDashboard
+                  onClose={() => {
+                    auth.signOut();
+                  }}
+                />
               );
             } else if (effectiveUserRole === 'owner') {
               return (
@@ -1352,6 +1364,8 @@ function AppContent() {
           })()}
         </>
       )}
+
+
 
 
 
