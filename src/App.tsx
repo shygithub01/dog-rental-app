@@ -1314,8 +1314,8 @@ function AppContent() {
                   <AdminDashboard
                     onClose={() => {
                       console.log('Closing admin dashboard');
-                      // Simple close - just refresh the page to reset state
-                      window.location.reload();
+                      // Log out the user to exit admin mode
+                      auth.signOut();
                     }}
                   />
                 </div>
