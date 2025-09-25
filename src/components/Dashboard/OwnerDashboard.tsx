@@ -169,13 +169,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                 </p>
               </div>
             ) : (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: isMobile 
-                  ? '1fr' 
-                  : 'repeat(auto-fit, minmax(350px, 1fr))',
-                gap: isMobile ? '15px' : '25px'
-              }}>
+              <div className="mobile-dogs-grid">
                 {myDogs.map((dog) => {
                   // Find rental information for this dog
                   const dogRental = myRentals.find(rental => rental.dogId === dog.id);

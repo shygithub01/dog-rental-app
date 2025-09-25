@@ -292,13 +292,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
       {/* Results Grid/List */}
       {sortedDogs.length > 0 && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile 
-            ? '1fr' 
-            : 'repeat(auto-fill, minmax(350px, 1fr))',
-          gap: isMobile ? '16px' : '24px'
-        }}>
+        <div className="mobile-search-grid">
           {sortedDogs.map(dog => (
             <div
               key={dog.id}

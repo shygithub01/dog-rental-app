@@ -44,6 +44,52 @@
 }
 
 @layer components {
+  /* Mobile Responsive Grid Fixes */
+  .mobile-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  
+  .mobile-dogs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+  }
+  
+  .mobile-search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+  }
+  
+  /* Mobile-first responsive overrides */
+  @media (max-width: 768px) {
+    .mobile-stats-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    .mobile-dogs-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    .mobile-search-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    .mobile-container {
+      padding: 30px 15px !important;
+      margin: 0 10px 10px 10px !important;
+    }
+    
+    .mobile-header-padding {
+      padding: 0 20px !important;
+    }
+  }
+
   /* Modern Button Components */
   .btn-glass {
     position: relative;
