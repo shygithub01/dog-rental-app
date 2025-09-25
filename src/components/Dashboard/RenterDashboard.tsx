@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface RenterDashboardProps {
   dogs: any[];
@@ -36,6 +37,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
   onViewPendingRequests,
   user
 }) => {
+  const isMobile = useIsMobile();
   const { db } = useFirebase();
   const [myRentals, setMyRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +101,7 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
         <div style={{
           maxWidth: '1200px',
           width: '100%',
-          padding: '0 40px',
+          padding: isMobile ? '0 20px' : '0 40px',
           textAlign: 'center',
           color: 'white'
         }}>
@@ -127,9 +129,9 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
       {/* Main Dashboard Content */}
       <div style={{ 
         background: 'rgba(255, 255, 255, 0.95)', 
-        padding: '60px 40px',
+        padding: isMobile ? '30px 15px' : '60px 40px',
         backdropFilter: 'blur(10px)',
-        margin: '0 20px 20px 20px',
+        margin: isMobile ? '0 10px 10px 10px' : '0 20px 20px 20px',
         borderRadius: '20px',
         boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
       }}>
@@ -182,8 +184,10 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
             ) : (
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                gap: '25px'
+                gridTemplateColumns: isMobile 
+                  ? '1fr' 
+                  : 'repeat(auto-fit, minmax(350px, 1fr))',
+                gap: isMobile ? '15px' : '25px'
               }}>
                 {myRentals.map((rental) => (
                   <div key={rental.id} style={{
@@ -371,8 +375,10 @@ const RenterDashboard: React.FC<RenterDashboardProps> = ({
             {/* Rental Summary Cards */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: '20px',
+              gridTemplateColumns: isMobile 
+                ? '1fr' 
+                : 'repeat(auto-fit, minmax(150px, 1fr))',
+              gap: isMobile ? '15px' : '20px',
               marginBottom: '30px'
             }}>
               <div style={{
