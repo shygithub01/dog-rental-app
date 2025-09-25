@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import MultiImageUpload from '../Common/MultiImageUpload';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Location } from '../../types/Location';
 
 interface Dog {
@@ -36,6 +37,7 @@ interface EditDogFormProps {
 }
 
 const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) => {
+  const isMobile = useIsMobile();
   const [formData, setFormData] = useState({
     name: dog.name,
     breed: dog.breed,
@@ -164,7 +166,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                ← Back to Dashboard
+                {isMobile ? '←' : '← Back to Dashboard'}
               </button>
             )}
             <a href="#" className="logo">

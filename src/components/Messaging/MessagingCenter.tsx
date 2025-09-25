@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ChatList from './ChatList';
 import ChatWindow from './ChatWindow';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { ConversationSummary } from '../../types/Message';
 
 interface MessagingCenterProps {
@@ -14,6 +15,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
   currentUserName, 
   onClose 
 }) => {
+  const isMobile = useIsMobile();
   const [selectedConversation, setSelectedConversation] = useState<ConversationSummary | null>(null);
 
   const handleSelectConversation = (conversation: ConversationSummary) => {
@@ -57,7 +59,7 @@ const MessagingCenter: React.FC<MessagingCenterProps> = ({
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              ← Back to Dashboard
+              {isMobile ? '←' : '← Back to Dashboard'}
             </button>
             <a href="#" className="logo">
               DogRental

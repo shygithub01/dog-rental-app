@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import MultiImageUpload from '../Common/MultiImageUpload';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Location } from '../../types/Location';
 
 interface CreateDogData {
@@ -27,6 +28,7 @@ interface AddDogFormProps {
 }
 
 const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
+  const isMobile = useIsMobile();
   const [formData, setFormData] = useState<CreateDogData>({
     name: '',
     breed: '',
@@ -178,7 +180,7 @@ const AddDogForm: React.FC<AddDogFormProps> = ({ onSuccess, onCancel }) => {
                 transition: 'all 0.2s ease'
               }}
             >
-              ← Back
+{isMobile ? '←' : '← Back to Dashboard'}
             </button>
           )}
           <h1 style={{

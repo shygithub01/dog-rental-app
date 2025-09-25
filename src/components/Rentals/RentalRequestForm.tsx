@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, addDoc, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { useNotificationService } from '../../services/notificationService';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface Dog {
   id: string;
@@ -25,6 +26,7 @@ interface RentalRequestFormProps {
 }
 
 const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, onCancel, onClose }) => {
+  const isMobile = useIsMobile();
   const [formData, setFormData] = useState({
     startDate: '',
     endDate: '',
@@ -177,7 +179,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                ← Back to Dashboard
+                {isMobile ? '←' : '← Back to Dashboard'}
               </button>
             )}
             <a href="#" className="logo">

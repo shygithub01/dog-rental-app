@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface EarningsReportProps {
   ownerEarnings: any[];
@@ -6,6 +7,7 @@ interface EarningsReportProps {
 }
 
 const EarningsReport: React.FC<EarningsReportProps> = ({ ownerEarnings, onClose }) => {
+  const isMobile = useIsMobile();
   // Calculate earnings
   const pastEarnings = ownerEarnings
     .filter(rental => rental.status === 'completed')
@@ -82,7 +84,7 @@ const EarningsReport: React.FC<EarningsReportProps> = ({ ownerEarnings, onClose 
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              ← Back to Dashboard
+              {isMobile ? '←' : '← Back to Dashboard'}
             </button>
             <a href="#" className="logo">
               DogRental
@@ -128,19 +130,7 @@ const EarningsReport: React.FC<EarningsReportProps> = ({ ownerEarnings, onClose 
               Your complete earnings breakdown and financial summary
             </p>
 
-            {/* Back to Dashboard Button */}
-            <div style={{ marginTop: '20px', textAlign: 'center' }}>
-              <button
-                onClick={onClose}
-                className="btn-glass-primary"
-                style={{
-                  padding: '12px 24px',
-                  fontSize: '1rem'
-                }}
-              >
-                ← Back to Dashboard
-              </button>
-            </div>
+
 
             {/* Earnings Breakdown */}
             <div style={{ marginTop: '32px' }}>

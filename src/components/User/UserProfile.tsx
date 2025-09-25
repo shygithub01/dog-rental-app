@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUserService } from '../../services/userService';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { UserProfileData } from '../../types/User';
 
 interface UserProfileProps {
@@ -8,6 +9,7 @@ interface UserProfileProps {
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
+  const isMobile = useIsMobile();
   const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -445,7 +447,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                ← Back to Dashboard
+                {isMobile ? '←' : '← Back to Dashboard'}
               </button>
             )}
             <a href="#" className="logo">
