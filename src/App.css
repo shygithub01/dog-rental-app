@@ -1654,4 +1654,48 @@ obile Fix for Find Dogs Stats Cards - High Specificity */
   div[style*="flex"] {
     max-width: 100% !important;
   }
+}/* 
+Fix remaining mobile issues */
+@media (max-width: 768px) {
+  /* Fix header text cutoff */
+  .hero-section .hero-content h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.5rem !important;
+    padding: 0 10px !important;
+  }
+  
+  .hero-section .hero-content p {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    padding: 0 10px !important;
+  }
+  
+  /* Better dog card sizing */
+  .mobile-search-grid > div {
+    width: 95% !important;
+    max-width: 300px !important;
+    margin: 0 auto 1rem auto !important;
+    padding: 12px !important;
+  }
+  
+  /* Fix dog card headers */
+  .mobile-search-grid h3 {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  /* Fix dog card details */
+  .mobile-search-grid div[style*="display: flex"] {
+    flex-wrap: wrap !important;
+    gap: 0.25rem !important;
+  }
+  
+  /* Fix button sizing in dog cards */
+  .mobile-search-grid button {
+    width: 100% !important;
+    margin-top: 0.5rem !important;
+    padding: 10px !important;
+    font-size: 0.9rem !important;
+  }
 }
