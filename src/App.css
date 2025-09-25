@@ -1698,4 +1698,44 @@ Fix remaining mobile issues */
     padding: 10px !important;
     font-size: 0.9rem !important;
   }
+}/* O
+NLY fix dog cards - very targeted approach */
+@media (max-width: 768px) {
+  /* Only target the search results grid */
+  .mobile-search-grid {
+    padding: 0 20px !important;
+  }
+  
+  /* Only target dog cards specifically */
+  .mobile-search-grid > div {
+    max-width: 280px !important;
+    margin: 0 auto 1rem auto !important;
+  }
+}/* Fix 
+only the two specific sections that are cut off */
+@media (max-width: 768px) {
+  /* Fix "Find Your Perfect Dog" search section */
+  div[style*="🔍 Find Your Perfect Dog"],
+  div:has(h2:contains("Find Your Perfect Dog")) {
+    width: 95% !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+  }
+  
+  /* Fix "2 Dogs Found" results header section */
+  div:has(h2:contains("Dogs Found")),
+  div[style*="2 Dogs Found"] {
+    width: 95% !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+  }
+  
+  /* Fix search input containers */
+  input[placeholder*="Search by breed"],
+  select[style*="Any Size"] {
+    width: 100% !important;
+    max-width: 200px !important;
+  }
 }
