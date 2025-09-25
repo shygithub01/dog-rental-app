@@ -1067,7 +1067,22 @@ function AppContent() {
               </div>
             ) : (
               <div className="hero-stats">
-                <div className="hero-stat">
+                <div 
+                  className="hero-stat"
+                  onClick={handleGoogleSignIn}
+                  style={{
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 107, 53, 0.2)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
                   <div className="hero-stat-number">🔐</div>
                   <div className="hero-stat-label">Sign in to start</div>
                 </div>

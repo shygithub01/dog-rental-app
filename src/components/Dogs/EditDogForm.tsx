@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import MultiImageUpload from '../Common/MultiImageUpload';
@@ -890,22 +890,29 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
               type="submit"
               disabled={loading}
               style={{
-                padding: '15px 30px',
-                backgroundColor: loading ? '#cbd5e0' : '#FF6B35',
+                flex: 1,
+                padding: '16px 24px',
+                backgroundColor: loading ? '#9ca3af' : '#FF6B35',
                 color: 'white',
                 border: 'none',
-                borderRadius: '10px',
+                borderRadius: '12px',
                 cursor: loading ? 'not-allowed' : 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                minWidth: '120px'
+                fontWeight: '700',
+                fontSize: '1.1rem',
+                transition: 'all 0.2s ease',
+                boxShadow: loading ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.3)'
               }}
               onMouseOver={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#FF8E53';
+                if (!loading) {
+                  e.currentTarget.style.backgroundColor = '#FF8E53';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }
               }}
               onMouseOut={(e) => {
-                if (!loading) e.currentTarget.style.backgroundColor = '#FF6B35';
+                if (!loading) {
+                  e.currentTarget.style.backgroundColor = '#FF6B35';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }
               }}
             >
               {loading ? '✏️ Updating...' : '✅ Update Dog'}

@@ -290,12 +290,15 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     min={new Date().toISOString().split('T')[0]}
                     style={{
                       width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '8px',
+                      padding: '14px 16px',
+                      border: '2px solid #e5e7eb',
+                      borderRadius: '10px',
                       fontSize: '1rem',
-                      backgroundColor: 'white'
+                      backgroundColor: 'white',
+                      transition: 'all 0.2s ease'
                     }}
+                    onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                   />
                 </div>
 
@@ -318,12 +321,15 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     min={formData.startDate || new Date().toISOString().split('T')[0]}
                     style={{
                       width: '100%',
-                      padding: '12px 16px',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '8px',
+                      padding: '14px 16px',
+                      border: '2px solid #e5e7eb',
+                      borderRadius: '10px',
                       fontSize: '1rem',
-                      backgroundColor: 'white'
+                      backgroundColor: 'white',
+                      transition: 'all 0.2s ease'
                     }}
+                    onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                   />
                 </div>
               </div>
@@ -380,12 +386,15 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   placeholder="(555) 123-4567"
                   style={{
                     width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
+                    padding: '14px 16px',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '10px',
                     fontSize: '1rem',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    transition: 'all 0.2s ease'
                   }}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                 />
               </div>
 
@@ -407,14 +416,17 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   placeholder="Any special requirements or questions for the owner..."
                   style={{
                     width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
+                    padding: '14px 16px',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '10px',
                     fontSize: '1rem',
                     backgroundColor: 'white',
                     resize: 'vertical',
-                    fontFamily: 'inherit'
+                    fontFamily: 'inherit',
+                    transition: 'all 0.2s ease'
                   }}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                 />
               </div>
 
@@ -441,7 +453,32 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-glass-primary w-full mb-4"
+                  style={{
+                    width: '100%',
+                    padding: '16px 24px',
+                    backgroundColor: loading ? '#9ca3af' : '#FF6B35',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1.1rem',
+                    fontWeight: '700',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: loading ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.3)',
+                    marginBottom: '12px'
+                  }}
+                  onMouseOver={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.backgroundColor = '#FF8E53';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.backgroundColor = '#FF6B35';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }
+                  }}
                 >
                   {loading ? '📝 Submitting Request...' : '📝 Submit Request'}
                 </button>
@@ -450,7 +487,26 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="btn-glass-primary w-full mb-4"
+                    style={{
+                      width: '100%',
+                      padding: '14px 24px',
+                      backgroundColor: 'transparent',
+                      color: '#6b7280',
+                      border: '2px solid #e5e7eb',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.borderColor = '#FF6B35';
+                      e.currentTarget.style.color = '#FF6B35';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.borderColor = '#e5e7eb';
+                      e.currentTarget.style.color = '#6b7280';
+                    }}
                   >
                     ← Back to Browse
                   </button>

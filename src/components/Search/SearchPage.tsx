@@ -4,6 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import AdvancedSearch, { type SearchFilters } from './AdvancedSearch';
 import SearchResults from './SearchResults';
 import FindDogsNearYou from '../Maps/FindDogsNearYou';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface Dog {
   id: string;
@@ -48,6 +49,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<SearchFilters>(initialFilters);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const isMobile = useIsMobile(768);
   const { db } = useFirebase();
 
   // Load all dogs
@@ -86,16 +88,18 @@ const SearchPage: React.FC<SearchPageProps> = ({
               <button
                 onClick={onBack}
                 style={{
-                  padding: '12px 24px',
+                  padding: isMobile ? '10px 16px' : '12px 24px',
                   backgroundColor: '#FF6B35',
                   border: 'none',
                   borderRadius: '8px',
                   color: 'white',
-                  fontSize: '1rem',
+                  fontSize: isMobile ? '0.875rem' : '1rem',
                   fontWeight: '700',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)',
+                  minHeight: isMobile ? '44px' : 'auto', // Touch-friendly on mobile
+                  minWidth: isMobile ? '44px' : 'auto'
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.backgroundColor = '#FF8E53';
@@ -106,7 +110,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                ← Back to Dashboard
+                {isMobile ? '←' : '← Back to Dashboard'}
               </button>
             )}
             <a href="#" className="logo">
@@ -163,9 +167,9 @@ const SearchPage: React.FC<SearchPageProps> = ({
                   onClick={() => setViewMode('list')}
                   style={{
                     padding: '12px 24px',
-                    backgroundColor: viewMode === 'list' ? '#FF6B35' : 'rgba(255, 255, 255, 0.2)',
+                    backgroundColor: viewMode === 'list' ? '#FF6B35' : 'rgba(0, 0, 0, 0.6)',
                     color: 'white',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    border: viewMode === 'list' ? '1px solid #FF6B35' : '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '8px',
                     fontSize: '1rem',
                     fontWeight: '600',
@@ -180,9 +184,9 @@ const SearchPage: React.FC<SearchPageProps> = ({
                   onClick={() => setViewMode('map')}
                   style={{
                     padding: '12px 24px',
-                    backgroundColor: viewMode === 'map' ? '#FF6B35' : 'rgba(255, 255, 255, 0.2)',
+                    backgroundColor: viewMode === 'map' ? '#FF6B35' : 'rgba(0, 0, 0, 0.6)',
                     color: 'white',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    border: viewMode === 'map' ? '1px solid #FF6B35' : '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '8px',
                     fontSize: '1rem',
                     fontWeight: '600',

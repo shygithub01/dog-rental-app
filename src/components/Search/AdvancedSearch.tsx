@@ -155,14 +155,23 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
             <button
               onClick={clearFilters}
               style={{
-                padding: '8px 16px',
+                padding: '10px 18px',
                 backgroundColor: 'transparent',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
+                border: '2px solid #e5e7eb',
+                borderRadius: '10px',
                 color: '#6b7280',
                 fontSize: '0.875rem',
+                fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = '#FF6B35';
+                e.currentTarget.style.color = '#FF6B35';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = '#e5e7eb';
+                e.currentTarget.style.color = '#6b7280';
               }}
             >
               Clear All
@@ -172,15 +181,24 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             style={{
-              padding: '8px 16px',
+              padding: '10px 18px',
               backgroundColor: '#FF6B35',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '10px',
               color: 'white',
               fontSize: '0.875rem',
-              fontWeight: '600',
+              fontWeight: '700',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#FF8E53';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#FF6B35';
+              e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
             {isExpanded ? 'Hide Filters' : 'Show Filters'}
@@ -202,25 +220,31 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
             value={filters.breed || ''}
             onChange={(e) => handleFilterChange('breed', e.target.value)}
             style={{
-              padding: '12px 16px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
+              padding: '14px 16px',
+              border: '2px solid #e5e7eb',
+              borderRadius: '10px',
               fontSize: '1rem',
-              backgroundColor: 'white'
+              backgroundColor: 'white',
+              transition: 'all 0.2s ease'
             }}
+            onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           />
           
           <select
             value={filters.size || ''}
             onChange={(e) => handleFilterChange('size', e.target.value)}
             style={{
-              padding: '12px 16px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
+              padding: '14px 16px',
+              border: '2px solid #e5e7eb',
+              borderRadius: '10px',
               fontSize: '1rem',
               backgroundColor: 'white',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
             }}
+            onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           >
             <option value="">Any Size</option>
             <option value="small">Small (under 20 lbs)</option>
@@ -235,12 +259,15 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               value={filters.location || ''}
               onChange={(e) => handleFilterChange('location', e.target.value)}
               style={{
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
+                padding: '14px 16px',
+                border: '2px solid #e5e7eb',
+                borderRadius: '10px',
                 fontSize: '1rem',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                transition: 'all 0.2s ease'
               }}
+              onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+              onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
             />
           )}
         </div>
@@ -271,13 +298,16 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 onChange={(e) => handleFilterChange('breed', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
+                  padding: '14px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '10px',
                   fontSize: '1rem',
                   backgroundColor: 'white',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
+                onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
               >
                 <option value="">Any Breed</option>
                 {popularBreeds.map(breed => (
@@ -302,13 +332,16 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 onChange={(e) => handleFilterChange('size', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
+                  padding: '14px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '10px',
                   fontSize: '1rem',
                   backgroundColor: 'white',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
+                onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
               >
                 <option value="">Any Size</option>
                 <option value="small">Small (under 20 lbs)</option>
@@ -333,13 +366,16 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 onChange={(e) => handleFilterChange('activityLevel', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
+                  padding: '14px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '10px',
                   fontSize: '1rem',
                   backgroundColor: 'white',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
+                onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
               >
                 <option value="">Any Activity Level</option>
                 <option value="Low">Low - Couch potato</option>
@@ -493,12 +529,15 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                   onChange={(e) => handleFilterChange('location', e.target.value)}
                   style={{
                     width: '100%',
-                    padding: '12px 16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
+                    padding: '14px 16px',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '10px',
                     fontSize: '1rem',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    transition: 'all 0.2s ease'
                   }}
+                  onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                 />
               </div>
             )}

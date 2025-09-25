@@ -267,11 +267,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
       {/* Message Input */}
       <form onSubmit={handleSendMessage} style={{
-        padding: '15px',
-        borderTop: '1px solid #eee',
+        padding: '20px',
+        borderTop: '2px solid #f3f4f6',
         backgroundColor: 'white',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: '12px'
       }}>
         <input
           type="text"
@@ -280,25 +281,43 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           placeholder="Type a message..."
           style={{
             flex: 1,
-            padding: '10px 15px',
-            border: '1px solid #ddd',
-            borderRadius: '20px',
-            fontSize: '14px',
-            outline: 'none'
+            padding: '12px 16px',
+            border: '2px solid #e5e7eb',
+            borderRadius: '12px',
+            fontSize: '1rem',
+            outline: 'none',
+            transition: 'all 0.2s ease',
+            backgroundColor: 'white'
           }}
+          onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
+          onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
         />
         <button
           type="submit"
           disabled={!newMessage.trim()}
           style={{
-            marginLeft: '10px',
-            padding: '10px 20px',
-            backgroundColor: newMessage.trim() ? '#007bff' : '#ccc',
+            padding: '12px 20px',
+            backgroundColor: newMessage.trim() ? '#FF6B35' : '#9ca3af',
             color: 'white',
             border: 'none',
-            borderRadius: '20px',
+            borderRadius: '12px',
             cursor: newMessage.trim() ? 'pointer' : 'not-allowed',
-            fontSize: '14px'
+            fontSize: '1rem',
+            fontWeight: '600',
+            transition: 'all 0.2s ease',
+            boxShadow: newMessage.trim() ? '0 2px 8px rgba(255, 107, 53, 0.3)' : 'none'
+          }}
+          onMouseOver={(e) => {
+            if (newMessage.trim()) {
+              e.currentTarget.style.backgroundColor = '#FF8E53';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }
+          }}
+          onMouseOut={(e) => {
+            if (newMessage.trim()) {
+              e.currentTarget.style.backgroundColor = '#FF6B35';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }
           }}
         >
           Send

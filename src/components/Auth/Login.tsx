@@ -62,26 +62,32 @@ const Login: React.FC = () => {
         disabled={loading}
         style={{ 
           width: '100%', 
-          padding: '15px', 
-          backgroundColor: loading ? '#cbd5e0' : '#4285f4',
+          padding: '16px 24px', 
+          backgroundColor: loading ? '#9ca3af' : '#4285f4',
           color: 'white',
           border: 'none',
           borderRadius: '12px',
           cursor: loading ? 'not-allowed' : 'pointer',
           fontSize: '1.1rem',
-          fontWeight: 'bold',
+          fontWeight: '700',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: '12px',
-          transition: 'all 0.2s',
+          transition: 'all 0.2s ease',
           boxShadow: loading ? 'none' : '0 4px 12px rgba(66, 133, 244, 0.3)'
         }}
         onMouseOver={(e) => {
-          if (!loading) e.currentTarget.style.backgroundColor = '#3367d6';
+          if (!loading) {
+            e.currentTarget.style.backgroundColor = '#3367d6';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }
         }}
         onMouseOut={(e) => {
-          if (!loading) e.currentTarget.style.backgroundColor = '#4285f4';
+          if (!loading) {
+            e.currentTarget.style.backgroundColor = '#4285f4';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }
         }}
       >
         {loading ? (
