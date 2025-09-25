@@ -1305,7 +1305,7 @@ function AppContent() {
       </section>
 
       {/* Role-Based Dashboard Content */}
-      {user && userProfile && !profileLoading && effectiveUserRole && (
+      {user && userProfile && (
         <>
           {(() => {
             if (effectiveUserRole === 'admin') {
@@ -1314,9 +1314,8 @@ function AppContent() {
                   <AdminDashboard
                     onClose={() => {
                       console.log('Closing admin dashboard');
-                      setShowUserProfile(false);
-                      // Also navigate to home to ensure clean state
-                      window.location.href = '/';
+                      // Simple close - just refresh the page to reset state
+                      window.location.reload();
                     }}
                   />
                 </div>
@@ -1354,22 +1353,7 @@ function AppContent() {
         </>
       )}
 
-      {/* Loading state for role determination */}
-      {user && profileLoading && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '200px',
-          fontSize: '1.2rem',
-          color: '#6b7280'
-        }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>⏳</div>
-            <div>Loading dashboard...</div>
-          </div>
-        </div>
-      )}
+
 
       {/* Dog Listings Section - Only show for non-logged in users */}
       {dogs.length > 0 && !userProfile && (
