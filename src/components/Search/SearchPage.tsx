@@ -140,18 +140,20 @@ const SearchPage: React.FC<SearchPageProps> = ({
               gap: isMobile ? '12px' : '24px',
               marginBottom: '2rem',
               width: '100%',
-              maxWidth: '100%'
+              maxWidth: '100%',
+              padding: isMobile ? '0 10px' : '0'
             }}>
               <div style={{
                 textAlign: 'center',
                 background: 'rgba(255, 255, 255, 0.9)',
-                padding: isMobile ? '16px 20px' : '24px 32px',
+                padding: isMobile ? '14px 16px' : '24px 32px',
                 borderRadius: '12px',
                 border: '1px solid rgba(255, 107, 53, 0.2)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                width: isMobile ? '90%' : 'auto',
-                maxWidth: isMobile ? '280px' : 'none',
-                margin: isMobile ? '0 auto' : '0'
+                width: isMobile ? '100%' : 'auto',
+                maxWidth: isMobile ? '240px' : 'none',
+                margin: isMobile ? '0 auto' : '0',
+                boxSizing: 'border-box'
               }}>
                 <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
                   {dogs.length}
@@ -163,13 +165,14 @@ const SearchPage: React.FC<SearchPageProps> = ({
               <div style={{
                 textAlign: 'center',
                 background: 'rgba(255, 255, 255, 0.9)',
-                padding: isMobile ? '16px 20px' : '24px 32px',
+                padding: isMobile ? '14px 16px' : '24px 32px',
                 borderRadius: '12px',
                 border: '1px solid rgba(255, 107, 53, 0.2)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                width: isMobile ? '90%' : 'auto',
-                maxWidth: isMobile ? '280px' : 'none',
-                margin: isMobile ? '0 auto' : '0'
+                width: isMobile ? '100%' : 'auto',
+                maxWidth: isMobile ? '240px' : 'none',
+                margin: isMobile ? '0 auto' : '0',
+                boxSizing: 'border-box'
               }}>
                 <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
                   🔍
@@ -181,13 +184,14 @@ const SearchPage: React.FC<SearchPageProps> = ({
               <div style={{
                 textAlign: 'center',
                 background: 'rgba(255, 255, 255, 0.9)',
-                padding: isMobile ? '16px 20px' : '24px 32px',
+                padding: isMobile ? '14px 16px' : '24px 32px',
                 borderRadius: '12px',
                 border: '1px solid rgba(255, 107, 53, 0.2)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                width: isMobile ? '90%' : 'auto',
-                maxWidth: isMobile ? '280px' : 'none',
-                margin: isMobile ? '0 auto' : '0'
+                width: isMobile ? '100%' : 'auto',
+                maxWidth: isMobile ? '240px' : 'none',
+                margin: isMobile ? '0 auto' : '0',
+                boxSizing: 'border-box'
               }}>
                 <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
                   🗺️
