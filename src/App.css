@@ -1016,6 +1016,14 @@ body {
   .hero-stats {
     justify-content: center;
     gap: 1rem;
+    flex-direction: column;
+  }
+  
+  .hero-stat {
+    min-width: auto;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
   }
   
   .services-grid {
