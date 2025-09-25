@@ -137,66 +137,61 @@ const SearchPage: React.FC<SearchPageProps> = ({
               flexDirection: isMobile ? 'column' : 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: isMobile ? '12px' : '24px',
+              gap: isMobile ? '8px' : '24px',
               marginBottom: '2rem',
               width: '100%',
-              maxWidth: '100%',
-              padding: isMobile ? '0 10px' : '0'
+              padding: isMobile ? '0 20px' : '0'
             }}>
               <div style={{
                 textAlign: 'center',
                 background: 'rgba(255, 255, 255, 0.9)',
-                padding: isMobile ? '14px 16px' : '24px 32px',
-                borderRadius: '12px',
+                padding: isMobile ? '12px' : '20px 24px',
+                borderRadius: '8px',
                 border: '1px solid rgba(255, 107, 53, 0.2)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                width: isMobile ? '100%' : 'auto',
-                maxWidth: isMobile ? '240px' : 'none',
-                margin: isMobile ? '0 auto' : '0',
-                boxSizing: 'border-box'
+                width: isMobile ? '180px' : 'auto',
+                margin: '0 auto'
               }}>
-                <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
+                <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '4px' }}>
                   {dogs.length}
                 </div>
-                <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: '600' }}>
+                <div style={{ fontSize: '0.8rem', color: '#6b7280', fontWeight: '600' }}>
                   Dogs Available
                 </div>
               </div>
+              
               <div style={{
                 textAlign: 'center',
                 background: 'rgba(255, 255, 255, 0.9)',
-                padding: isMobile ? '14px 16px' : '24px 32px',
-                borderRadius: '12px',
+                padding: isMobile ? '12px' : '20px 24px',
+                borderRadius: '8px',
                 border: '1px solid rgba(255, 107, 53, 0.2)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                width: isMobile ? '100%' : 'auto',
-                maxWidth: isMobile ? '240px' : 'none',
-                margin: isMobile ? '0 auto' : '0',
-                boxSizing: 'border-box'
+                width: isMobile ? '180px' : 'auto',
+                margin: '0 auto'
               }}>
-                <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
+                <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '4px' }}>
                   🔍
                 </div>
-                <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: '600' }}>
+                <div style={{ fontSize: '0.8rem', color: '#6b7280', fontWeight: '600' }}>
                   Smart Filters
                 </div>
               </div>
+              
               <div style={{
                 textAlign: 'center',
                 background: 'rgba(255, 255, 255, 0.9)',
-                padding: isMobile ? '14px 16px' : '24px 32px',
-                borderRadius: '12px',
+                padding: isMobile ? '12px' : '20px 24px',
+                borderRadius: '8px',
                 border: '1px solid rgba(255, 107, 53, 0.2)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                width: isMobile ? '100%' : 'auto',
-                maxWidth: isMobile ? '240px' : 'none',
-                margin: isMobile ? '0 auto' : '0',
-                boxSizing: 'border-box'
+                width: isMobile ? '180px' : 'auto',
+                margin: '0 auto'
               }}>
-                <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
+                <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '4px' }}>
                   🗺️
                 </div>
-                <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: '600' }}>
+                <div style={{ fontSize: '0.8rem', color: '#6b7280', fontWeight: '600' }}>
                   Map View
                 </div>
               </div>
