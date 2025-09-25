@@ -120,17 +120,41 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
       }}>
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={() => {
+            console.log('Admin dashboard close button clicked');
+            if (onClose) {
+              onClose();
+            }
+          }}
           style={{
             position: 'absolute',
             top: '20px',
             right: '20px',
-            background: 'none',
-            border: 'none',
-            fontSize: '24px',
+            background: '#f3f4f6',
+            border: '2px solid #e5e7eb',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            fontSize: '18px',
             cursor: 'pointer',
-            color: '#666'
+            color: '#374151',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s ease',
+            zIndex: 10
           }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#ef4444';
+            e.currentTarget.style.color = 'white';
+            e.currentTarget.style.borderColor = '#dc2626';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#f3f4f6';
+            e.currentTarget.style.color = '#374151';
+            e.currentTarget.style.borderColor = '#e5e7eb';
+          }}
+          title="Close Admin Dashboard"
         >
           ✕
         </button>

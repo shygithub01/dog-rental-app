@@ -1305,10 +1305,23 @@ function AppContent() {
       </section>
 
       {/* Role-Based Dashboard Content */}
-      {user && userProfile && (
+      {user && userProfile && !profileLoading && effectiveUserRole && (
         <>
           {(() => {
-            if (effectiveUserRole === 'owner') {
+            if (effectiveUserRole === 'admin') {
+              return (
+                <div className="fade-in">
+                  <AdminDashboard
+                    onClose={() => {
+                      console.log('Closing admin dashboard');
+                      setShowUserProfile(false);
+                      // Also navigate to home to ensure clean state
+                      window.location.href = '/';
+                    }}
+                  />
+                </div>
+              );
+            } else if (effectiveUserRole === 'owner') {
               return (
                 <div className="fade-in">
                   <OwnerDashboard
@@ -1335,18 +1348,27 @@ function AppContent() {
                   />
                 </div>
               );
-            } else if (effectiveUserRole === 'admin') {
-              return (
-                <div className="fade-in">
-                  <AdminDashboard
-                    onClose={() => setShowUserProfile(false)}
-                  />
-                </div>
-              );
             }
             return null;
           })()}
         </>
+      )}
+
+      {/* Loading state for role determination */}
+      {user && profileLoading && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '200px',
+          fontSize: '1.2rem',
+          color: '#6b7280'
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>⏳</div>
+            <div>Loading dashboard...</div>
+          </div>
+        </div>
       )}
 
       {/* Dog Listings Section - Only show for non-logged in users */}
