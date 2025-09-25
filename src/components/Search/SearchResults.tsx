@@ -1,6 +1,7 @@
 import React, { useState, useMemo, memo } from 'react';
 import PhotoCarousel from '../Common/PhotoCarousel';
 import type { SearchFilters } from './AdvancedSearch';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface Dog {
   id: string;
@@ -45,6 +46,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   onMessageOwner,
   loading = false
 }) => {
+  const isMobile = useIsMobile();
   const [sortBy, setSortBy] = useState<SortOption>('relevance');
 
 
@@ -292,8 +294,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       {sortedDogs.length > 0 && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-          gap: '24px'
+          gridTemplateColumns: isMobile 
+            ? '1fr' 
+            : 'repeat(auto-fill, minmax(350px, 1fr))',
+          gap: isMobile ? '16px' : '24px'
         }}>
           {sortedDogs.map(dog => (
             <div
