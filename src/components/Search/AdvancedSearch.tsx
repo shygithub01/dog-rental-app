@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 export interface SearchFilters {
   breed?: string;
@@ -26,6 +27,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   initialFilters = {},
   showLocationFilter = true 
 }) => {
+  const isMobile = useIsMobile();
   const [filters, setFilters] = useState<SearchFilters>({
     breed: '',
     size: '',
@@ -210,7 +212,9 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       {!isExpanded && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: showLocationFilter ? '1fr 1fr 1fr' : '1fr 1fr',
+          gridTemplateColumns: isMobile 
+            ? '1fr' // Single column on mobile
+            : showLocationFilter ? '1fr 1fr 1fr' : '1fr 1fr', // Original layout on desktop
           gap: '12px',
           alignItems: 'center'
         }}>

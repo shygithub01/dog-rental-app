@@ -220,7 +220,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div style={{ 
+          display: 'flex', 
+          gap: isMobile ? '8px' : '12px', 
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: isMobile ? 'center' : 'flex-end'
+        }}>
 
 
           {/* Sort Dropdown */}
@@ -228,12 +234,14 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
             style={{
-              padding: '8px 12px',
+              padding: isMobile ? '10px 12px' : '8px 12px',
               border: '1px solid #d1d5db',
               borderRadius: '8px',
-              fontSize: '0.875rem',
+              fontSize: isMobile ? '0.8rem' : '0.875rem',
               backgroundColor: 'white',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              minWidth: isMobile ? '140px' : 'auto',
+              maxWidth: isMobile ? '160px' : 'none'
             }}
           >
             <option value="relevance">Most Relevant</option>
@@ -343,14 +351,18 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 {/* Availability Badge */}
                 <div style={{
                   position: 'absolute',
-                  top: '12px',
-                  right: '12px',
-                  padding: '4px 8px',
+                  top: isMobile ? '8px' : '12px',
+                  right: isMobile ? '8px' : '12px',
+                  padding: isMobile ? '3px 6px' : '4px 8px',
                   backgroundColor: dog.isAvailable ? '#10b981' : '#ef4444',
                   color: 'white',
-                  fontSize: '0.75rem',
+                  fontSize: isMobile ? '0.7rem' : '0.75rem',
                   fontWeight: '600',
-                  borderRadius: '12px'
+                  borderRadius: '12px',
+                  maxWidth: isMobile ? '80px' : 'none',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
                 }}>
                   {dog.isAvailable ? 'Available' : 'Unavailable'}
                 </div>
@@ -405,35 +417,48 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 <div style={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: '8px',
-                  marginBottom: '12px'
+                  gap: isMobile ? '6px' : '8px',
+                  marginBottom: '12px',
+                  justifyContent: isMobile ? 'center' : 'flex-start'
                 }}>
                   <span style={{
-                    padding: '4px 8px',
+                    padding: isMobile ? '3px 6px' : '4px 8px',
                     backgroundColor: '#f3f4f6',
                     borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    color: '#374151'
+                    fontSize: isMobile ? '0.7rem' : '0.75rem',
+                    color: '#374151',
+                    whiteSpace: 'nowrap',
+                    maxWidth: isMobile ? '120px' : 'none',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                   }}>
                     📏 {getSizeLabel(dog.size)}
                   </span>
                   {dog.activityLevel && (
                     <span style={{
-                      padding: '4px 8px',
+                      padding: isMobile ? '3px 6px' : '4px 8px',
                       backgroundColor: '#f3f4f6',
                       borderRadius: '12px',
-                      fontSize: '0.75rem',
-                      color: '#374151'
+                      fontSize: isMobile ? '0.7rem' : '0.75rem',
+                      color: '#374151',
+                      whiteSpace: 'nowrap',
+                      maxWidth: isMobile ? '120px' : 'none',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
                     }}>
                       {getActivityLevelEmoji(dog.activityLevel)} {dog.activityLevel} Energy
                     </span>
                   )}
                   <span style={{
-                    padding: '4px 8px',
+                    padding: isMobile ? '3px 6px' : '4px 8px',
                     backgroundColor: '#f3f4f6',
                     borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    color: '#374151'
+                    fontSize: isMobile ? '0.7rem' : '0.75rem',
+                    color: '#374151',
+                    whiteSpace: 'nowrap',
+                    maxWidth: isMobile ? '120px' : 'none',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                   }}>
                     📍 {dog.location}
                   </span>
@@ -444,19 +469,24 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                   <div style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '6px',
-                    marginBottom: '12px'
+                    gap: isMobile ? '4px' : '6px',
+                    marginBottom: '12px',
+                    justifyContent: isMobile ? 'center' : 'flex-start'
                   }}>
                     {dog.temperament.slice(0, 3).map(trait => (
                       <span
                         key={trait}
                         style={{
-                          padding: '2px 6px',
+                          padding: isMobile ? '2px 4px' : '2px 6px',
                           backgroundColor: '#FF6B35',
                           color: 'white',
-                          fontSize: '0.625rem',
+                          fontSize: isMobile ? '0.6rem' : '0.625rem',
                           fontWeight: '500',
-                          borderRadius: '8px'
+                          borderRadius: '8px',
+                          whiteSpace: 'nowrap',
+                          maxWidth: isMobile ? '80px' : 'none',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
                         }}
                       >
                         {trait}

@@ -202,30 +202,34 @@ const SearchPage: React.FC<SearchPageProps> = ({
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '16px',
+              gap: isMobile ? '8px' : '16px',
               marginTop: '32px',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
+              padding: isMobile ? '0 16px' : '0' // Add padding on mobile
             }}>
 
 
               {/* View Mode Toggle */}
               <div style={{
                 display: 'flex',
-                gap: '12px'
+                gap: isMobile ? '8px' : '12px',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}>
                 <button
                   onClick={() => setViewMode('list')}
                   style={{
-                    padding: '12px 24px',
+                    padding: isMobile ? '10px 16px' : '12px 24px',
                     backgroundColor: viewMode === 'list' ? '#FF6B35' : 'rgba(0, 0, 0, 0.6)',
                     color: 'white',
                     border: viewMode === 'list' ? '1px solid #FF6B35' : '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '8px',
-                    fontSize: '1rem',
+                    fontSize: isMobile ? '0.875rem' : '1rem',
                     fontWeight: '600',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    backdropFilter: 'blur(10px)'
+                    backdropFilter: 'blur(10px)',
+                    minWidth: isMobile ? '120px' : 'auto' // Ensure buttons have minimum width on mobile
                   }}
                 >
                   📋 Search & Filter
@@ -233,16 +237,17 @@ const SearchPage: React.FC<SearchPageProps> = ({
                 <button
                   onClick={() => setViewMode('map')}
                   style={{
-                    padding: '12px 24px',
+                    padding: isMobile ? '10px 16px' : '12px 24px',
                     backgroundColor: viewMode === 'map' ? '#FF6B35' : 'rgba(0, 0, 0, 0.6)',
                     color: 'white',
                     border: viewMode === 'map' ? '1px solid #FF6B35' : '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '8px',
-                    fontSize: '1rem',
+                    fontSize: isMobile ? '0.875rem' : '1rem',
                     fontWeight: '600',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    backdropFilter: 'blur(10px)'
+                    backdropFilter: 'blur(10px)',
+                    minWidth: isMobile ? '120px' : 'auto' // Ensure buttons have minimum width on mobile
                   }}
                 >
                   🗺️ Explore Map
