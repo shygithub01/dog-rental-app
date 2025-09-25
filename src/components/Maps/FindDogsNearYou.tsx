@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DogMap from './DogMap';
 import type { Dog } from '../../types/Dog';
 import type { Location } from '../../types/Location';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface FindDogsNearYouProps {
   dogs: Dog[];
@@ -20,6 +21,7 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
   currentUserId,
   embedded = false
 }) => {
+  const isMobile = useIsMobile();
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [userLocation, setUserLocation] = useState<Location | null>(null);
 
@@ -123,7 +125,7 @@ const FindDogsNearYou: React.FC<FindDogsNearYouProps> = ({
                     fontSize: '1rem'
                   }}
                 >
-                  ← Back to Dashboard
+                  {isMobile ? '←' : '← Back to Dashboard'}
                 </button>
               </div>
             )}

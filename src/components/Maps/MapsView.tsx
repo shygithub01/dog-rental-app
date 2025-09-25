@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DogMap from './DogMap';
 import type { Dog } from '../../types/Dog';
 import type { Location } from '../../types/Location';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface MapsViewProps {
   dogs: Dog[];
@@ -18,6 +19,7 @@ const MapsView: React.FC<MapsViewProps> = ({
   onBack,
   currentUserId
 }) => {
+  const isMobile = useIsMobile();
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [userLocation, setUserLocation] = useState<Location | null>(null);
 
@@ -65,7 +67,7 @@ const MapsView: React.FC<MapsViewProps> = ({
           onClick={onBack}
           className="btn-glass"
         >
-          ← Back to Dashboard
+          {isMobile ? '←' : '← Back to Dashboard'}
         </button>
       </div>
 

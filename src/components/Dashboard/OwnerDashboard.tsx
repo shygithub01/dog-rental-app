@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface OwnerDashboardProps {
   dogs: any[];
@@ -34,6 +35,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
   onViewRequests,
   user
 }) => {
+  const isMobile = useIsMobile();
   const { db } = useFirebase();
   const [myRentals, setMyRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
@@ -169,8 +171,10 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
             ) : (
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                gap: '25px'
+                gridTemplateColumns: isMobile 
+                  ? '1fr' 
+                  : 'repeat(auto-fit, minmax(350px, 1fr))',
+                gap: isMobile ? '15px' : '25px'
               }}>
                 {myDogs.map((dog) => {
                   // Find rental information for this dog

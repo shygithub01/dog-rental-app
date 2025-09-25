@@ -7,6 +7,7 @@ import { useFirebase } from "./contexts/FirebaseContext";
 import { useUserService } from "./services/userService";
 import { useMessageService } from "./services/messageService";
 import { useNotificationService } from "./services/notificationService";
+import { useIsMobile } from "./hooks/useIsMobile";
 import { doc, updateDoc, collection, getDocs, query, where, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { cleanupOrphanedData, clearAllData } from "./utils/dataCleanup";
@@ -33,6 +34,7 @@ import SearchPage from "./components/Search/SearchPage";
 import { FirebaseProvider } from "./contexts/FirebaseContext";
 
 function AppContent() {
+  const isMobile = useIsMobile();
   const [user, setUser] = useState<any>(null);
   const [showAddDog, setShowAddDog] = useState(false);
   const [showEditDog, setShowEditDog] = useState(false);
@@ -670,7 +672,7 @@ function AppContent() {
                 onClick={() => setShowPaymentHistory(false)}
                 className="btn-glass"
               >
-                ← Back to Dashboard
+                {isMobile ? '←' : '← Back to Dashboard'}
               </button>
             </div>
 
