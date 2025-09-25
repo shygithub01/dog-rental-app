@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMessageService } from '../../services/messageService';
 import { useNotificationService } from '../../services/notificationService';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Message, ConversationSummary } from '../../types/Message';
 
 interface ChatWindowProps {
@@ -16,6 +17,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   conversation, 
   onBack 
 }) => {
+  const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -192,7 +194,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           }}
           title="Back to Dashboard"
         >
-          ← Back to Dashboard
+          {isMobile ? '←' : '← Back to Dashboard'}
         </button>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '16px', fontWeight: 'bold' }}>

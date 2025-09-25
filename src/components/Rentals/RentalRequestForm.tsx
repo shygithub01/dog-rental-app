@@ -510,7 +510,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                       e.currentTarget.style.color = '#6b7280';
                     }}
                   >
-                    ← Back to Browse
+{isMobile ? '←' : '← Back to Browse'}
                   </button>
                 )}
               </div>

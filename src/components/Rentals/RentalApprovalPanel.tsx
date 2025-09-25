@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, query, where, getDocs, updateDoc, doc, Timestamp, addDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useNotificationService } from '../../services/notificationService';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface RentalRequest {
   id: string;
@@ -29,6 +30,7 @@ interface RentalApprovalPanelProps {
 }
 
 const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId, onRequestUpdate, onClose }) => {
+  const isMobile = useIsMobile();
   const [requests, setRequests] = useState<RentalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -246,7 +248,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                ← Back to Dashboard
+                {isMobile ? '←' : '← Back to Dashboard'}
               </button>
             )}
             <a href="#" className="logo">

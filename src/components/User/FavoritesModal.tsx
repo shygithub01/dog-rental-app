@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface FavoritesModalProps {
   currentUserId: string;
@@ -22,6 +23,7 @@ interface Dog {
 }
 
 const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose, onBrowseDogs }) => {
+  const isMobile = useIsMobile();
   const { db } = useFirebase();
   const [favoriteDogs, setFavoriteDogs] = useState<Dog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -146,7 +148,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({ currentUserId, onClose,
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              ← Back to Dashboard
+              {isMobile ? '←' : '← Back to Dashboard'}
             </button>
             <a href="#" className="logo">
               DogRental
