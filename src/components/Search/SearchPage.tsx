@@ -132,18 +132,69 @@ const SearchPage: React.FC<SearchPageProps> = ({
               Search, filter, and discover amazing dogs available for rent. Use advanced filters or explore on the map to find your ideal furry friend.
             </p>
             
-            <div className="hero-stats">
-              <div className="hero-stat">
-                <div className="hero-stat-number">{dogs.length}</div>
-                <div className="hero-stat-label">Dogs Available</div>
+            <div style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: isMobile ? '12px' : '24px',
+              marginBottom: '2rem',
+              width: '100%',
+              maxWidth: '100%'
+            }}>
+              <div style={{
+                textAlign: 'center',
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: isMobile ? '16px 20px' : '24px 32px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 107, 53, 0.2)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                width: isMobile ? '90%' : 'auto',
+                maxWidth: isMobile ? '280px' : 'none',
+                margin: isMobile ? '0 auto' : '0'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
+                  {dogs.length}
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: '600' }}>
+                  Dogs Available
+                </div>
               </div>
-              <div className="hero-stat">
-                <div className="hero-stat-number">🔍</div>
-                <div className="hero-stat-label">Smart Filters</div>
+              <div style={{
+                textAlign: 'center',
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: isMobile ? '16px 20px' : '24px 32px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 107, 53, 0.2)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                width: isMobile ? '90%' : 'auto',
+                maxWidth: isMobile ? '280px' : 'none',
+                margin: isMobile ? '0 auto' : '0'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
+                  🔍
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: '600' }}>
+                  Smart Filters
+                </div>
               </div>
-              <div className="hero-stat">
-                <div className="hero-stat-number">🗺️</div>
-                <div className="hero-stat-label">Map View</div>
+              <div style={{
+                textAlign: 'center',
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: isMobile ? '16px 20px' : '24px 32px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 107, 53, 0.2)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                width: isMobile ? '90%' : 'auto',
+                maxWidth: isMobile ? '280px' : 'none',
+                margin: isMobile ? '0 auto' : '0'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '8px' }}>
+                  🗺️
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: '600' }}>
+                  Map View
+                </div>
               </div>
             </div>
 
