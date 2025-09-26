@@ -486,12 +486,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
           </div>
 
           {/* Profile Card - Same Style as Search Card in App.tsx */}
-          <div className="search-card slide-up" style={{ 
-            minHeight: '600px', 
-            maxWidth: '900px',
-            padding: isMobile ? '20px' : '40px',
-            margin: isMobile ? '10px' : '0'
-          }}>
+          <div className="search-card slide-up" style={{ minHeight: '600px', maxWidth: '900px' }}>
             <h3 className="search-title">
               User Profile
             </h3>
@@ -504,12 +499,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
         {/* User Info */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          gap: isMobile ? '16px' : '30px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', // Single column on mobile, two columns on desktop
+          gap: isMobile ? '20px' : '30px',
           marginTop: '20px',
           marginBottom: '30px',
           alignItems: 'stretch'
-        }} className="mobile-form-grid">
+        }}>
           <div>
             <h3 style={{
               fontSize: '1.2rem',
@@ -568,9 +563,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-              gap: isMobile ? '12px' : '15px' 
-            }} className="mobile-form-grid">
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', // Single column on mobile, two columns on desktop
+              gap: isMobile ? '10px' : '15px' 
+            }}>
               <div style={{ textAlign: 'center', padding: '10px', backgroundColor: 'white', borderRadius: '6px' }}>
                 <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>Dogs Owned</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50' }}>{user.stats.dogsOwned}</div>
@@ -601,13 +596,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
         {/* Tabs */}
         <div style={{
           display: 'flex',
-          gap: isMobile ? '8px' : '10px',
+          gap: isMobile ? '5px' : '10px',
           marginBottom: '20px',
           borderBottom: '1px solid #e2e8f0',
-          flexWrap: 'wrap',
-          overflowX: isMobile ? 'auto' : 'visible',
-          paddingBottom: '10px',
-          WebkitOverflowScrolling: 'touch' // Smooth scrolling on iOS
+          flexWrap: 'wrap', // Allow tabs to wrap on mobile
+          overflowX: isMobile ? 'auto' : 'visible', // Allow horizontal scroll on mobile if needed
+          paddingBottom: '10px'
         }}>
           {[
             { key: 'overview', label: 'Overview', icon: '📋' },
@@ -620,36 +614,29 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               key={key}
               onClick={() => setActiveTab(key as any)}
               style={{
-                padding: isMobile ? '10px 14px' : '12px 20px',
+                padding: isMobile ? '8px 12px' : '12px 20px',
                 borderRadius: '10px',
                 fontWeight: '600',
-                fontSize: isMobile ? '0.875rem' : '0.9rem',
-                transition: 'all 0.2s ease',
-                backgroundColor: activeTab === key ? '#FF6B35' : 'rgba(255, 255, 255, 0.9)',
-                color: activeTab === key ? 'white' : '#6b7280',
-                border: activeTab === key ? '2px solid #FF6B35' : '2px solid #e5e7eb',
+                fontSize: isMobile ? '0.8rem' : '0.9rem',
+                transition: 'all 0.2s',
+                backgroundColor: activeTab === key ? 'rgba(255, 107, 53, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                color: activeTab === key ? '#1f2937' : '#6b7280',
+                border: activeTab === key ? '1px solid rgba(255, 107, 53, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)',
                 cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                minWidth: isMobile ? 'auto' : '120px',
-                minHeight: isMobile ? '44px' : 'auto', // Touch-friendly height
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                whiteSpace: 'nowrap', // Prevent text wrapping in tabs
+                minWidth: isMobile ? 'auto' : '120px' // Allow flexible width on mobile
               }}
               onMouseOver={(e) => {
                 if (activeTab !== key) {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                  e.currentTarget.style.borderColor = '#FF6B35';
-                  e.currentTarget.style.color = '#FF6B35';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.color = '#374151';
                 }
               }}
               onMouseOut={(e) => {
                 if (activeTab !== key) {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-                  e.currentTarget.style.borderColor = '#e5e7eb';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
                   e.currentTarget.style.color = '#6b7280';
-                  e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
             >
@@ -662,10 +649,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          paddingRight: isMobile ? '5px' : '10px',
-          minHeight: isMobile ? '400px' : '500px',
-          maxHeight: isMobile ? '500px' : '600px',
-          height: isMobile ? '400px' : '500px'
+          paddingRight: '10px',
+          minHeight: '500px',
+          maxHeight: '600px',
+          height: '500px'
         }}>
           {activeTab === 'overview' && (
             <div>
@@ -679,9 +666,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               </h3>
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                gap: isMobile ? '16px' : '20px'
-              }} className="mobile-form-grid">
+                gridTemplateColumns: '1fr 1fr',
+                gap: '20px'
+              }}>
                 <div style={{
                   background: '#f0fff4',
                   padding: '20px',
@@ -714,8 +701,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                   backgroundColor: '#fff3cd',
                   borderRadius: '10px',
                   border: '2px solid #ffc107',
-                  marginLeft: isMobile ? '0' : '15px',
-                  marginTop: isMobile ? '16px' : '0'
+                  marginLeft: '15px'
                 }}>
                   <div style={{
                     display: 'flex',
@@ -776,9 +762,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
               ) : (
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: isMobile ? '16px' : '20px'
-                }} className="mobile-dogs-grid">
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '20px'
+                }}>
                   {dogs.map((dog) => (
                     <div key={dog.id} style={{
                       background: 'white',
@@ -1721,11 +1707,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                   <div style={{
                     backgroundColor: 'white',
                     borderRadius: '16px',
-                    padding: isMobile ? '24px' : '32px',
-                    maxWidth: isMobile ? '350px' : '400px',
-                    width: isMobile ? '95%' : '90%',
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-                    margin: isMobile ? '20px' : '0'
+                    padding: '32px',
+                    maxWidth: '400px',
+                    width: '90%',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
                   }}>
                     <div style={{
                       textAlign: 'center',
@@ -1783,17 +1768,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                             placeholder="+1 (555) 123-4567"
                             style={{
                               width: '100%',
-                              padding: isMobile ? '14px 16px' : '12px',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '10px',
-                              fontSize: '1rem',
-                              outline: 'none',
-                              transition: 'all 0.2s ease',
-                              backgroundColor: 'white',
-                              minHeight: isMobile ? '44px' : 'auto'
+                              padding: '12px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '16px',
+                              outline: 'none'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                             onKeyPress={(e) => e.key === 'Enter' && sendVerificationCode()}
                             autoFocus={!phoneInput}
                           />
@@ -1808,28 +1788,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                             disabled={isVerifying || !phoneInput.trim()}
                             style={{
                               flex: 1,
-                              padding: isMobile ? '14px 16px' : '12px',
-                              backgroundColor: isVerifying || !phoneInput.trim() ? '#9ca3af' : '#FF6B35',
+                              padding: '12px',
+                              backgroundColor: isVerifying || !phoneInput.trim() ? '#9ca3af' : '#3b82f6',
                               color: 'white',
                               border: 'none',
-                              borderRadius: '10px',
+                              borderRadius: '8px',
                               cursor: isVerifying || !phoneInput.trim() ? 'not-allowed' : 'pointer',
-                              fontWeight: '700',
-                              fontSize: isMobile ? '1rem' : '14px',
-                              minHeight: isMobile ? '44px' : 'auto',
-                              transition: 'all 0.2s ease'
-                            }}
-                            onMouseOver={(e) => {
-                              if (!isVerifying && phoneInput.trim()) {
-                                e.currentTarget.style.backgroundColor = '#FF8E53';
-                                e.currentTarget.style.transform = 'translateY(-1px)';
-                              }
-                            }}
-                            onMouseOut={(e) => {
-                              if (!isVerifying && phoneInput.trim()) {
-                                e.currentTarget.style.backgroundColor = '#FF6B35';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                              }
+                              fontWeight: '600',
+                              fontSize: '14px'
                             }}
                           >
                             {isVerifying ? '⏳ Sending...' : 'Send Code'}
@@ -1837,24 +1803,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                           <button
                             onClick={() => setShowPhoneVerification(false)}
                             style={{
-                              padding: isMobile ? '14px 16px' : '12px 16px',
-                              backgroundColor: 'transparent',
-                              color: '#6b7280',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '10px',
+                              padding: '12px 16px',
+                              backgroundColor: '#f3f4f6',
+                              color: '#374151',
+                              border: 'none',
+                              borderRadius: '8px',
                               cursor: 'pointer',
-                              fontWeight: '600',
-                              fontSize: isMobile ? '1rem' : '14px',
-                              minHeight: isMobile ? '44px' : 'auto',
-                              transition: 'all 0.2s ease'
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.borderColor = '#FF6B35';
-                              e.currentTarget.style.color = '#FF6B35';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.borderColor = '#e5e7eb';
-                              e.currentTarget.style.color = '#6b7280';
+                              fontWeight: '500',
+                              fontSize: '14px'
                             }}
                           >
                             Cancel
@@ -1918,20 +1874,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                             placeholder="123456"
                             style={{
                               width: '100%',
-                              padding: isMobile ? '16px' : '12px',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '10px',
-                              fontSize: isMobile ? '1.2rem' : '16px',
+                              padding: '12px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '8px',
+                              fontSize: '16px',
                               textAlign: 'center',
-                              letterSpacing: '3px',
-                              outline: 'none',
-                              fontFamily: 'monospace',
-                              fontWeight: '600',
-                              minHeight: isMobile ? '50px' : 'auto',
-                              transition: 'all 0.2s ease'
+                              letterSpacing: '2px',
+                              outline: 'none'
                             }}
-                            onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
-                            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
                             onKeyPress={(e) => e.key === 'Enter' && verifyPhoneCode()}
                             maxLength={6}
                           />
@@ -1946,28 +1896,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
                             disabled={isVerifying || verificationCode.length !== 6}
                             style={{
                               flex: 1,
-                              padding: isMobile ? '14px 16px' : '12px',
+                              padding: '12px',
                               backgroundColor: isVerifying || verificationCode.length !== 6 ? '#9ca3af' : '#10b981',
                               color: 'white',
                               border: 'none',
-                              borderRadius: '10px',
+                              borderRadius: '8px',
                               cursor: isVerifying || verificationCode.length !== 6 ? 'not-allowed' : 'pointer',
-                              fontWeight: '700',
-                              fontSize: isMobile ? '1rem' : '14px',
-                              minHeight: isMobile ? '44px' : 'auto',
-                              transition: 'all 0.2s ease'
-                            }}
-                            onMouseOver={(e) => {
-                              if (!isVerifying && verificationCode.length === 6) {
-                                e.currentTarget.style.backgroundColor = '#059669';
-                                e.currentTarget.style.transform = 'translateY(-1px)';
-                              }
-                            }}
-                            onMouseOut={(e) => {
-                              if (!isVerifying && verificationCode.length === 6) {
-                                e.currentTarget.style.backgroundColor = '#10b981';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                              }
+                              fontWeight: '600',
+                              fontSize: '14px'
                             }}
                           >
                             {isVerifying ? '⏳ Verifying...' : 'Verify Code'}
