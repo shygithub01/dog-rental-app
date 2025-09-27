@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Dog Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #FF8E53;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐕 Dog Data Seeder</h1>
+        <p>This will add 23 new dogs (Stanny3 through Stanny25) to your Firebase database.</p>
+        
+        <div>
+            <strong>Specifications:</strong>
+            <ul>
+                <li>Names: Stanny3, Stanny4, ..., Stanny25</li>
+                <li>Prices: $50-$150 per day</li>
+                <li>Location: 5-25 miles from 23059 (Glen Allen, VA)</li>
+                <li>Random breeds, ages, temperaments, etc.</li>
+            </ul>
+        </div>
+
+        <div id="authStatus">
+            <div class="info">Checking authentication...</div>
+        </div>
+
+        <button id="loginBtn" onclick="signInWithGoogle()" style="display: none;">🔐 Sign in as Lucy (Admin)</button>
+        <button id="seedBtn" onclick="seedDogs()" style="display: none;">🚀 Add Dogs for Shyam</button>
+        <button id="clearBtn" onclick="clearLog()">🧹 Clear Log</button>
+
+        <div id="log" class="log">
+            <div class="info">Ready to seed dog data. Click the button above to start.</div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase config - using your working config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvOkBH0CqgShJ_wAjOWnVtNCzqShphI30",
+            authDomain: "dog-rental-app.firebaseapp.com",
+            projectId: "dog-rental-app",
+            storageBucket: "dog-rental-app.firebasestorage.app",
+            messagingSenderId: "649517070731",
+            appId: "1:649517070731:web:0b8c4a1a5c5d5e5f5g5h5i"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Make Firebase services available globally
+        window.db = db;
+        window.auth = auth;
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.Timestamp = Timestamp;
+        window.signInWithPopup = signInWithPopup;
+        window.GoogleAuthProvider = GoogleAuthProvider;
+
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            const authStatus = document.getElementById('authStatus');
+            const seedBtn = document.getElementById('seedBtn');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                authStatus.innerHTML = `<div class="success">✅ Signed in as: ${user.displayName || user.email} (Admin)</div>`;
+                seedBtn.style.display = 'inline-block';
+                loginBtn.style.display = 'none';
+                window.currentUser = user;
+            } else {
+                authStatus.innerHTML = `<div class="error">❌ Please sign in as Lucy (Admin) first</div>`;
+                seedBtn.style.display = 'none';
+                loginBtn.style.display = 'inline-block';
+                window.currentUser = null;
+            }
+        });
+
+        // Data arrays
+        window.breeds = [
+            'Golden Retriever', 'Labrador Retriever', 'German Shepherd', 'Bulldog',
+            'Poodle', 'Beagle', 'Rottweiler', 'Yorkshire Terrier', 'Dachshund',
+            'Siberian Husky', 'Boxer', 'Border Collie', 'Chihuahua', 'Shih Tzu',
+            'Boston Terrier', 'Pomeranian', 'Australian Shepherd', 'Cocker Spaniel',
+            'French Bulldog', 'Great Dane', 'Mastiff', 'Pit Bull', 'Jack Russell Terrier'
+        ];
+
+        window.sizes = ['small', 'medium', 'large'];
+        window.temperaments = ['Calm', 'Energetic', 'Playful', 'Gentle', 'Protective', 'Social', 'Independent', 'Cuddly'];
+        window.goodWithOptions = ['Kids', 'Other Dogs', 'Cats', 'Strangers', 'Seniors'];
+        window.activityLevels = ['Low', 'Medium', 'High'];
+
+        window.descriptions = [
+            "A friendly and well-trained dog who loves to play and cuddle. Great with families and other pets.",
+            "This sweet pup is perfect for active families who enjoy outdoor adventures and long walks.",
+            "A gentle soul who loves attention and is great with children. House-trained and obedient.",
+            "An energetic companion who loves to play fetch and go on hikes. Very social and friendly.",
+            "A calm and loving dog who enjoys quiet time and gentle walks. Perfect for seniors or families.",
+            "This playful pup loves toys, treats, and meeting new people. Great for first-time dog owners.",
+            "A loyal and protective companion who is also gentle and loving with family members.",
+            "An intelligent and well-behaved dog who knows basic commands and loves to learn new tricks."
+        ];
+
+        window.locations = [
+            'Glen Allen, VA', 'Richmond, VA', 'Henrico, VA', 'Short Pump, VA',
+            'Mechanicsville, VA', 'Ashland, VA', 'Innsbrook, VA', 'Sandston, VA',
+            'Tuckahoe, VA', 'Lakeside, VA'
+        ];
+
+        window.ownerNames = [
+            'Sarah Johnson', 'Mike Davis', 'Emily Chen', 'David Wilson',
+            'Jessica Brown', 'Chris Martinez', 'Amanda Taylor', 'Ryan Anderson',
+            'Lisa Thompson', 'Kevin White', 'Maria Garcia', 'James Miller',
+            'Nicole Rodriguez', 'Brandon Lee', 'Ashley Clark', 'Tyler Hall'
+        ];
+
+        window.dogImageUrls = [
+            'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=400&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1546975490-e8b92a360b24?w=400&h=300&fit=crop',
+            'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop'
+        ];
+
+        console.log('Firebase initialized successfully');
+    </script>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(div);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '<div class="info">Log cleared. Ready to seed dog data.</div>';
+        }
+
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function getRandomElements(array, count) {
+            const shuffled = [...array].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function generateRandomCoordinates() {
+            // 23059 coordinates: approximately 37.6501° N, 77.5047° W
+            const baseLatitude = 37.6501;
+            const baseLongitude = -77.5047;
+            
+            // Generate random distance between 5-25 miles
+            const minDistance = 5;
+            const maxDistance = 25;
+            const distance = Math.random() * (maxDistance - minDistance) + minDistance;
+            
+            // Convert miles to degrees (rough approximation)
+            const milesPerDegree = 69;
+            const maxOffset = distance / milesPerDegree;
+            
+            // Generate random angle
+            const angle = Math.random() * 2 * Math.PI;
+            
+            // Calculate offset
+            const latOffset = Math.cos(angle) * maxOffset * (Math.random() * 0.8 + 0.2);
+            const lngOffset = Math.sin(angle) * maxOffset * (Math.random() * 0.8 + 0.2);
+            
+            return {
+                lat: baseLatitude + latOffset,
+                lng: baseLongitude + lngOffset
+            };
+        }
+
+        async function signInWithGoogle() {
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.textContent = '🔄 Signing in...';
+
+            try {
+                const provider = new window.GoogleAuthProvider();
+                await window.signInWithPopup(window.auth, provider);
+                log('✅ Successfully signed in as Admin!', 'success');
+            } catch (error) {
+                log(`❌ Sign in failed: ${error.message}`, 'error');
+                loginBtn.disabled = false;
+                loginBtn.textContent = '🔐 Sign in as Lucy (Admin)';
+            }
+        }
+
+        async function seedDogs() {
+            if (!window.currentUser) {
+                log('❌ Please sign in as Lucy (Admin) first!', 'error');
+                return;
+            }
+
+            const seedBtn = document.getElementById('seedBtn');
+            seedBtn.disabled = true;
+            seedBtn.textContent = '🔄 Adding Dogs...';
+
+            log('🐕 Starting to seed dog data...', 'info');
+            log(`👤 Admin ${window.currentUser.displayName || window.currentUser.email} adding dogs for Shyam`, 'info');
+
+            try {
+                for (let i = 3; i <= 25; i++) {
+                    const coordinates = generateRandomCoordinates();
+                    const breed = getRandomElement(window.breeds);
+                    const size = getRandomElement(window.sizes);
+                    const temperament = getRandomElements(window.temperaments, Math.floor(Math.random() * 4) + 1);
+                    const goodWith = getRandomElements(window.goodWithOptions, Math.floor(Math.random() * 3) + 1);
+                    const activityLevel = getRandomElement(window.activityLevels);
+                    const age = Math.floor(Math.random() * 12) + 1;
+                    const pricePerDay = Math.floor(Math.random() * 101) + 50;
+                    const location = getRandomElement(window.locations);
+                    const ownerName = getRandomElement(window.ownerNames);
+                    const description = getRandomElement(window.descriptions);
+                    const imageUrl = getRandomElement(window.dogImageUrls);
+
+                    const dogData = {
+                        name: `Stanny${i}`,
+                        breed: breed,
+                        age: age,
+                        size: size,
+                        description: description,
+                        pricePerDay: pricePerDay,
+                        location: location,
+                        coordinates: coordinates,
+                        imageUrl: imageUrl,
+                        imageUrls: [imageUrl],
+                        temperament: temperament,
+                        goodWith: goodWith,
+                        activityLevel: activityLevel,
+                        specialNotes: `Stanny${i} is a wonderful ${breed.toLowerCase()} who loves spending time with people!`,
+                        ownerId: 'shyam-user-001', // Shyam's user ID
+                        ownerName: 'Shyamalendu Mohapatra',
+                        isAvailable: true,
+                        status: 'available',
+                        adminReviewed: true,
+                        createdAt: window.Timestamp.now(),
+                        updatedAt: window.Timestamp.now(),
+                        averageRating: Math.round((Math.random() * 2 + 3) * 10) / 10
+                    };
+
+                    await window.addDoc(window.collection(window.db, 'dogs'), dogData);
+                    log(`✅ Added ${dogData.name} - ${dogData.breed} in ${dogData.location} ($${dogData.pricePerDay}/day)`, 'success');
+
+                    // Small delay to avoid overwhelming Firebase
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
+
+                log('🎉 Successfully seeded 23 new dogs (Stanny3 - Stanny25)!', 'success');
+                log('📍 All dogs are located within 5-25 miles of 23059 (Glen Allen, VA)', 'info');
+                log('💰 Prices range from $50-$150 per day', 'info');
+
+            } catch (error) {
+                log(`❌ Error seeding dog data: ${error.message}`, 'error');
+                console.error('Error:', error);
+            } finally {
+                seedBtn.disabled = false;
+                seedBtn.textContent = '🚀 Add Dogs for Shyam';
+            }
+        }
+    </script>
+</body>
+</html>

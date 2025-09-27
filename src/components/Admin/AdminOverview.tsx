@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, addDoc, Timestamp } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
@@ -156,9 +156,12 @@ const AdminOverview: React.FC<AdminOverviewProps> = ({ adminData, onRefresh }) =
   return (
     <div>
       <div style={{ marginBottom: '30px' }}>
-        <h1 style={{ fontSize: '2rem', color: '#1f2937', margin: '0 0 10px 0' }}>
-          📊 System Overview
-        </h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <h1 style={{ fontSize: '2rem', color: '#1f2937', margin: 0 }}>
+            📊 System Overview
+          </h1>
+          <SeedDogsButton />
+        </div>
         <p style={{ color: '#6b7280', margin: 0 }}>
           Real-time insights and key performance metrics
         </p>
@@ -410,5 +413,165 @@ const MetricCard: React.FC<{
     )}
   </div>
 );
+
+// Seed Dogs Button Component
+const SeedDogsButton: React.FC = () => {
+  const { db, auth } = useFirebase();
+  const [seeding, setSeeding] = useState(false);
+  const [message, setMessage] = useState('');
+
+  // Dog data arrays
+  const breeds = [
+    'Golden Retriever', 'Labrador Retriever', 'German Shepherd', 'Bulldog',
+    'Poodle', 'Beagle', 'Rottweiler', 'Yorkshire Terrier', 'Dachshund',
+    'Siberian Husky', 'Boxer', 'Border Collie', 'Chihuahua', 'Shih Tzu',
+    'Boston Terrier', 'Pomeranian', 'Australian Shepherd', 'Cocker Spaniel'
+  ];
+
+  const sizes = ['small', 'medium', 'large'];
+  const temperaments = ['Calm', 'Energetic', 'Playful', 'Gentle', 'Protective', 'Social', 'Independent', 'Cuddly'];
+  const goodWithOptions = ['Kids', 'Other Dogs', 'Cats', 'Strangers', 'Seniors'];
+  const activityLevels = ['Low', 'Medium', 'High'];
+  const locations = [
+    'Glen Allen, VA', 'Richmond, VA', 'Henrico, VA', 'Short Pump, VA',
+    'Mechanicsville, VA', 'Ashland, VA', 'Innsbrook, VA', 'Sandston, VA'
+  ];
+
+  const descriptions = [
+    "A friendly and well-trained dog who loves to play and cuddle. Great with families and other pets.",
+    "This sweet pup is perfect for active families who enjoy outdoor adventures and long walks.",
+    "A gentle soul who loves attention and is great with children. House-trained and obedient.",
+    "An energetic companion who loves to play fetch and go on hikes. Very social and friendly."
+  ];
+
+  const dogImageUrls = [
+    'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=300&fit=crop'
+  ];
+
+  const getRandomElement = (array: any[]) => array[Math.floor(Math.random() * array.length)];
+  const getRandomElements = (array: any[], count: number) => {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  const generateRandomCoordinates = () => {
+    const baseLatitude = 37.6501;
+    const baseLongitude = -77.5047;
+    const distance = Math.random() * 20 + 5; // 5-25 miles
+    const milesPerDegree = 69;
+    const maxOffset = distance / milesPerDegree;
+    const angle = Math.random() * 2 * Math.PI;
+    const latOffset = Math.cos(angle) * maxOffset * (Math.random() * 0.8 + 0.2);
+    const lngOffset = Math.sin(angle) * maxOffset * (Math.random() * 0.8 + 0.2);
+    
+    return {
+      lat: baseLatitude + latOffset,
+      lng: baseLongitude + lngOffset
+    };
+  };
+
+  const seedDogs = async () => {
+    if (!auth.currentUser) {
+      setMessage('❌ Not authenticated');
+      return;
+    }
+
+    setSeeding(true);
+    setMessage('🐕 Starting to seed dog data...');
+
+    try {
+      for (let i = 3; i <= 25; i++) {
+        const coordinates = generateRandomCoordinates();
+        const breed = getRandomElement(breeds);
+        const size = getRandomElement(sizes);
+        const temperament = getRandomElements(temperaments, Math.floor(Math.random() * 4) + 1);
+        const goodWith = getRandomElements(goodWithOptions, Math.floor(Math.random() * 3) + 1);
+        const activityLevel = getRandomElement(activityLevels);
+        const age = Math.floor(Math.random() * 12) + 1;
+        const pricePerDay = Math.floor(Math.random() * 101) + 50;
+        const location = getRandomElement(locations);
+        const description = getRandomElement(descriptions);
+        const imageUrl = getRandomElement(dogImageUrls);
+
+        const dogData = {
+          name: `Stanny${i}`,
+          breed: breed,
+          age: age,
+          size: size,
+          description: description,
+          pricePerDay: pricePerDay,
+          location: location,
+          coordinates: coordinates,
+          imageUrl: imageUrl,
+          imageUrls: [imageUrl],
+          temperament: temperament,
+          goodWith: goodWith,
+          activityLevel: activityLevel,
+          specialNotes: `Stanny${i} is a wonderful ${breed.toLowerCase()} who loves spending time with people!`,
+          ownerId: 'shyam-user-001', // Shyam's user ID
+          ownerName: 'Shyamalendu Mohapatra',
+          isAvailable: true,
+          status: 'available',
+          adminReviewed: true,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+          averageRating: Math.round((Math.random() * 2 + 3) * 10) / 10
+        };
+
+        await addDoc(collection(db, 'dogs'), dogData);
+        setMessage(`✅ Added ${dogData.name} - ${dogData.breed} ($${dogData.pricePerDay}/day)`);
+        
+        // Small delay
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
+      setMessage('🎉 Successfully seeded 23 new dogs (Stanny3-Stanny25) for Shyam!');
+      setTimeout(() => setMessage(''), 5000);
+
+    } catch (error: any) {
+      setMessage(`❌ Error: ${error.message}`);
+      setTimeout(() => setMessage(''), 5000);
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: 'right' }}>
+      <button
+        onClick={seedDogs}
+        disabled={seeding}
+        style={{
+          padding: '12px 24px',
+          backgroundColor: seeding ? '#9ca3af' : '#FF6B35',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          fontSize: '0.9rem',
+          fontWeight: '600',
+          cursor: seeding ? 'not-allowed' : 'pointer',
+          transition: 'all 0.2s ease',
+          marginBottom: '8px'
+        }}
+      >
+        {seeding ? '🔄 Seeding...' : '🌱 Seed Dog Data'}
+      </button>
+      {message && (
+        <div style={{
+          fontSize: '0.8rem',
+          color: message.includes('❌') ? '#dc2626' : message.includes('✅') || message.includes('🎉') ? '#16a34a' : '#6b7280',
+          marginTop: '4px',
+          maxWidth: '300px',
+          textAlign: 'right'
+        }}>
+          {message}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default AdminOverview;
