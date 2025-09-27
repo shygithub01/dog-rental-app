@@ -16,8 +16,6 @@ interface Dog {
   ownerId: string;
   ownerName: string;
   isAvailable: boolean;
-  imageUrl?: string;
-  imageUrls?: string[];
 }
 
 interface RentalRequestFormProps {
@@ -236,52 +234,25 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 fontSize: '1rem',
                 fontWeight: '600',
                 color: '#374151',
-                marginBottom: '16px'
+                marginBottom: '12px'
               }}>
                 🐕 About {dog.name}
               </h4>
-              
-              {/* Dog Image and Basic Info */}
               <div style={{
-                display: 'flex',
-                gap: '16px',
-                marginBottom: '16px',
-                flexDirection: isMobile ? 'column' : 'row',
-                alignItems: isMobile ? 'center' : 'flex-start'
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '12px',
+                marginBottom: '12px'
               }}>
-                {/* Dog Image */}
-                <div style={{
-                  width: isMobile ? '120px' : '80px',
-                  height: isMobile ? '120px' : '80px',
-                  borderRadius: '12px',
-                  background: (dog.imageUrls && dog.imageUrls.length > 0) ? `url(${dog.imageUrls[0]})` : 
-                             dog.imageUrl ? `url(${dog.imageUrl})` : '#e5e7eb',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  flexShrink: 0,
-                  border: '2px solid #e5e7eb'
-                }} />
-                
-                {/* Dog Details */}
-                <div style={{ flex: 1 }}>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                    gap: isMobile ? '12px' : '16px',
-                    marginBottom: '12px'
-                  }} className="mobile-form-grid">
-                    <div>
-                      <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Breed:</span>
-                      <div style={{ color: '#374151', fontWeight: '600' }}>{dog.breed}</div>
-                    </div>
-                    <div>
-                      <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Owner:</span>
-                      <div style={{ color: '#374151', fontWeight: '600' }}>{dog.ownerName}</div>
-                    </div>
-                  </div>
+                <div>
+                  <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Breed:</span>
+                  <div style={{ color: '#374151', fontWeight: '600' }}>{dog.breed}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Owner:</span>
+                  <div style={{ color: '#374151', fontWeight: '600' }}>{dog.ownerName}</div>
                 </div>
               </div>
-              
               <div style={{ marginBottom: '12px' }}>
                 <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>Description:</span>
                 <p style={{
@@ -298,10 +269,10 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
             <form onSubmit={handleSubmit} style={{ marginTop: '32px' }}>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
-                gap: isMobile ? '20px' : '16px', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '16px', 
                 marginBottom: '24px'
-              }} className="mobile-form-grid">
+              }}>
                 <div>
                   <label style={{
                     display: 'block',
@@ -321,13 +292,12 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     min={new Date().toISOString().split('T')[0]}
                     style={{
                       width: '100%',
-                      padding: isMobile ? '16px' : '14px 16px',
+                      padding: '14px 16px',
                       border: '2px solid #e5e7eb',
                       borderRadius: '10px',
                       fontSize: '1rem',
                       backgroundColor: 'white',
-                      transition: 'all 0.2s ease',
-                      minHeight: isMobile ? '48px' : 'auto'
+                      transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                     onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -353,13 +323,12 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                     min={formData.startDate || new Date().toISOString().split('T')[0]}
                     style={{
                       width: '100%',
-                      padding: isMobile ? '16px' : '14px 16px',
+                      padding: '14px 16px',
                       border: '2px solid #e5e7eb',
                       borderRadius: '10px',
                       fontSize: '1rem',
                       backgroundColor: 'white',
-                      transition: 'all 0.2s ease',
-                      minHeight: isMobile ? '48px' : 'auto'
+                      transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                     onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -385,9 +354,9 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   </h4>
                   <div style={{
                     display: 'grid',
-                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                    gap: isMobile ? '16px' : '12px'
-                  }} className="mobile-form-grid">
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '12px'
+                  }}>
                     <div>
                       <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Duration:</span>
                       <div style={{ fontWeight: '600', color: '#374151' }}>{totalCost.days} day{totalCost.days !== 1 ? 's' : ''}</div>
@@ -419,13 +388,12 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   placeholder="(555) 123-4567"
                   style={{
                     width: '100%',
-                    padding: isMobile ? '16px' : '14px 16px',
+                    padding: '14px 16px',
                     border: '2px solid #e5e7eb',
                     borderRadius: '10px',
                     fontSize: '1rem',
                     backgroundColor: 'white',
-                    transition: 'all 0.2s ease',
-                    minHeight: isMobile ? '48px' : 'auto'
+                    transition: 'all 0.2s ease'
                   }}
                   onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -446,19 +414,18 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   name="specialRequests"
                   value={formData.specialRequests}
                   onChange={handleChange}
-                  rows={isMobile ? 4 : 3}
+                  rows={3}
                   placeholder="Any special requirements or questions for the owner..."
                   style={{
                     width: '100%',
-                    padding: isMobile ? '16px' : '14px 16px',
+                    padding: '14px 16px',
                     border: '2px solid #e5e7eb',
                     borderRadius: '10px',
                     fontSize: '1rem',
                     backgroundColor: 'white',
                     resize: 'vertical',
                     fontFamily: 'inherit',
-                    transition: 'all 0.2s ease',
-                    minHeight: isMobile ? '100px' : 'auto'
+                    transition: 'all 0.2s ease'
                   }}
                   onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -482,7 +449,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
               <div style={{ 
                 display: 'flex', 
                 flexDirection: 'column',
-                gap: isMobile ? '16px' : '12px', 
+                gap: '12px', 
                 marginTop: '24px'
               }}>
                 <button
@@ -490,18 +457,17 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   disabled={loading}
                   style={{
                     width: '100%',
-                    padding: isMobile ? '18px 24px' : '16px 24px',
+                    padding: '16px 24px',
                     backgroundColor: loading ? '#9ca3af' : '#FF6B35',
                     color: 'white',
                     border: 'none',
                     borderRadius: '12px',
-                    fontSize: isMobile ? '1.2rem' : '1.1rem',
+                    fontSize: '1.1rem',
                     fontWeight: '700',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s ease',
                     boxShadow: loading ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.3)',
-                    marginBottom: '12px',
-                    minHeight: isMobile ? '56px' : 'auto'
+                    marginBottom: '12px'
                   }}
                   onMouseOver={(e) => {
                     if (!loading) {
@@ -518,7 +484,35 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 >
                   {loading ? '📝 Submitting Request...' : '📝 Submit Request'}
                 </button>
-
+                
+                {(onCancel || onClose) && (
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    style={{
+                      width: '100%',
+                      padding: '14px 24px',
+                      backgroundColor: 'transparent',
+                      color: '#6b7280',
+                      border: '2px solid #e5e7eb',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.borderColor = '#FF6B35';
+                      e.currentTarget.style.color = '#FF6B35';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.borderColor = '#e5e7eb';
+                      e.currentTarget.style.color = '#6b7280';
+                    }}
+                  >
+{isMobile ? '←' : '← Back to Browse'}
+                  </button>
+                )}
               </div>
             </form>
           </div>
