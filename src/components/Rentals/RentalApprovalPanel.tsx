@@ -34,7 +34,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
   const [requests, setRequests] = useState<RentalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [debugInfo, setDebugInfo] = useState('');
+
   const [dogImages, setDogImages] = useState<{[key: string]: string}>({});
 
   const { db } = useFirebase();
@@ -47,9 +47,6 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
   const loadRequests = async () => {
     setLoading(true);
     try {
-      console.log('Loading rental requests for user:', currentUserId);
-      setDebugInfo(`🔍 Debug: Looking for requests where dogOwnerId == "${currentUserId}"`);
-      
       const requestsQuery = query(
         collection(db, 'rentalRequests'),
         where('dogOwnerId', '==', currentUserId),
@@ -61,9 +58,6 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
         id: doc.id,
         ...doc.data()
       })) as RentalRequest[];
-      
-      console.log('Rental requests loaded:', requestsData);
-      setDebugInfo(`🔍 Debug: Found ${requestsData.length} requests. Current user ID: "${currentUserId}"`);
       
       // Validate that the dogs still exist
       const validRequests = [];
@@ -82,7 +76,6 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
         }
       }
       
-      console.log('Valid rental requests after cleanup:', validRequests);
       setRequests(validRequests);
 
       // Fetch dog images for requests that don't have dogImageUrl
@@ -324,20 +317,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
               Review the details below and manage each request
             </p>
 
-            {/* Debug Info */}
-            {debugInfo && (
-              <div style={{
-                background: '#f0f9ff',
-                border: '1px solid #0ea5e9',
-                borderRadius: '8px',
-                padding: '12px',
-                marginBottom: '20px',
-                fontSize: '0.875rem',
-                fontFamily: 'monospace'
-              }}>
-                {debugInfo}
-              </div>
-            )}
+
 
             {loading ? (
               <div style={{ textAlign: 'center', padding: '40px' }}>

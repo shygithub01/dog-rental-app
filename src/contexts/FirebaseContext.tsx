@@ -35,6 +35,23 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
     console.log('Auth:', auth);
     console.log('Firestore:', db);
     console.log('Storage:', storage);
+    
+    // Suppress Firebase IDP Vault errors (browser extension conflicts)
+    const originalConsoleError = console.error;
+    console.error = (...args) => {
+      const message = args.join(' ');
+      if (message.includes('[IDP][Vault]') || 
+          message.includes('Invalid JSON format') ||
+          message.includes('Received invalid message')) {
+        // Suppress these specific Firebase IDP errors
+        return;
+      }
+      originalConsoleError.apply(console, args);
+    };
+    
+    return () => {
+      console.error = originalConsoleError;
+    };
   }, []);
 
   return (

@@ -169,7 +169,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* Header */}
+      {/* Header - Removed duplicate back button, MessagingCenter already has one */}
       <div style={{
         padding: '15px',
         borderBottom: '1px solid #eee',
@@ -177,25 +177,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         display: 'flex',
         alignItems: 'center'
       }}>
-        <button
-          onClick={onBack}
-          style={{
-            background: 'none',
-            border: 'none',
-            fontSize: '18px',
-            cursor: 'pointer',
-            marginRight: '10px',
-            color: '#666',
-            padding: '5px 10px',
-            borderRadius: '5px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px'
-          }}
-          title="Back to Dashboard"
-        >
-          {isMobile ? '←' : '← Back to Dashboard'}
-        </button>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
             {conversation.otherUserName}
