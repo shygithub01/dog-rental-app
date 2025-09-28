@@ -224,13 +224,12 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
             value={filters.breed || ''}
             onChange={(e) => handleFilterChange('breed', e.target.value)}
             style={{
-              padding: isMobile ? '16px' : '14px 16px',
+              padding: '14px 16px',
               border: '2px solid #e5e7eb',
               borderRadius: '10px',
               fontSize: '1rem',
               backgroundColor: 'white',
-              transition: 'all 0.2s ease',
-              minHeight: isMobile ? '48px' : 'auto'
+              transition: 'all 0.2s ease'
             }}
             onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -240,14 +239,13 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
             value={filters.size || ''}
             onChange={(e) => handleFilterChange('size', e.target.value)}
             style={{
-              padding: isMobile ? '16px' : '14px 16px',
+              padding: '14px 16px',
               border: '2px solid #e5e7eb',
               borderRadius: '10px',
               fontSize: '1rem',
               backgroundColor: 'white',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              minHeight: isMobile ? '48px' : 'auto'
+              transition: 'all 0.2s ease'
             }}
             onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -285,9 +283,9 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
           {/* Basic Filters Row */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-            gap: isMobile ? '20px' : '16px'
-          }} className="mobile-form-grid">
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '16px'
+          }}>
             {/* Breed */}
             <div>
               <label style={{
@@ -304,14 +302,13 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 onChange={(e) => handleFilterChange('breed', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: isMobile ? '16px' : '14px 16px',
+                  padding: '14px 16px',
                   border: '2px solid #e5e7eb',
                   borderRadius: '10px',
                   fontSize: '1rem',
                   backgroundColor: 'white',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  minHeight: isMobile ? '48px' : 'auto'
+                  transition: 'all 0.2s ease'
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                 onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -339,14 +336,13 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 onChange={(e) => handleFilterChange('size', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: isMobile ? '16px' : '14px 16px',
+                  padding: '14px 16px',
                   border: '2px solid #e5e7eb',
                   borderRadius: '10px',
                   fontSize: '1rem',
                   backgroundColor: 'white',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  minHeight: isMobile ? '48px' : 'auto'
+                  transition: 'all 0.2s ease'
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                 onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -374,14 +370,13 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 onChange={(e) => handleFilterChange('activityLevel', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: isMobile ? '16px' : '14px 16px',
+                  padding: '14px 16px',
                   border: '2px solid #e5e7eb',
                   borderRadius: '10px',
                   fontSize: '1rem',
                   backgroundColor: 'white',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  minHeight: isMobile ? '48px' : 'auto'
+                  transition: 'all 0.2s ease'
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                 onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
@@ -516,10 +511,10 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
           {/* Location & Search Radius */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : (showLocationFilter ? '2fr 1fr' : '1fr'),
-            gap: isMobile ? '20px' : '16px',
+            gridTemplateColumns: showLocationFilter ? '2fr 1fr' : '1fr',
+            gap: '16px',
             alignItems: 'end'
-          }} className="mobile-form-grid">
+          }}>
             {showLocationFilter && (
               <div>
                 <label style={{
@@ -538,13 +533,12 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                   onChange={(e) => handleFilterChange('location', e.target.value)}
                   style={{
                     width: '100%',
-                    padding: isMobile ? '16px' : '14px 16px',
+                    padding: '14px 16px',
                     border: '2px solid #e5e7eb',
                     borderRadius: '10px',
                     fontSize: '1rem',
                     backgroundColor: 'white',
-                    transition: 'all 0.2s ease',
-                    minHeight: isMobile ? '48px' : 'auto'
+                    transition: 'all 0.2s ease'
                   }}
                   onFocus={(e) => e.target.style.borderColor = '#FF6B35'}
                   onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}

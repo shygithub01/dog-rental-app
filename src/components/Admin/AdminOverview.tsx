@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, orderBy, limit, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, addDoc, Timestamp, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
@@ -160,7 +160,9 @@ const AdminOverview: React.FC<AdminOverviewProps> = ({ adminData, onRefresh }) =
           <h1 style={{ fontSize: '2rem', color: '#1f2937', margin: 0 }}>
             📊 System Overview
           </h1>
-          <SeedDogsButton />
+          <div>
+            <SmartSeedDogsButton />
+          </div>
         </div>
         <p style={{ color: '#6b7280', margin: 0 }}>
           Real-time insights and key performance metrics
@@ -414,11 +416,76 @@ const MetricCard: React.FC<{
   </div>
 );
 
-// Seed Dogs Button Component
-const SeedDogsButton: React.FC = () => {
+// Smart Seed Dogs Button Component with User Selection
+const SmartSeedDogsButton: React.FC = () => {
   const { db, auth } = useFirebase();
   const [seeding, setSeeding] = useState(false);
   const [message, setMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedDogBatch, setSelectedDogBatch] = useState('');
+  const [availableBatches, setAvailableBatches] = useState<string[]>([]);
+
+  // Load users and available dog batches
+  useEffect(() => {
+    loadUsersAndBatches();
+  }, []);
+
+  const loadUsersAndBatches = async () => {
+    try {
+      // Get all users
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      const allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Get existing dogs to determine which batches are used
+      const dogsSnapshot = await getDocs(collection(db, 'dogs'));
+      const existingDogs = dogsSnapshot.docs.map(doc => doc.data());
+      
+      // Filter out only admin users (users can own multiple dog batches)
+      const availableUsers = allUsers.filter((user: any) => {
+        // Exclude admin users only
+        if (user.role === 'admin' || user.isAdmin === true) {
+          return false;
+        }
+        return true;
+      });
+      
+      setUsers(availableUsers);
+
+
+      
+      // Define all possible batches
+      const allBatches = [
+        'Stanny1-10 (10 dogs)',
+        'Stanny11-20 (10 dogs)', 
+        'Stanny21-30 (10 dogs)',
+        'Stanny31-40 (10 dogs)',
+        'Stanny41-50 (10 dogs)'
+      ];
+
+      // Check which batches are already used
+      const usedBatches = new Set();
+      existingDogs.forEach(dog => {
+        const name = dog.name;
+        if (name && name.startsWith('Stanny')) {
+          const num = parseInt(name.replace('Stanny', ''));
+          if (num >= 1 && num <= 10) usedBatches.add('Stanny1-10 (10 dogs)');
+          else if (num >= 11 && num <= 20) usedBatches.add('Stanny11-20 (10 dogs)');
+          else if (num >= 21 && num <= 30) usedBatches.add('Stanny21-30 (10 dogs)');
+          else if (num >= 31 && num <= 40) usedBatches.add('Stanny31-40 (10 dogs)');
+          else if (num >= 41 && num <= 50) usedBatches.add('Stanny41-50 (10 dogs)');
+        }
+      });
+
+      // Only show available batches
+      const available = allBatches.filter(batch => !usedBatches.has(batch));
+      setAvailableBatches(available);
+
+    } catch (error) {
+      console.error('Error loading users and batches:', error);
+    }
+  };
 
   // Dog data arrays
   const breeds = [
@@ -445,10 +512,30 @@ const SeedDogsButton: React.FC = () => {
   ];
 
   const dogImageUrls = [
-    'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop',
-    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=300&fit=crop',
-    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
-    'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=300&fit=crop'
+    'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop', // Golden Retriever
+    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=300&fit=crop', // Husky
+    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop', // Beagle
+    'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=300&fit=crop', // Bulldog
+    'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=400&h=300&fit=crop', // Border Collie
+    'https://images.unsplash.com/photo-1546975490-e8b92a360b24?w=400&h=300&fit=crop', // German Shepherd
+    'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop', // Labrador
+    'https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=400&h=300&fit=crop', // Poodle
+    'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=400&h=300&fit=crop', // Rottweiler
+    'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=300&fit=crop', // Boxer
+    'https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?w=400&h=300&fit=crop', // Chihuahua
+    'https://images.unsplash.com/photo-1605568427561-40dd23c2acea?w=400&h=300&fit=crop', // Shih Tzu
+    'https://images.unsplash.com/photo-1534361960057-19889db9621e?w=400&h=300&fit=crop', // Yorkshire Terrier
+    'https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?w=400&h=300&fit=crop', // Dachshund
+    'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=400&h=300&fit=crop', // Boston Terrier
+    'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=400&h=300&fit=crop', // Pomeranian
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop', // Australian Shepherd
+    'https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=400&h=300&fit=crop', // Cocker Spaniel
+    'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400&h=300&fit=crop', // Mixed breed 1
+    'https://images.unsplash.com/photo-1529429617124-95b109e86bb8?w=400&h=300&fit=crop', // Mixed breed 2
+    'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop', // Mixed breed 3
+    'https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=400&h=300&fit=crop', // Mixed breed 4
+    'https://images.unsplash.com/photo-1504595403659-9088ce801e29?w=400&h=300&fit=crop', // Mixed breed 5
+    'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=400&h=300&fit=crop'  // Mixed breed 6
   ];
 
   const getRandomElement = (array: any[]) => array[Math.floor(Math.random() * array.length)];
@@ -474,8 +561,8 @@ const SeedDogsButton: React.FC = () => {
   };
 
   const seedDogs = async () => {
-    if (!auth.currentUser) {
-      setMessage('❌ Not authenticated');
+    if (!selectedUser || !selectedDogBatch) {
+      setMessage('❌ Please select both user and dog batch');
       return;
     }
 
@@ -483,7 +570,22 @@ const SeedDogsButton: React.FC = () => {
     setMessage('🐕 Starting to seed dog data...');
 
     try {
-      for (let i = 3; i <= 25; i++) {
+      // Parse batch range
+      const batchRanges = {
+        'Stanny1-10 (10 dogs)': { start: 1, end: 10 },
+        'Stanny11-20 (10 dogs)': { start: 11, end: 20 },
+        'Stanny21-30 (10 dogs)': { start: 21, end: 30 },
+        'Stanny31-40 (10 dogs)': { start: 31, end: 40 },
+        'Stanny41-50 (10 dogs)': { start: 41, end: 50 }
+      };
+
+      const range = batchRanges[selectedDogBatch as keyof typeof batchRanges];
+      
+      // Get the selected user data directly from database
+      const userDoc = await getDoc(doc(db, 'users', selectedUser));
+      const selectedUserData = userDoc.exists() ? { id: userDoc.id, ...userDoc.data() } : null;
+
+      for (let i = range.start; i <= range.end; i++) {
         const coordinates = generateRandomCoordinates();
         const breed = getRandomElement(breeds);
         const size = getRandomElement(sizes);
@@ -494,25 +596,26 @@ const SeedDogsButton: React.FC = () => {
         const pricePerDay = Math.floor(Math.random() * 101) + 50;
         const location = getRandomElement(locations);
         const description = getRandomElement(descriptions);
-        const imageUrl = getRandomElement(dogImageUrls);
+        // Use index to ensure unique images - cycle through the array
+        const imageUrl = dogImageUrls[(i - 3) % dogImageUrls.length];
 
         const dogData = {
           name: `Stanny${i}`,
-          breed: breed,
-          age: age,
-          size: size,
-          description: description,
-          pricePerDay: pricePerDay,
-          location: location,
-          coordinates: coordinates,
-          imageUrl: imageUrl,
-          imageUrls: [imageUrl],
-          temperament: temperament,
-          goodWith: goodWith,
-          activityLevel: activityLevel,
-          specialNotes: `Stanny${i} is a wonderful ${breed.toLowerCase()} who loves spending time with people!`,
-          ownerId: 'shyam-user-001', // Shyam's user ID
-          ownerName: 'Shyamalendu Mohapatra',
+          breed: breed || 'Mixed Breed',
+          age: age || 2,
+          size: size || 'medium',
+          description: description || 'A wonderful dog looking for adventure!',
+          pricePerDay: pricePerDay || 75,
+          location: location || 'Glen Allen, VA',
+          coordinates: coordinates || { lat: 37.6501, lng: -77.5047 },
+          imageUrl: imageUrl || 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop',
+          imageUrls: [imageUrl || 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop'],
+          temperament: temperament && temperament.length > 0 ? temperament : ['Friendly'],
+          goodWith: goodWith && goodWith.length > 0 ? goodWith : ['Kids'],
+          activityLevel: activityLevel || 'Medium',
+          specialNotes: `Stanny${i} is a wonderful ${(breed || 'mixed breed').toLowerCase()} who loves spending time with people!`,
+          ownerId: selectedUser || 'unknown',
+          ownerName: (selectedUserData as any)?.displayName || (selectedUserData as any)?.email || 'Unknown User',
           isAvailable: true,
           status: 'available',
           adminReviewed: true,
@@ -521,14 +624,27 @@ const SeedDogsButton: React.FC = () => {
           averageRating: Math.round((Math.random() * 2 + 3) * 10) / 10
         };
 
-        await addDoc(collection(db, 'dogs'), dogData);
-        setMessage(`✅ Added ${dogData.name} - ${dogData.breed} ($${dogData.pricePerDay}/day)`);
+        console.log('Creating dog:', dogData.name, 'for owner:', dogData.ownerName);
+
+        try {
+          await addDoc(collection(db, 'dogs'), dogData);
+          setMessage(`✅ Added ${dogData.name} - ${dogData.breed} ($${dogData.pricePerDay}/day)`);
+        } catch (error) {
+          console.error('Error adding dog:', dogData.name, error);
+          setMessage(`❌ Error adding ${dogData.name}: ${error}`);
+          throw error; // Re-throw to stop the loop
+        }
         
         // Small delay
         await new Promise(resolve => setTimeout(resolve, 200));
       }
 
-      setMessage('🎉 Successfully seeded 23 new dogs (Stanny3-Stanny25) for Shyam!');
+      const dogCount = range.end - range.start + 1;
+      setMessage(`🎉 Successfully seeded ${dogCount} dogs (${selectedDogBatch}) for ${selectedUserData?.displayName || selectedUserData?.email}!`);
+      
+      // Refresh available batches
+      await loadUsersAndBatches();
+      setShowModal(false);
       setTimeout(() => setMessage(''), 5000);
 
     } catch (error: any) {
@@ -540,37 +656,156 @@ const SeedDogsButton: React.FC = () => {
   };
 
   return (
-    <div style={{ textAlign: 'right' }}>
-      <button
-        onClick={seedDogs}
-        disabled={seeding}
-        style={{
-          padding: '12px 24px',
-          backgroundColor: seeding ? '#9ca3af' : '#FF6B35',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '0.9rem',
-          fontWeight: '600',
-          cursor: seeding ? 'not-allowed' : 'pointer',
-          transition: 'all 0.2s ease',
-          marginBottom: '8px'
-        }}
-      >
-        {seeding ? '🔄 Seeding...' : '🌱 Seed Dog Data'}
-      </button>
-      {message && (
+    <>
+      <div style={{ textAlign: 'right' }}>
+        <button
+          onClick={() => setShowModal(true)}
+          disabled={seeding}
+          style={{
+            padding: '12px 24px',
+            backgroundColor: seeding ? '#9ca3af' : '#FF6B35',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: seeding ? 'not-allowed' : 'pointer',
+            transition: 'all 0.2s ease',
+            marginBottom: '8px'
+          }}
+        >
+          {seeding ? '🔄 Seeding...' : '🌱 Smart Seed Dogs'}
+        </button>
+        {message && (
+          <div style={{
+            fontSize: '0.8rem',
+            color: message.includes('❌') ? '#dc2626' : message.includes('✅') || message.includes('🎉') ? '#16a34a' : '#6b7280',
+            marginTop: '4px',
+            maxWidth: '300px',
+            textAlign: 'right'
+          }}>
+            {message}
+          </div>
+        )}
+      </div>
+
+      {/* Smart Seeding Modal */}
+      {showModal && (
         <div style={{
-          fontSize: '0.8rem',
-          color: message.includes('❌') ? '#dc2626' : message.includes('✅') || message.includes('🎉') ? '#16a34a' : '#6b7280',
-          marginTop: '4px',
-          maxWidth: '300px',
-          textAlign: 'right'
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000
         }}>
-          {message}
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '30px',
+            maxWidth: '500px',
+            width: '90%',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+          }}>
+            <h2 style={{ margin: '0 0 20px 0', color: '#1f2937', textAlign: 'center' }}>
+              🌱 Smart Dog Seeding
+            </h2>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#374151' }}>
+                👤 Select User (Dog Owner):
+              </label>
+              <select
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              >
+                <option value="">Choose a user...</option>
+                {users.map(user => (
+                  <option key={user.id} value={user.id}>
+                    {user.displayName || user.email} ({user.role || 'user'})
+                  </option>
+                ))}
+              </select>
+              {users.length === 0 && (
+                <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '5px' }}>
+                  ℹ️ No available users. Only admin users are filtered out.
+                </p>
+              )}
+            </div>
+
+            <div style={{ marginBottom: '25px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#374151' }}>
+                🐕 Select Dog Batch:
+              </label>
+              <select
+                value={selectedDogBatch}
+                onChange={(e) => setSelectedDogBatch(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '8px',
+                  fontSize: '14px'
+                }}
+              >
+                <option value="">Choose a batch...</option>
+                {availableBatches.map(batch => (
+                  <option key={batch} value={batch}>
+                    {batch}
+                  </option>
+                ))}
+              </select>
+              {availableBatches.length === 0 && (
+                <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '5px' }}>
+                  ⚠️ All dog batches have been used. Clear existing dogs to create new batches.
+                </p>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowModal(false)}
+                style={{
+                  padding: '10px 20px',
+                  background: '#6b7280',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={seedDogs}
+                disabled={!selectedUser || !selectedDogBatch || seeding}
+                style={{
+                  padding: '10px 20px',
+                  background: (!selectedUser || !selectedDogBatch || seeding) ? '#9ca3af' : '#FF6B35',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: (!selectedUser || !selectedDogBatch || seeding) ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {seeding ? '🔄 Creating Dogs...' : '🌱 Create Dogs'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

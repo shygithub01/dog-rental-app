@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useFirebase } from '../../contexts/FirebaseContext';
-import { useIsMobile } from '../../hooks/useIsMobile';
 
 const Login: React.FC = () => {
-  const isMobile = useIsMobile();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { auth } = useFirebase();
@@ -28,21 +26,19 @@ const Login: React.FC = () => {
   return (
     <div>
       <h2 style={{ 
-        fontSize: isMobile ? '1.6rem' : '1.8rem', 
+        fontSize: '1.8rem', 
         color: '#2d3748', 
-        marginBottom: isMobile ? '12px' : '10px',
-        fontWeight: 'bold',
-        textAlign: 'center'
+        marginBottom: '10px',
+        fontWeight: 'bold'
       }}>
         Welcome to Dog Rental App
       </h2>
       <p style={{ 
         textAlign: 'center', 
-        marginBottom: isMobile ? '24px' : '30px', 
+        marginBottom: '30px', 
         color: '#4a5568',
-        fontSize: isMobile ? '1rem' : '1.1rem',
-        lineHeight: '1.6',
-        padding: isMobile ? '0 10px' : '0'
+        fontSize: '1.1rem',
+        lineHeight: '1.6'
       }}>
         Sign in to start renting dogs or list your dogs for rent
       </p>
@@ -66,21 +62,20 @@ const Login: React.FC = () => {
         disabled={loading}
         style={{ 
           width: '100%', 
-          padding: isMobile ? '18px 24px' : '16px 24px', 
+          padding: '16px 24px', 
           backgroundColor: loading ? '#9ca3af' : '#4285f4',
           color: 'white',
           border: 'none',
           borderRadius: '12px',
           cursor: loading ? 'not-allowed' : 'pointer',
-          fontSize: isMobile ? '1.2rem' : '1.1rem',
+          fontSize: '1.1rem',
           fontWeight: '700',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: '12px',
           transition: 'all 0.2s ease',
-          boxShadow: loading ? 'none' : '0 4px 12px rgba(66, 133, 244, 0.3)',
-          minHeight: isMobile ? '56px' : 'auto'
+          boxShadow: loading ? 'none' : '0 4px 12px rgba(66, 133, 244, 0.3)'
         }}
         onMouseOver={(e) => {
           if (!loading) {
@@ -112,11 +107,10 @@ const Login: React.FC = () => {
       
       <p style={{ 
         textAlign: 'center', 
-        marginTop: isMobile ? '20px' : '25px', 
-        fontSize: isMobile ? '0.85rem' : '0.9rem', 
+        marginTop: '25px', 
+        fontSize: '0.9rem', 
         color: '#FF6B35',
-        lineHeight: '1.5',
-        padding: isMobile ? '0 10px' : '0'
+        lineHeight: '1.5'
       }}>
         By signing in, you agree to our terms of service and privacy policy
       </p>

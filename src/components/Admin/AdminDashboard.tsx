@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import AdminOverview from './AdminOverview';
 import FinancialDashboard from './FinancialDashboard';
@@ -161,6 +161,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
           }}>
             Advanced analytics, financial tracking, and system management
           </p>
+          
+
         </div>
 
         {/* Navigation Tabs */}

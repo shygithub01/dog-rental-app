@@ -87,6 +87,7 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         dogId: dog.id,
         dogName: dog.name,
         dogBreed: dog.breed,
+        dogImageUrl: dog.imageUrl, // Add dog image URL
         dogOwnerId: dog.ownerId,
         dogOwnerName: dog.ownerName,
         renterId: auth.currentUser.uid,

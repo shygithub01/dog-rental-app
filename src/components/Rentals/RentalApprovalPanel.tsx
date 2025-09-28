@@ -34,6 +34,8 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
   const [requests, setRequests] = useState<RentalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [debugInfo, setDebugInfo] = useState('');
+  const [dogImages, setDogImages] = useState<{[key: string]: string}>({});
 
   const { db } = useFirebase();
   const notificationService = useNotificationService();
@@ -46,6 +48,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
     setLoading(true);
     try {
       console.log('Loading rental requests for user:', currentUserId);
+      setDebugInfo(`🔍 Debug: Looking for requests where dogOwnerId == "${currentUserId}"`);
       
       const requestsQuery = query(
         collection(db, 'rentalRequests'),
@@ -60,6 +63,7 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
       })) as RentalRequest[];
       
       console.log('Rental requests loaded:', requestsData);
+      setDebugInfo(`🔍 Debug: Found ${requestsData.length} requests. Current user ID: "${currentUserId}"`);
       
       // Validate that the dogs still exist
       const validRequests = [];
@@ -80,6 +84,31 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
       
       console.log('Valid rental requests after cleanup:', validRequests);
       setRequests(validRequests);
+
+      // Fetch dog images for requests that don't have dogImageUrl
+      const imagePromises = validRequests.map(async (request) => {
+        if (!(request as any).dogImageUrl && request.dogId) {
+          try {
+            const dogDoc = await getDoc(doc(db, 'dogs', request.dogId));
+            if (dogDoc.exists()) {
+              const dogData = dogDoc.data();
+              return { dogId: request.dogId, imageUrl: dogData.imageUrl };
+            }
+          } catch (error) {
+            console.error('Error fetching dog image:', error);
+          }
+        }
+        return null;
+      });
+
+      const imageResults = await Promise.all(imagePromises);
+      const imageMap: {[key: string]: string} = {};
+      imageResults.forEach(result => {
+        if (result) {
+          imageMap[result.dogId] = result.imageUrl;
+        }
+      });
+      setDogImages(imageMap);
     } catch (error) {
       console.error('Error loading rental requests:', error);
       setError('Failed to load rental requests');
@@ -295,6 +324,21 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
               Review the details below and manage each request
             </p>
 
+            {/* Debug Info */}
+            {debugInfo && (
+              <div style={{
+                background: '#f0f9ff',
+                border: '1px solid #0ea5e9',
+                borderRadius: '8px',
+                padding: '12px',
+                marginBottom: '20px',
+                fontSize: '0.875rem',
+                fontFamily: 'monospace'
+              }}>
+                {debugInfo}
+              </div>
+            )}
+
             {loading ? (
               <div style={{ textAlign: 'center', padding: '40px' }}>
                 <div style={{
@@ -374,13 +418,44 @@ const RentalApprovalPanel: React.FC<RentalApprovalPanelProps> = ({ currentUserId
                               border: '1px solid #d1d5db',
                               borderRadius: '8px',
                               fontSize: '1rem',
-                              backgroundColor: 'white'
+                              backgroundColor: 'white',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px'
                             }}>
-                              🐕 {request.dogName} ({request.dogBreed})
-                              <br />
-                              <small style={{ color: '#6b7280' }}>
-                                By: {request.renterName}
-                              </small>
+                              {((request as any).dogImageUrl || dogImages[request.dogId]) ? (
+                                <img 
+                                  src={(request as any).dogImageUrl || dogImages[request.dogId]} 
+                                  alt={request.dogName}
+                                  style={{
+                                    width: '60px',
+                                    height: '60px',
+                                    borderRadius: '8px',
+                                    objectFit: 'cover'
+                                  }}
+                                />
+                              ) : (
+                                <div style={{
+                                  width: '60px',
+                                  height: '60px',
+                                  borderRadius: '8px',
+                                  backgroundColor: '#f3f4f6',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '24px'
+                                }}>
+                                  🐕
+                                </div>
+                              )}
+                              <div>
+                                <div style={{ fontWeight: 'bold' }}>
+                                  {request.dogName} ({request.dogBreed})
+                                </div>
+                                <small style={{ color: '#6b7280' }}>
+                                  By: {request.renterName}
+                                </small>
+                              </div>
                             </div>
                           </div>
 

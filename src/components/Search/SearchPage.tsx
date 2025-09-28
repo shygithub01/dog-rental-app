@@ -170,7 +170,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
             }}>
               <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '4px' }}>
-                {dogs.length}
+                {dogs.filter(dog => dog.isAvailable).length}
               </div>
               <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
                 Dogs Available

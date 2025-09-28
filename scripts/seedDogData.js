@@ -154,8 +154,8 @@ async function seedDogData() {
         goodWith: goodWith,
         activityLevel: activityLevel,
         specialNotes: `Stanny${i} is a wonderful ${breed.toLowerCase()} who loves spending time with people!`,
-        ownerId: 'demo-owner-' + Math.random().toString(36).substr(2, 9),
-        ownerName: ownerName,
+        ownerId: 'Y8qPWIVDbcaUGFKbU0wN2D46fRH3', // Shyamalendu's real Firebase user ID
+        ownerName: 'Shyamalendu Mohapatra',
         isAvailable: true,
         status: 'available',
         adminReviewed: true,
