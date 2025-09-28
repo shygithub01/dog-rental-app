@@ -640,7 +640,7 @@ const SmartSeedDogsButton: React.FC = () => {
       }
 
       const dogCount = range.end - range.start + 1;
-      setMessage(`🎉 Successfully seeded ${dogCount} dogs (${selectedDogBatch}) for ${selectedUserData?.displayName || selectedUserData?.email}!`);
+      setMessage(`🎉 Successfully seeded ${dogCount} dogs (${selectedDogBatch}) for ${(selectedUserData as any)?.displayName || (selectedUserData as any)?.email || 'Unknown User'}!`);
       
       // Refresh available batches
       await loadUsersAndBatches();
