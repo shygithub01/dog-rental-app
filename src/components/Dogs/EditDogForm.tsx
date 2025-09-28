@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFirebase } from '../../contexts/FirebaseContext';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import MultiImageUpload from '../Common/MultiImageUpload';
+import DogCalendar from '../Calendar/DogCalendar';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Location } from '../../types/Location';
 
@@ -59,6 +60,7 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
   const [error, setError] = useState('');
   const [coordinates, setCoordinates] = useState<Location | null>(dog.coordinates || null);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'basic' | 'calendar'>('basic');
 
   const { db } = useFirebase();
 
@@ -226,8 +228,53 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          {/* Image Upload Section */}
+        {/* Tab Navigation */}
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          marginBottom: '30px',
+          borderBottom: '2px solid #f7fafc'
+        }}>
+          <button
+            type="button"
+            onClick={() => setActiveTab('basic')}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: activeTab === 'basic' ? '#FF6B35' : 'transparent',
+              color: activeTab === 'basic' ? 'white' : '#6b7280',
+              border: 'none',
+              borderRadius: '8px 8px 0 0',
+              fontSize: '1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            🐕 Basic Info
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('calendar')}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: activeTab === 'calendar' ? '#FF6B35' : 'transparent',
+              color: activeTab === 'calendar' ? 'white' : '#6b7280',
+              border: 'none',
+              borderRadius: '8px 8px 0 0',
+              fontSize: '1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            📅 Availability Calendar
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'basic' ? (
+          <form onSubmit={handleSubmit}>
+            {/* Image Upload Section */}
           <div style={{
             marginBottom: '30px',
             padding: '25px',
@@ -921,6 +968,67 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
             </button>
           </div>
         </form>
+        ) : (
+          /* Calendar Tab */
+          <div>
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '30px'
+            }}>
+              <h3 style={{
+                fontSize: '1.5rem',
+                color: '#2d3748',
+                margin: '0 0 10px 0',
+                fontWeight: 'bold'
+              }}>
+                📅 Manage {dog.name}'s Availability
+              </h3>
+              <p style={{
+                color: '#4a5568',
+                fontSize: '1rem',
+                margin: 0,
+                lineHeight: '1.6'
+              }}>
+                Set specific dates when {dog.name} is available or blocked for rentals
+              </p>
+            </div>
+
+            <DogCalendar
+              dogId={dog.id}
+              ownerId={dog.ownerId}
+              mode="owner"
+            />
+
+            <div style={{
+              marginTop: '30px',
+              padding: '20px',
+              backgroundColor: '#f0f9ff',
+              borderRadius: '12px',
+              border: '1px solid #0ea5e9'
+            }}>
+              <h4 style={{
+                fontSize: '1.1rem',
+                color: '#0c4a6e',
+                margin: '0 0 10px 0',
+                fontWeight: 'bold'
+              }}>
+                💡 Calendar Tips
+              </h4>
+              <ul style={{
+                color: '#0c4a6e',
+                fontSize: '0.9rem',
+                margin: 0,
+                paddingLeft: '20px'
+              }}>
+                <li>Click dates to select them, then choose "Available" or "Blocked"</li>
+                <li>Green dates are available for booking</li>
+                <li>Red dates are blocked by you</li>
+                <li>Yellow dates are already booked</li>
+                <li>Use bulk selection to quickly update multiple dates</li>
+              </ul>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </div>
