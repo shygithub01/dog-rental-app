@@ -197,35 +197,138 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
           width: '100%',
           margin: '0 auto'
         }}>
-        {/* Form Header */}
+        {/* Form Header with Dog Image */}
         <div style={{
-          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '30px',
           marginBottom: '40px',
           paddingBottom: '20px',
-          borderBottom: '2px solid #f7fafc'
+          borderBottom: '2px solid #f7fafc',
+          flexDirection: isMobile ? 'column' : 'row'
         }}>
+          {/* Dog Image */}
           <div style={{
-            fontSize: '3rem',
-            marginBottom: '15px'
+            flexShrink: 0,
+            position: 'relative'
           }}>
-            ✏️
+            {formData.imageUrls && formData.imageUrls.length > 0 ? (
+              <div style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '4px solid #FF6B35',
+                boxShadow: '0 8px 20px rgba(255, 107, 53, 0.3)'
+              }}>
+                <img
+                  src={formData.imageUrls[0]}
+                  alt={dog.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              </div>
+            ) : (
+              <div style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                backgroundColor: '#f3f4f6',
+                border: '4px solid #FF6B35',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '3rem',
+                boxShadow: '0 8px 20px rgba(255, 107, 53, 0.3)'
+              }}>
+                🐕
+              </div>
+            )}
+            
+            {/* Edit Icon Overlay */}
+            <div style={{
+              position: 'absolute',
+              bottom: '5px',
+              right: '5px',
+              backgroundColor: '#FF6B35',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1rem',
+              color: 'white',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            }}>
+              ✏️
+            </div>
           </div>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#2d3748',
-            margin: '0 0 10px 0',
-            fontWeight: 'bold'
+
+          {/* Dog Info */}
+          <div style={{
+            flex: 1,
+            textAlign: isMobile ? 'center' : 'left'
           }}>
-            Edit {dog.name}
-          </h2>
-          <p style={{
-            color: '#4a5568',
-            fontSize: '1.1rem',
-            margin: 0,
-            lineHeight: '1.6'
-          }}>
-            Update your dog's information and photos
-          </p>
+            <h2 style={{
+              fontSize: '2.5rem',
+              color: '#2d3748',
+              margin: '0 0 10px 0',
+              fontWeight: 'bold'
+            }}>
+              Edit {dog.name}
+            </h2>
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              alignItems: 'center',
+              marginBottom: '10px',
+              justifyContent: isMobile ? 'center' : 'flex-start',
+              flexWrap: 'wrap'
+            }}>
+              <span style={{
+                backgroundColor: '#f0f9ff',
+                color: '#0c4a6e',
+                padding: '4px 12px',
+                borderRadius: '12px',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}>
+                {dog.breed}
+              </span>
+              <span style={{
+                backgroundColor: '#f0fdf4',
+                color: '#166534',
+                padding: '4px 12px',
+                borderRadius: '12px',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}>
+                {dog.age} years old
+              </span>
+              <span style={{
+                backgroundColor: '#fef3c7',
+                color: '#92400e',
+                padding: '4px 12px',
+                borderRadius: '12px',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}>
+                ${dog.pricePerDay}/day
+              </span>
+            </div>
+            <p style={{
+              color: '#4a5568',
+              fontSize: '1rem',
+              margin: 0,
+              lineHeight: '1.6'
+            }}>
+              Update your dog's information, photos, and availability
+            </p>
+          </div>
         </div>
 
         {/* Tab Navigation */}
@@ -972,25 +1075,78 @@ const EditDogForm: React.FC<EditDogFormProps> = ({ dog, onSuccess, onCancel }) =
           /* Calendar Tab */
           <div>
             <div style={{
-              textAlign: 'center',
-              marginBottom: '30px'
+              display: 'flex',
+              alignItems: 'center',
+              gap: '20px',
+              marginBottom: '30px',
+              padding: '20px',
+              backgroundColor: '#f8fafc',
+              borderRadius: '12px',
+              border: '2px solid #e2e8f0',
+              flexDirection: isMobile ? 'column' : 'row'
             }}>
-              <h3 style={{
-                fontSize: '1.5rem',
-                color: '#2d3748',
-                margin: '0 0 10px 0',
-                fontWeight: 'bold'
+              {/* Small Dog Image for Calendar Tab */}
+              <div style={{
+                flexShrink: 0
               }}>
-                📅 Manage {dog.name}'s Availability
-              </h3>
-              <p style={{
-                color: '#4a5568',
-                fontSize: '1rem',
-                margin: 0,
-                lineHeight: '1.6'
+                {formData.imageUrls && formData.imageUrls.length > 0 ? (
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    border: '3px solid #FF6B35',
+                    boxShadow: '0 4px 12px rgba(255, 107, 53, 0.3)'
+                  }}>
+                    <img
+                      src={formData.imageUrls[0]}
+                      alt={dog.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    backgroundColor: '#f3f4f6',
+                    border: '3px solid #FF6B35',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2rem',
+                    boxShadow: '0 4px 12px rgba(255, 107, 53, 0.3)'
+                  }}>
+                    🐕
+                  </div>
+                )}
+              </div>
+
+              <div style={{
+                flex: 1,
+                textAlign: isMobile ? 'center' : 'left'
               }}>
-                Set specific dates when {dog.name} is available or blocked for rentals
-              </p>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  color: '#2d3748',
+                  margin: '0 0 8px 0',
+                  fontWeight: 'bold'
+                }}>
+                  📅 Manage {dog.name}'s Availability
+                </h3>
+                <p style={{
+                  color: '#4a5568',
+                  fontSize: '1rem',
+                  margin: 0,
+                  lineHeight: '1.6'
+                }}>
+                  Set specific dates when {dog.name} is available or blocked for rentals
+                </p>
+              </div>
             </div>
 
             <DogCalendar
