@@ -887,23 +887,25 @@ function AppContent() {
               DogRental
             </a>
             
-            {/* Modern Landing Toggle */}
-            <button
-              onClick={() => setShowModernLanding(!showModernLanding)}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: showModernLanding ? '#FF6B35' : '#f3f4f6',
-                color: showModernLanding ? 'white' : '#6b7280',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '0.875rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {showModernLanding ? '🎨 Modern' : '📱 Classic'}
-            </button>
+            {/* Modern Landing Toggle - Only show for non-logged-in users */}
+            {!user && (
+              <button
+                onClick={() => setShowModernLanding(!showModernLanding)}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: showModernLanding ? '#FF6B35' : '#f3f4f6',
+                  color: showModernLanding ? 'white' : '#6b7280',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {showModernLanding ? '🎨 Modern' : '📱 Classic'}
+              </button>
+            )}
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -1088,16 +1090,10 @@ function AppContent() {
         </div>
       )}
 
-      {/* Modern Landing Page or Classic Hero Section */}
-      {showModernLanding ? (
+      {/* Modern Landing Page (only for non-logged-in users) or Classic Hero Section */}
+      {!user && showModernLanding ? (
         <ModernLandingPage 
-          onGetStarted={() => {
-            if (!user) {
-              handleGoogleSignIn();
-            } else {
-              setShowSearch(true);
-            }
-          }}
+          onGetStarted={handleGoogleSignIn}
         />
       ) : (
         <>
