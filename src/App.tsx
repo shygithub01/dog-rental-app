@@ -32,6 +32,7 @@ import HybridDashboard from "./components/Dashboard/HybridDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import EarningsReport from "./components/Dashboard/EarningsReport";
 import SearchPage from "./components/Search/SearchPage";
+import ModernLandingPage from "./components/Landing/ModernLandingPage";
 import { FirebaseProvider } from "./contexts/FirebaseContext";
 
 function AppContent() {
@@ -48,6 +49,7 @@ function AppContent() {
   const [showMessaging, setShowMessaging] = useState(false);
 
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showModernLanding, setShowModernLanding] = useState(false);
   const [showEarningsReport, setShowEarningsReport] = useState(false);
   const [showPaymentHistory, setShowPaymentHistory] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
@@ -884,6 +886,24 @@ function AppContent() {
             <a href="#" className="logo">
               DogRental
             </a>
+            
+            {/* Modern Landing Toggle */}
+            <button
+              onClick={() => setShowModernLanding(!showModernLanding)}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: showModernLanding ? '#FF6B35' : '#f3f4f6',
+                color: showModernLanding ? 'white' : '#6b7280',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {showModernLanding ? '🎨 Modern' : '📱 Classic'}
+            </button>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -1068,8 +1088,21 @@ function AppContent() {
         </div>
       )}
 
-      {/* Hero Section */}
-      <section className="hero-section">
+      {/* Modern Landing Page or Classic Hero Section */}
+      {showModernLanding ? (
+        <ModernLandingPage 
+          onGetStarted={() => {
+            if (!user) {
+              handleGoogleSignIn();
+            } else {
+              setShowSearch(true);
+            }
+          }}
+        />
+      ) : (
+        <>
+          {/* Classic Hero Section */}
+          <section className="hero-section">
         <div className="hero-content fade-in">
           {/* Hero Text */}
           <div className="hero-text">
@@ -1335,6 +1368,8 @@ function AppContent() {
           </div>
         </div>
       </section>
+        </>
+      )}
 
       {/* Role-Based Dashboard Content */}
       {user && userProfile && (
