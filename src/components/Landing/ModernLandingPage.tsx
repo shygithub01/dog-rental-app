@@ -176,70 +176,189 @@ const ModernLandingPage: React.FC<ModernLandingPageProps> = ({ onGetStarted }) =
           Get Started
         </button>
 
-        {/* Hero Image - Professional Labrador */}
+        {/* Hero Image - Featuring Stanny Dogs */}
         <div style={{
           width: '100%',
-          height: isMobile ? '300px' : '400px',
-          borderRadius: '24px',
-          overflow: 'hidden',
-          marginTop: '40px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-          position: 'relative'
+          marginTop: '40px'
         }}>
-          <img
-            src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2124&q=80"
-            alt="Happy Golden Labrador with family"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center'
-            }}
-            onError={(e) => {
-              // Fallback if image fails to load
-              e.currentTarget.style.display = 'none';
-              const fallback = e.currentTarget.parentElement?.querySelector('.fallback-content');
-              if (fallback) {
-                (fallback as HTMLElement).style.display = 'flex';
-              }
-            }}
-          />
-          
-          {/* Fallback content if image fails */}
-          <div 
-            className="fallback-content"
-            style={{
+          {/* Main Featured Dog */}
+          <div style={{
+            width: '100%',
+            height: isMobile ? '300px' : '400px',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+            position: 'relative',
+            marginBottom: '20px'
+          }}>
+            <img
+              src="/images/stanny7.jpg"
+              alt="Stanny 7 - Beautiful Golden Retriever available for companionship"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+              onError={(e) => {
+                // Fallback to Stanny 5 if Stanny 7 doesn't load
+                e.currentTarget.src = '/images/stanny5.jpg';
+                e.currentTarget.alt = 'Stanny 5 - Adorable companion dog';
+                e.currentTarget.onerror = () => {
+                  // Final fallback to stock image
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2124&q=80';
+                  e.currentTarget.alt = 'Happy Golden Retriever';
+                };
+              }}
+            />
+            
+            {/* Dog Info Overlay */}
+            <div style={{
               position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#f8f9fa',
-              display: 'none',
+              bottom: '20px',
+              left: '20px',
+              right: '20px',
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '12px',
+              padding: '16px',
+              display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              color: '#9ca3af'
-            }}
-          >
-            <div>
-              <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🐕‍🦺</div>
-              <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
-                Happy dogs with their temporary families
-              </p>
+              gap: '12px'
+            }}>
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.5rem'
+              }}>
+                🐕
+              </div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{
+                  margin: 0,
+                  fontSize: '1.1rem',
+                  fontWeight: '700',
+                  color: '#1f2937'
+                }}>
+                  Meet Stanny 7
+                </h3>
+                <p style={{
+                  margin: 0,
+                  fontSize: '0.9rem',
+                  color: '#6b7280'
+                }}>
+                  Golden Retriever • Available for walks & companionship
+                </p>
+              </div>
+              <div style={{
+                padding: '6px 12px',
+                backgroundColor: '#10b981',
+                color: 'white',
+                borderRadius: '20px',
+                fontSize: '0.8rem',
+                fontWeight: '600'
+              }}>
+                Available
+              </div>
             </div>
           </div>
-          
-          {/* Overlay with subtle gradient for better text readability if needed */}
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '60px',
-            background: 'linear-gradient(transparent, rgba(0, 0, 0, 0.1))',
-            borderRadius: '0 0 24px 24px'
-          }} />
+
+          {/* Secondary Dogs Showcase */}
+          {!isMobile && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '20px'
+            }}>
+              {/* Stanny 5 */}
+              <div style={{
+                height: '200px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+                position: 'relative'
+              }}>
+                <img
+                  src="/images/stanny5.jpg"
+                  alt="Stanny 5 - Playful companion dog"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  bottom: '12px',
+                  left: '12px',
+                  right: '12px',
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  borderRadius: '8px',
+                  padding: '8px 12px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    color: '#1f2937'
+                  }}>
+                    Stanny 5
+                  </div>
+                  <div style={{
+                    fontSize: '0.75rem',
+                    color: '#6b7280'
+                  }}>
+                    Perfect for adventures
+                  </div>
+                </div>
+              </div>
+
+              {/* More Dogs Available */}
+              <div style={{
+                height: '200px',
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 142, 83, 0.1) 100%)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                padding: '20px',
+                border: '2px dashed rgba(255, 107, 53, 0.3)'
+              }}>
+                <div style={{
+                  fontSize: '2.5rem',
+                  marginBottom: '12px'
+                }}>
+                  🐕‍🦺
+                </div>
+                <h3 style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '700',
+                  color: '#FF6B35',
+                  margin: '0 0 8px 0'
+                }}>
+                  +10 More Dogs
+                </h3>
+                <p style={{
+                  fontSize: '0.9rem',
+                  color: '#6b7280',
+                  margin: 0,
+                  lineHeight: '1.4'
+                }}>
+                  Discover more amazing companions in your area
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
