@@ -176,30 +176,70 @@ const ModernLandingPage: React.FC<ModernLandingPageProps> = ({ onGetStarted }) =
           Get Started
         </button>
 
-        {/* Hero Image Placeholder */}
+        {/* Hero Image - Professional Labrador */}
         <div style={{
           width: '100%',
           height: isMobile ? '300px' : '400px',
-          backgroundColor: '#f8f9fa',
           borderRadius: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '2px solid #e5e7eb',
-          marginTop: '40px'
+          overflow: 'hidden',
+          marginTop: '40px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+          position: 'relative'
         }}>
-          <div style={{
-            textAlign: 'center',
-            color: '#9ca3af'
-          }}>
-            <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🐕‍🦺</div>
-            <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
-              Happy dogs with their temporary families
-            </p>
-            <p style={{ fontSize: '0.9rem', marginTop: '8px' }}>
-              Professional photo coming soon
-            </p>
+          <img
+            src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2124&q=80"
+            alt="Happy Golden Labrador with family"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+            onError={(e) => {
+              // Fallback if image fails to load
+              e.currentTarget.style.display = 'none';
+              const fallback = e.currentTarget.parentElement?.querySelector('.fallback-content');
+              if (fallback) {
+                (fallback as HTMLElement).style.display = 'flex';
+              }
+            }}
+          />
+          
+          {/* Fallback content if image fails */}
+          <div 
+            className="fallback-content"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#f8f9fa',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              color: '#9ca3af'
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🐕‍🦺</div>
+              <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
+                Happy dogs with their temporary families
+              </p>
+            </div>
           </div>
+          
+          {/* Overlay with subtle gradient for better text readability if needed */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '60px',
+            background: 'linear-gradient(transparent, rgba(0, 0, 0, 0.1))',
+            borderRadius: '0 0 24px 24px'
+          }} />
         </div>
       </section>
 
