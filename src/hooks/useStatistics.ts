@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { statisticsService, PlatformStatistics } from '../services/statisticsService';
+import { statisticsService } from '../services/statisticsService';
+import type { PlatformStatistics } from '../services/statisticsService';
 import { useFirebase } from '../contexts/FirebaseContext';
 
 interface UseStatisticsReturn {
