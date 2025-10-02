@@ -40,7 +40,7 @@ export class UserService {
 
       const user: Omit<User, 'id'> = {
         ...userData,
-        role: userData.role || 'renter',
+        role: userData.role || 'renter', // Default to renter if no role specified
         joinDate: new Date(),
         lastActive: new Date(),
         isVerified: false,
@@ -52,6 +52,7 @@ export class UserService {
         stats: defaultStats
       };
 
+      // Use setDoc with the userId as the document ID
       await setDoc(doc(this.db, 'users', userId), {
         ...user,
         joinDate: Timestamp.fromDate(user.joinDate),
@@ -86,7 +87,7 @@ export class UserService {
         phoneNumber: data.phoneNumber,
         location: data.location,
         bio: data.bio,
-        role: data.role || 'renter',
+        role: data.role || 'renter', // Default to renter if no role exists
         joinDate: data.joinDate.toDate(),
         lastActive: data.lastActive.toDate(),
         isVerified: data.isVerified,
@@ -100,6 +101,7 @@ export class UserService {
           memberSince: data.stats.memberSince.toDate(),
           lastRentalDate: data.stats.lastRentalDate?.toDate()
         },
+        // Add verification fields
         phoneVerified: data.phoneVerified || false,
         addressVerified: data.addressVerified || false,
         photoVerified: data.photoVerified || false,
@@ -118,12 +120,13 @@ export class UserService {
   // Get complete user profile with dogs, rentals, and reviews
   async getUserProfile(userId: string): Promise<UserProfileData | null> {
     try {
+      // First, check and update dog availability
       await checkAndUpdateDogAvailability(this.db);
       
       const user = await this.getUser(userId);
       if (!user) return null;
 
-      // Get user's dogs
+      // Get user's dogs (simplified query to avoid index requirement)
       const dogsQuery = query(
         collection(this.db, 'dogs'),
         where('ownerId', '==', userId)
@@ -135,12 +138,13 @@ export class UserService {
           id: doc.id,
           name: data.name,
           breed: data.breed,
-          imageUrl: data.imageUrl,
-          imageUrls: data.imageUrls || (data.imageUrl ? [data.imageUrl] : []),
+          imageUrl: data.imageUrl, // Keep for backward compatibility
+          imageUrls: data.imageUrls || (data.imageUrl ? [data.imageUrl] : []), // Support multiple images
           isAvailable: data.isAvailable,
           totalRentals: data.totalRentals || 0,
           averageRating: data.averageRating || 0,
           pricePerDay: data.pricePerDay || 0,
+          // Personality fields
           temperament: data.temperament || [],
           goodWith: data.goodWith || [],
           activityLevel: data.activityLevel,
@@ -148,108 +152,48 @@ export class UserService {
         };
       });
 
-      // Get rental REQUESTS where user is the renter
-      let renterRequests: any[] = [];
-      try {
-        const renterRequestsQuery = query(
-          collection(this.db, 'rentalRequests'),
-          where('renterId', '==', userId)
-        );
-        const renterRequestsSnapshot = await getDocs(renterRequestsQuery);
-        renterRequests = renterRequestsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            dogName: data.dogName,
-            dogBreed: data.dogBreed,
-            startDate: data.startDate.toDate(),
-            endDate: data.endDate.toDate(),
-            status: data.status,
-            totalCost: data.totalCost,
-            type: 'rented' as const
-          };
-        });
-      } catch (error) {
-        console.log('Error loading renter requests:', error);
-      }
+      // Get rentals where user is the renter
+      const renterRentalsQuery = query(
+        collection(this.db, 'rentals'),
+        where('renterId', '==', userId)
+      );
+      const renterRentalsSnapshot = await getDocs(renterRentalsQuery);
+      const renterRentals = renterRentalsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          dogName: data.dogName,
+          dogBreed: data.dogBreed,
+          startDate: data.startDate.toDate(),
+          endDate: data.endDate.toDate(),
+          status: data.status,
+          totalCost: data.totalCost,
+          type: 'rented' as const
+        };
+      });
 
-      // Get rental REQUESTS where user is the dog owner
-      let ownerRequests: any[] = [];
-      try {
-        const ownerRequestsQuery = query(
-          collection(this.db, 'rentalRequests'),
-          where('dogOwnerId', '==', userId)
-        );
-        const ownerRequestsSnapshot = await getDocs(ownerRequestsQuery);
-        ownerRequests = ownerRequestsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            dogName: data.dogName,
-            dogBreed: data.dogBreed,
-            startDate: data.startDate.toDate(),
-            endDate: data.endDate.toDate(),
-            status: data.status,
-            totalCost: data.totalCost,
-            type: 'owned' as const
-          };
-        });
-      } catch (error) {
-        console.log('Error loading owner requests:', error);
-      }
+      // Get rentals where user is the dog owner (for earnings)
+      const ownerRentalsQuery = query(
+        collection(this.db, 'rentals'),
+        where('dogOwnerId', '==', userId)
+      );
+      const ownerRentalsSnapshot = await getDocs(ownerRentalsQuery);
+      const ownerRentals = ownerRentalsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          dogName: data.dogName,
+          dogBreed: data.dogBreed,
+          startDate: data.startDate.toDate(),
+          endDate: data.endDate.toDate(),
+          status: data.status,
+          totalCost: data.totalCost,
+          type: 'owned' as const
+        };
+      });
 
-      // Get COMPLETED/ACTIVE rentals where user is the renter
-      let renterRentals: any[] = [];
-      try {
-        const renterRentalsQuery = query(
-          collection(this.db, 'rentals'),
-          where('renterId', '==', userId)
-        );
-        const renterRentalsSnapshot = await getDocs(renterRentalsQuery);
-        renterRentals = renterRentalsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            dogName: data.dogName,
-            dogBreed: data.dogBreed,
-            startDate: data.startDate.toDate(),
-            endDate: data.endDate.toDate(),
-            status: data.status,
-            totalCost: data.totalCost,
-            type: 'rented' as const
-          };
-        });
-      } catch (error) {
-        console.log('No completed rentals as renter yet');
-      }
-
-      // Get COMPLETED/ACTIVE rentals where user is the dog owner
-      let ownerRentals: any[] = [];
-      try {
-        const ownerRentalsQuery = query(
-          collection(this.db, 'rentals'),
-          where('dogOwnerId', '==', userId)
-        );
-        const ownerRentalsSnapshot = await getDocs(ownerRentalsQuery);
-        ownerRentals = ownerRentalsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            dogName: data.dogName,
-            dogBreed: data.dogBreed,
-            startDate: data.startDate.toDate(),
-            endDate: data.endDate.toDate(),
-            status: data.status,
-            totalCost: data.totalCost,
-            type: 'owned' as const
-          };
-        });
-      } catch (error) {
-        console.log('No completed rentals as owner yet');
-      }
-
-      // Combine all: requests + completed rentals
-      const allRentals = [...renterRequests, ...ownerRequests, ...renterRentals, ...ownerRentals];
+      // Combine all rentals for display
+      const allRentals = [...renterRentals, ...ownerRentals];
       const recentRentals: RentalSummary[] = allRentals
         .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
         .slice(0, 5)
@@ -267,39 +211,26 @@ export class UserService {
       const reviews: ReviewSummary[] = [];
 
       // Calculate updated stats based on actual data
-      const totalRentalsAsRenter = uniqueRenterTransactions.length;
-      const totalRentalsAsOwner = uniqueOwnerTransactions.length;
+      const totalRentalsAsRenter = renterRentals.length;
+      const totalRentalsAsOwner = ownerRentals.length;
+      const completedRentalsAsRenter = renterRentals.filter(r => r.status === 'completed' || r.status === 'active').length;
+      const completedRentalsAsOwner = ownerRentals.filter(r => r.status === 'completed' || r.status === 'active').length;
       
-      const completedRentalsAsRenter = uniqueRenterTransactions
-        .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved').length;
-      const completedRentalsAsOwner = uniqueOwnerTransactions
-        .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved').length;
-      
-      // Combine and deduplicate owner rentals by ID to avoid double counting
-      const allOwnerTransactions = [...ownerRequests, ...ownerRentals];
-      const uniqueOwnerTransactions = allOwnerTransactions.filter((rental, index, self) => 
-        index === self.findIndex(r => r.id === rental.id)
-      );
-      
-      const totalEarnings = uniqueOwnerTransactions
-        .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved')
+      const totalEarnings = ownerRentals
+        .filter(r => r.status === 'completed' || r.status === 'active')
         .reduce((sum, r) => sum + r.totalCost, 0);
       
-      // Combine and deduplicate rentals by ID to avoid double counting
-      const allRenterTransactions = [...renterRequests, ...renterRentals];
-      const uniqueRenterTransactions = allRenterTransactions.filter((rental, index, self) => 
-        index === self.findIndex(r => r.id === rental.id)
-      );
-      
-      const totalSpent = uniqueRenterTransactions
-        .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved')
+      const totalSpent = renterRentals
+        .filter(r => r.status === 'completed' || r.status === 'active')
         .reduce((sum, r) => sum + r.totalCost, 0);
 
+      // Determine if user is primarily an owner or renter
       const isOwner = dogs.length > 0;
       
       const updatedStats = {
         dogsOwned: dogs.length,
         dogsRented: totalRentalsAsRenter,
+        // For owners: show their dogs' rentals. For renters: show their own rentals
         totalRentals: isOwner ? totalRentalsAsOwner : totalRentalsAsRenter,
         completedRentals: isOwner ? completedRentalsAsOwner : completedRentalsAsRenter,
         cancelledRentals: allRentals.filter(r => r.status === 'cancelled').length,
@@ -316,8 +247,6 @@ export class UserService {
         completedRentals: updatedStats.completedRentals,
         totalEarnings: updatedStats.totalEarnings,
         totalSpent: updatedStats.totalSpent,
-        renterRequests: renterRequests.length,
-        ownerRequests: ownerRequests.length,
         renterRentals: renterRentals.length,
         ownerRentals: ownerRentals.length,
         isOwner: isOwner
@@ -337,6 +266,7 @@ export class UserService {
         }
       }
 
+      // Return profile with updated stats
       const updatedUser = {
         ...user,
         stats: updatedStats
@@ -394,10 +324,12 @@ export class UserService {
         lastActive: Timestamp.now()
       };
 
+      // Convert Date objects to Timestamps
       if (stats.lastRentalDate) {
         updateData['stats.lastRentalDate'] = Timestamp.fromDate(stats.lastRentalDate);
       }
 
+      // Add other stats
       Object.keys(stats).forEach(key => {
         if (key !== 'lastRentalDate') {
           updateData[`stats.${key}`] = stats[key as keyof UserStats];
@@ -437,7 +369,7 @@ export class UserService {
           phoneNumber: data.phoneNumber,
           location: data.location,
           bio: data.bio,
-          role: data.role || 'renter',
+          role: data.role || 'renter', // Default to renter if no role exists
           joinDate: data.joinDate.toDate(),
           lastActive: data.lastActive.toDate(),
           isVerified: data.isVerified,
@@ -469,6 +401,7 @@ export class UserService {
         lastActive: Timestamp.now()
       };
 
+      // Handle specific fields that need special processing
       if (updates.phoneNumber !== undefined) updateData.phoneNumber = updates.phoneNumber;
       if (updates.phoneVerified !== undefined) updateData.phoneVerified = updates.phoneVerified;
       if (updates.idDocument !== undefined) updateData.idDocument = updates.idDocument;
@@ -494,4 +427,4 @@ export class UserService {
 export const useUserService = () => {
   const { db } = useFirebase();
   return new UserService(db);
-};
+}; 

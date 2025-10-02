@@ -322,7 +322,7 @@ body {
   margin-bottom: 1.5rem;
   letter-spacing: -0.025em;
   color: var(--text-primary);
-  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-coral) 50%, var(--secondary-teal) 100%);
+  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-coral) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -617,7 +617,7 @@ body {
   color: var(--text-primary);
   margin-bottom: 1rem;
   letter-spacing: -0.025em;
-  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-teal) 100%);
+  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-coral) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -666,7 +666,7 @@ body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary-orange), var(--secondary-teal));
+  background: linear-gradient(90deg, var(--primary-orange), var(--primary-coral));
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -1381,7 +1381,7 @@ body {
 
 /* Modern Utility Classes */
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-teal) 100%);
+  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-coral) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1459,7 +1459,7 @@ body {
 
 /* Modern Typography */
 .text-gradient {
-  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-teal) 100%);
+  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-coral) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1490,7 +1490,7 @@ body {
 .border-gradient {
   border: 2px solid transparent;
   background: linear-gradient(white, white) padding-box,
-              linear-gradient(135deg, var(--primary-orange), var(--secondary-teal)) border-box;
+              linear-gradient(135deg, var(--primary-orange), var(--primary-coral)) border-box;
 }
 
 /* Modern Responsive Grid */

@@ -41,7 +41,6 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
   const { auth, db } = useFirebase();
   const notificationService = useNotificationService();
 
-  // Calculate total cost - memoized to prevent re-render issues
   const totalCost = useMemo(() => {
     if (!formData.startDate || !formData.endDate) {
       return { days: 0, total: 0 };
@@ -83,11 +82,12 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
       const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
       const totalCostValue = daysDiff * dog.pricePerDay;
 
+      console.log('Creating rental request...');
       const requestRef = await addDoc(collection(db, 'rentalRequests'), {
         dogId: dog.id,
         dogName: dog.name,
         dogBreed: dog.breed,
-        dogImageUrl: dog.imageUrl, // Add dog image URL
+        dogImageUrl: dog.imageUrl,
         dogOwnerId: dog.ownerId,
         dogOwnerName: dog.ownerName,
         renterId: auth.currentUser.uid,
@@ -101,7 +101,10 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         status: 'pending',
         createdAt: Timestamp.now()
       });
+      console.log('Rental request created successfully:', requestRef.id);
 
+      // Update dog status to requested
+      console.log('Updating dog status...');
       await updateDoc(doc(db, 'dogs', dog.id), {
         isAvailable: false,
         status: 'requested',
@@ -109,30 +112,44 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
         requestedAt: Timestamp.now(),
         updatedAt: Timestamp.now()
       });
+      console.log('Dog status updated');
 
-      await notificationService.createNotification(
-        dog.ownerId,
-        'rental_request',
-        {
-          title: `New Rental Request for ${dog.name}`,
-          message: `${auth.currentUser.displayName || auth.currentUser.email} wants to rent ${dog.name} from ${formData.startDate} to ${formData.endDate}. Check your requests to approve or reject.`,
-          data: {
-            requestId: requestRef.id,
-            dogId: dog.id,
-            dogName: dog.name,
-            renterId: auth.currentUser.uid,
-            renterName: auth.currentUser.displayName || auth.currentUser.email,
-            startDate: formData.startDate,
-            endDate: formData.endDate,
-            totalCost: totalCostValue
+      // Try to create notification, but don't let it block success
+      try {
+        console.log('Creating notification for owner...');
+        await notificationService.createNotification(
+          dog.ownerId,
+          'rental_request',
+          {
+            title: `New Rental Request for ${dog.name}`,
+            message: `${auth.currentUser.displayName || auth.currentUser.email} wants to rent ${dog.name} from ${formData.startDate} to ${formData.endDate}. Check your requests to approve or reject.`,
+            data: {
+              requestId: requestRef.id,
+              dogId: dog.id,
+              dogName: dog.name,
+              renterId: auth.currentUser.uid,
+              renterName: auth.currentUser.displayName || auth.currentUser.email,
+              startDate: formData.startDate,
+              endDate: formData.endDate,
+              totalCost: totalCostValue
+            }
           }
-        }
-      );
+        );
+        console.log('Notification created successfully');
+      } catch (notifError) {
+        console.warn('Failed to create notification (non-critical):', notifError);
+      }
 
-      onSuccess?.();
+      console.log('Rental request completed successfully');
+      setLoading(false);
+      
+      if (onSuccess) {
+        onSuccess();
+      }
+      
     } catch (error: any) {
-      setError(error.message);
-    } finally {
+      console.error('Error creating rental request:', error);
+      setError(error.message || 'Failed to create rental request');
       setLoading(false);
     }
   };
@@ -143,14 +160,6 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleBack = () => {
-    if (onClose) {
-      onClose();
-    } else if (onCancel) {
-      onCancel();
-    }
   };
 
   return (
@@ -242,7 +251,6 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 🐕 About {dog.name}
               </h4>
               
-              {/* Dog Image and Basic Info */}
               <div style={{
                 display: 'flex',
                 gap: '16px',
@@ -250,7 +258,6 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 flexDirection: isMobile ? 'column' : 'row',
                 alignItems: isMobile ? 'center' : 'flex-start'
               }}>
-                {/* Dog Image */}
                 <div style={{
                   width: isMobile ? '120px' : '80px',
                   height: isMobile ? '120px' : '80px',
@@ -263,7 +270,6 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                   border: '2px solid #e5e7eb'
                 }} />
                 
-                {/* Dog Details */}
                 <div style={{ flex: 1 }}>
                   <div style={{
                     display: 'grid',
@@ -480,47 +486,38 @@ const RentalRequestForm: React.FC<RentalRequestFormProps> = ({ dog, onSuccess, o
                 </div>
               )}
 
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column',
-                gap: isMobile ? '16px' : '12px', 
-                marginTop: '24px'
-              }}>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  style={{
-                    width: '100%',
-                    padding: isMobile ? '18px 24px' : '16px 24px',
-                    backgroundColor: loading ? '#9ca3af' : '#FF6B35',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '12px',
-                    fontSize: isMobile ? '1.2rem' : '1.1rem',
-                    fontWeight: '700',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: loading ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.3)',
-                    marginBottom: '12px',
-                    minHeight: isMobile ? '56px' : 'auto'
-                  }}
-                  onMouseOver={(e) => {
-                    if (!loading) {
-                      e.currentTarget.style.backgroundColor = '#FF8E53';
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseOut={(e) => {
-                    if (!loading) {
-                      e.currentTarget.style.backgroundColor = '#FF6B35';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }
-                  }}
-                >
-                  {loading ? '📝 Submitting Request...' : '📝 Submit Request'}
-                </button>
-
-              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: isMobile ? '18px 24px' : '16px 24px',
+                  backgroundColor: loading ? '#9ca3af' : '#FF6B35',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontSize: isMobile ? '1.2rem' : '1.1rem',
+                  fontWeight: '700',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: loading ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.3)',
+                  minHeight: isMobile ? '56px' : 'auto'
+                }}
+                onMouseOver={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.backgroundColor = '#FF8E53';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.backgroundColor = '#FF6B35';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
+              >
+                {loading ? '📝 Submitting Request...' : '📝 Submit Request'}
+              </button>
             </form>
           </div>
         </div>

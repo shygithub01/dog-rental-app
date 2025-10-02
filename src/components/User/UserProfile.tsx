@@ -317,6 +317,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
       const userProfile = await userService.getUserProfile(userId);
       console.log('User profile loaded:', userProfile);
       setProfile(userProfile);
+      
+      // Force a re-render to ensure stats are updated
+      setForceUpdate(prev => prev + 1);
     } catch (error: any) {
       console.error('Error loading user profile:', error);
       setError(error.message || 'Failed to load user profile');
@@ -471,16 +474,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             
             <div className="hero-stats">
               <div className="hero-stat">
-                <div className="hero-stat-number">{profile?.dogs?.length || 0}</div>
+                <div className="hero-stat-number">{user.stats.dogsOwned || 0}</div>
                 <div className="hero-stat-label">Dogs Owned</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-number">{0}</div>
+                <div className="hero-stat-number">{user.stats.totalRentals || 0}</div>
                 <div className="hero-stat-label">Total Rentals</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-number">${0}</div>
-                <div className="hero-stat-label">Total Earnings</div>
+                <div className="hero-stat-number">${user.stats.dogsOwned > 0 ? (user.stats.totalEarnings || 0) : (user.stats.totalSpent || 0)}</div>
+                <div className="hero-stat-label">{user.stats.dogsOwned > 0 ? 'Total Earnings' : 'Total Paid'}</div>
               </div>
             </div>
           </div>
@@ -561,9 +564,38 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, onClose }) => {
             flexDirection: 'column',
             justifyContent: 'center'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-              <span style={{ fontSize: '18px', marginRight: '8px' }}>📊</span>
-              <h3 style={{ margin: 0, color: '#1f2937' }}>Statistics</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ fontSize: '18px', marginRight: '8px' }}>📊</span>
+                <h3 style={{ margin: 0, color: '#1f2937' }}>Statistics</h3>
+              </div>
+              <button
+                onClick={loadUserProfile}
+                disabled={loading}
+                style={{
+                  padding: '6px 12px',
+                  backgroundColor: '#FF6B35',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '0.8rem',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.6 : 1,
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.backgroundColor = '#FF8E53';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.backgroundColor = '#FF6B35';
+                  }
+                }}
+              >
+                {loading ? '🔄' : '🔄 Sync'}
+              </button>
             </div>
             
             <div style={{ 

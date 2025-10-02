@@ -134,7 +134,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
             marginBottom: '1rem',
             letterSpacing: '-0.025em',
             color: '#1f2937',
-            background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 50%, #2DD4BF 100%)',
+            background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text'

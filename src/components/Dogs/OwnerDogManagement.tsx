@@ -1,0 +1,741 @@
+import React, { useState, useEffect } from 'react';
+import { useFirebase } from '../../contexts/FirebaseContext';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import PhotoCarousel from '../Common/PhotoCarousel';
+import { useIsMobile } from '../../hooks/useIsMobile';
+
+interface Dog {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+  size: 'small' | 'medium' | 'large';
+  description: string;
+  pricePerDay: number;
+  location: string;
+  imageUrl?: string;
+  imageUrls?: string[];
+  temperament?: string[];
+  goodWith?: string[];
+  activityLevel?: string;
+  specialNotes?: string;
+  isAvailable: boolean;
+  status?: 'available' | 'requested' | 'rented';
+  ownerId: string;
+  ownerName: string;
+  createdAt: any;
+  updatedAt: any;
+}
+
+interface OwnerDogManagementProps {
+  currentUserId: string;
+  onEditDog: (dog: Dog) => void;
+  onAddNewDog: () => void;
+  onBack: () => void;
+}
+
+const OwnerDogManagement: React.FC<OwnerDogManagementProps> = ({
+  currentUserId,
+  onEditDog,
+  onAddNewDog,
+  onBack
+}) => {
+  const isMobile = useIsMobile();
+  const [dogs, setDogs] = useState<Dog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { db } = useFirebase();
+
+  useEffect(() => {
+    loadOwnerDogs();
+  }, [currentUserId]);
+
+  const loadOwnerDogs = async () => {
+    try {
+      setLoading(true);
+      const dogsQuery = query(
+        collection(db, 'dogs'),
+        where('ownerId', '==', currentUserId),
+        orderBy('createdAt', 'desc')
+      );
+
+      const querySnapshot = await getDocs(dogsQuery);
+      const dogsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Dog[];
+
+      setDogs(dogsData);
+    } catch (error) {
+      console.error('Error loading owner dogs:', error);
+      setError('Failed to load your dogs');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusColor = (dog: Dog) => {
+    if (!dog.isAvailable || dog.status === 'rented') return '#ef4444'; // Red
+    if (dog.status === 'requested') return '#f59e0b'; // Orange
+    return '#22c55e'; // Green
+  };
+
+  const getStatusText = (dog: Dog) => {
+    if (!dog.isAvailable) return 'Unavailable';
+    if (dog.status === 'rented') return 'Currently Rented';
+    if (dog.status === 'requested') return 'Pending Request';
+    return 'Available';
+  };
+
+  const getStatusIcon = (dog: Dog) => {
+    if (!dog.isAvailable || dog.status === 'rented') return '🔒';
+    if (dog.status === 'requested') return '⏳';
+    return '✅';
+  };
+
+  const getSizeLabel = (size: string) => {
+    switch (size) {
+      case 'small': return 'Small (under 20 lbs)';
+      case 'medium': return 'Medium (20-50 lbs)';
+      case 'large': return 'Large (over 50 lbs)';
+      default: return size;
+    }
+  };
+
+  const getActivityLevelEmoji = (level?: string) => {
+    switch (level) {
+      case 'Low': return '😴';
+      case 'Medium': return '🚶';
+      case 'High': return '🏃';
+      default: return '🐕';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', background: 'white' }}>
+        {/* Header */}
+        <header className="modern-header fade-in">
+          <div className="header-content">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+              <button
+                onClick={onBack}
+                style={{
+                  padding: isMobile ? '10px 16px' : '12px 24px',
+                  backgroundColor: '#FF6B35',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontSize: isMobile ? '0.875rem' : '1rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)',
+                  minHeight: isMobile ? '44px' : 'auto',
+                  minWidth: isMobile ? '44px' : 'auto'
+                }}
+              >
+                {isMobile ? '←' : '← Back to Dashboard'}
+              </button>
+              <a href="#" className="logo">
+                DogRental
+              </a>
+            </div>
+          </div>
+        </header>
+
+        {/* Loading State */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 'calc(100vh - 80px)',
+          background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 142, 83, 0.05) 100%)'
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🐕</div>
+            <h2 style={{ color: '#2d3748', marginBottom: '10px' }}>Loading Your Dogs...</h2>
+            <p style={{ color: '#6b7280' }}>Please wait while we fetch your furry friends</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'white' }}>
+      {/* Header */}
+      <header className="modern-header fade-in">
+        <div className="header-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <button
+              onClick={onBack}
+              style={{
+                padding: isMobile ? '10px 16px' : '12px 24px',
+                backgroundColor: '#FF6B35',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: isMobile ? '0.875rem' : '1rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)',
+                minHeight: isMobile ? '44px' : 'auto',
+                minWidth: isMobile ? '44px' : 'auto'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF8E53';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF6B35';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              {isMobile ? '←' : '← Back to Dashboard'}
+            </button>
+            <a href="#" className="logo">
+              DogRental
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section style={{
+        background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 142, 83, 0.05) 100%), radial-gradient(circle at 30% 30%, rgba(255, 107, 53, 0.1) 0%, transparent 50%)',
+        padding: isMobile ? '60px 20px 40px' : '80px 40px 60px',
+        textAlign: 'center'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h1 style={{
+            fontSize: isMobile ? '2.5rem' : '3.5rem',
+            fontWeight: '800',
+            lineHeight: '1.1',
+            marginBottom: '1rem',
+            letterSpacing: '-0.025em',
+            color: '#1f2937',
+            background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
+            Manage Your Dogs
+          </h1>
+          <p style={{
+            fontSize: isMobile ? '1.1rem' : '1.25rem',
+            color: '#6b7280',
+            marginBottom: '2rem',
+            maxWidth: '600px',
+            margin: '0 auto 2rem auto',
+            lineHeight: '1.6'
+          }}>
+            Edit your listings and create happy memories for dog lovers
+          </p>
+
+          {/* Stats Row */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: isMobile ? '16px' : '32px',
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
+          }}>
+            {/* Your Dogs Count */}
+            <div style={{
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.9)',
+              padding: isMobile ? '12px 16px' : '16px 24px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 107, 53, 0.2)',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              minWidth: isMobile ? '120px' : '140px'
+            }}>
+              <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#FF6B35', marginBottom: '4px' }}>
+                {dogs.length}
+              </div>
+              <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
+                Your Dogs
+              </div>
+            </div>
+
+            {/* Available Count */}
+            <div style={{
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.9)',
+              padding: isMobile ? '12px 16px' : '16px 24px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 107, 53, 0.2)',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              minWidth: isMobile ? '120px' : '140px'
+            }}>
+              <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#10b981', marginBottom: '4px' }}>
+                {dogs.filter(d => d.isAvailable && d.status !== 'rented').length}
+              </div>
+              <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
+                Available
+              </div>
+            </div>
+
+            {/* Currently Rented */}
+            <div style={{
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.9)',
+              padding: isMobile ? '12px 16px' : '16px 24px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 107, 53, 0.2)',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              minWidth: isMobile ? '120px' : '140px'
+            }}>
+              <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#dc2626', marginBottom: '4px' }}>
+                {dogs.filter(d => d.status === 'rented').length}
+              </div>
+              <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
+                Currently Rented
+              </div>
+            </div>
+
+            {/* Pending Requests - Clickable */}
+            <div
+              onClick={() => {
+                // This will be handled by the parent component
+                window.dispatchEvent(new CustomEvent('openPendingRequests'));
+              }}
+              style={{
+                textAlign: 'center',
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: isMobile ? '12px 16px' : '16px 24px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 107, 53, 0.2)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                minWidth: isMobile ? '120px' : '140px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 107, 53, 0.2)';
+                e.currentTarget.style.borderColor = '#FF6B35';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.2)';
+              }}
+            >
+              <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#f59e0b', marginBottom: '4px' }}>
+                {dogs.filter(d => d.status === 'requested').length}
+              </div>
+              <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '600' }}>
+                Pending Requests
+              </div>
+            </div>
+
+            {/* Add New Dog - Clickable */}
+            <div
+              onClick={onAddNewDog}
+              style={{
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
+                padding: isMobile ? '12px 16px' : '16px 24px',
+                borderRadius: '12px',
+                border: '1px solid #FF6B35',
+                boxShadow: '0 4px 14px 0 rgba(255, 107, 53, 0.39)',
+                minWidth: isMobile ? '120px' : '140px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 107, 53, 0.5)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #FF8E53 0%, #FF6B35 100%)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(255, 107, 53, 0.39)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)';
+              }}
+            >
+              <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: 'white', marginBottom: '4px' }}>
+                +
+              </div>
+              <div style={{ fontSize: '0.875rem', color: 'white', fontWeight: '600' }}>
+                Add New Dog
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content Section */}
+      <section style={{
+        background: '#fafaf9',
+        minHeight: '100vh',
+        padding: isMobile ? '20px' : '40px 20px'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Results Header */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '24px',
+            padding: '16px 24px',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
+            <div>
+              <h2 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#1f2937',
+                margin: 0,
+                marginBottom: '4px'
+              }}>
+                {dogs.length} Dog{dogs.length !== 1 ? 's' : ''} Listed
+              </h2>
+              <p style={{
+                fontSize: '0.875rem',
+                color: '#6b7280',
+                margin: 0
+              }}>
+                Click on any dog to edit their information, photos, and availability
+              </p>
+            </div>
+          </div>
+
+          {error && (
+            <div style={{
+              color: '#dc2626',
+              marginBottom: '20px',
+              padding: '15px',
+              backgroundColor: '#fef2f2',
+              borderRadius: '10px',
+              border: '1px solid #fecaca',
+              fontSize: '0.95rem'
+            }}>
+              ⚠️ {error}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {dogs.length === 0 && !loading && (
+            <div style={{
+              textAlign: 'center',
+              padding: '48px 24px',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '16px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🐕</div>
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#1f2937',
+                marginBottom: '8px'
+              }}>
+                No Dogs Listed Yet
+              </h3>
+              <p style={{
+                fontSize: '1rem',
+                color: '#6b7280',
+                marginBottom: '24px'
+              }}>
+                Start earning by listing your first furry friend! It only takes a few minutes to create a listing.
+              </p>
+              <button
+                onClick={onAddNewDog}
+                style={{
+                  padding: '15px 30px',
+                  backgroundColor: '#FF6B35',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF8E53';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF6B35';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                🐕 List Your First Dog
+              </button>
+            </div>
+          )}
+
+          {/* Dogs Grid */}
+          {dogs.length > 0 && (
+            <div className="mobile-search-grid">
+              {dogs.map(dog => (
+                <div
+                  key={dog.id}
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => onEditDog(dog)}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15)';
+                    e.currentTarget.style.borderColor = '#FF6B35';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  }}
+                >
+                  {/* Dog Image */}
+                  <div style={{ height: '200px', position: 'relative' }}>
+                    {dog.imageUrls && dog.imageUrls.length > 0 ? (
+                      <PhotoCarousel
+                        images={dog.imageUrls}
+                        dogName={dog.name}
+                        height="200px"
+                        showCounter={true}
+                        showDots={false}
+                      />
+                    ) : dog.imageUrl ? (
+                      <img
+                        src={dog.imageUrl}
+                        alt={dog.name}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    ) : (
+                      <div style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#f3f4f6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '4rem'
+                      }}>
+                        🐕
+                      </div>
+                    )}
+
+                    {/* Status Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: isMobile ? '8px' : '12px',
+                      right: isMobile ? '8px' : '12px',
+                      backgroundColor: getStatusColor(dog),
+                      color: 'white',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                    }}>
+                      {getStatusIcon(dog)} {getStatusText(dog)}
+                    </div>
+                  </div>
+
+                  {/* Dog Info */}
+                  <div style={{ padding: '20px' }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      marginBottom: '12px'
+                    }}>
+                      <div>
+                        <h3 style={{
+                          fontSize: '1.25rem',
+                          fontWeight: '700',
+                          color: '#1f2937',
+                          margin: 0,
+                          marginBottom: '4px'
+                        }}>
+                          {dog.name}
+                        </h3>
+                        <p style={{
+                          fontSize: '0.875rem',
+                          color: '#6b7280',
+                          margin: 0
+                        }}>
+                          {dog.breed} • {dog.age} year{dog.age !== 1 ? 's' : ''} old
+                        </p>
+                      </div>
+                      <div style={{
+                        textAlign: 'right'
+                      }}>
+                        <div style={{
+                          fontSize: '1.5rem',
+                          fontWeight: '700',
+                          color: '#059669'
+                        }}>
+                          ${dog.pricePerDay}
+                        </div>
+                        <div style={{
+                          fontSize: '0.75rem',
+                          color: '#6b7280'
+                        }}>
+                          per day
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Dog Details */}
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: isMobile ? '6px' : '8px',
+                      marginBottom: '12px',
+                      justifyContent: isMobile ? 'center' : 'flex-start'
+                    }}>
+                      <span style={{
+                        padding: isMobile ? '3px 6px' : '4px 8px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '12px',
+                        fontSize: isMobile ? '0.7rem' : '0.75rem',
+                        color: '#374151',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        📏 {getSizeLabel(dog.size)}
+                      </span>
+                      {dog.activityLevel && (
+                        <span style={{
+                          padding: isMobile ? '3px 6px' : '4px 8px',
+                          backgroundColor: '#f3f4f6',
+                          borderRadius: '12px',
+                          fontSize: isMobile ? '0.7rem' : '0.75rem',
+                          color: '#374151',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {getActivityLevelEmoji(dog.activityLevel)} {dog.activityLevel} Energy
+                        </span>
+                      )}
+                      <span style={{
+                        padding: isMobile ? '3px 6px' : '4px 8px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '12px',
+                        fontSize: isMobile ? '0.7rem' : '0.75rem',
+                        color: '#374151',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        📍 {dog.location}
+                      </span>
+                    </div>
+
+                    {/* Temperament Tags */}
+                    {dog.temperament && dog.temperament.length > 0 && (
+                      <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: isMobile ? '4px' : '6px',
+                        marginBottom: '12px',
+                        justifyContent: isMobile ? 'center' : 'flex-start'
+                      }}>
+                        {dog.temperament.slice(0, 3).map(trait => (
+                          <span
+                            key={trait}
+                            style={{
+                              padding: isMobile ? '2px 4px' : '2px 6px',
+                              backgroundColor: '#FF6B35',
+                              color: 'white',
+                              fontSize: isMobile ? '0.6rem' : '0.625rem',
+                              fontWeight: '500',
+                              borderRadius: '8px',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {trait}
+                          </span>
+                        ))}
+                        {dog.temperament.length > 3 && (
+                          <span style={{
+                            padding: '2px 6px',
+                            backgroundColor: '#e5e7eb',
+                            color: '#6b7280',
+                            fontSize: '0.625rem',
+                            borderRadius: '8px'
+                          }}>
+                            +{dog.temperament.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Description */}
+                    <p style={{
+                      fontSize: '0.875rem',
+                      color: '#6b7280',
+                      lineHeight: '1.5',
+                      margin: 0,
+                      marginBottom: '16px',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}>
+                      {dog.description}
+                    </p>
+
+                    {/* Edit Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditDog(dog);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '12px 20px',
+                        backgroundColor: '#FF6B35',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '10px',
+                        fontSize: '0.875rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = '#FF8E53';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = '#FF6B35';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      ✏️ Edit {dog.name}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default OwnerDogManagement;

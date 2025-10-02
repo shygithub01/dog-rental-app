@@ -17,8 +17,8 @@
     --accent-lime: #84CC16;
     
     /* Modern gradients */
-    --warm-gradient: linear-gradient(135deg, #FF6B35 0%, #FF8E53 50%, #2DD4BF 100%);
-    --cool-gradient: linear-gradient(135deg, #2DD4BF 0%, #67E8F9 50%, #84CC16 100%);
+    --warm-gradient: linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%);
+    --cool-gradient: linear-gradient(135deg, #FF8E53 0%, #FF6B35 100%);
     --sunset-gradient: linear-gradient(135deg, #FF6B35 0%, #FDE047 50%, #84CC16 100%);
     
     /* Modern glass effects */
@@ -138,7 +138,7 @@
   
   /* Primary Modern Button */
   .btn-glass-primary {
-    @apply relative overflow-hidden w-full text-white;
+  /*  @apply relative overflow-hidden w-full text-white;*/
     background: var(--warm-gradient) !important;
     border: 2px solid transparent !important;
     font-weight: 700 !important;

@@ -543,19 +543,6 @@ function AppContent() {
       />
     )
   }
-  
-  if (showOwnerDogManagement) {
-      console.log("Current user UID:", user.uid);
-  console.log("Looking for dogs with ownerId:", user.uid);
-    return (
-      <OwnerDogManagement
-        currentUserId={user.uid}
-        onEditDog={handleEditDog}
-        onAddNewDog={() => setShowAddDog(true)}
-        onBack={() => setShowOwnerDogManagement(false)}
-      />
-    )
-  }
 
   if (showApprovalPanel) {
   return (
@@ -1276,10 +1263,10 @@ function AppContent() {
                       return (
                         <>
                           <button
-                            onClick={() => setShowOwnerDogManagement(true)}
+                            onClick={() => setShowAddDog(true)}
                             className="btn-glass-primary w-full mb-4"
                           >
-                            Manage Dogs
+                            Add New Dog
                           </button>
                           <button
                             onClick={() => setShowApprovalPanel(true)}
@@ -1350,7 +1337,18 @@ function AppContent() {
                 />
               );
             } else if (effectiveUserRole === 'owner') {
-              return null;
+              return (
+                <div className="fade-in">
+                  <OwnerDashboard
+                    dogs={dogs}
+                    onAddDog={() => setShowAddDog(true)}
+                    onEditDog={handleEditDog}
+                    onDeleteDog={handleDeleteDog}
+                    onViewRequests={() => setShowApprovalPanel(true)}
+                    user={userProfile}
+                  />
+                </div>
+              );
             } else if (effectiveUserRole === 'renter') {
               return (
                 <div className="fade-in">
