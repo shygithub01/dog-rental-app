@@ -267,6 +267,19 @@ export class UserService {
       const reviews: ReviewSummary[] = [];
 
       // Calculate updated stats based on actual data
+      // Debug: Log the data to see what's happening
+      console.log('DEBUG - Renter data:', {
+        renterRequests: renterRequests.length,
+        renterRentals: renterRentals.length,
+        renterRequestsData: renterRequests.map(r => ({ id: r.id, cost: r.totalCost, status: r.status })),
+        renterRentalsData: renterRentals.map(r => ({ id: r.id, cost: r.totalCost, status: r.status }))
+      });
+
+      // For now, let's use ONLY completed rentals to avoid double counting
+      // This is a more reliable approach than trying to deduplicate
+      const uniqueRenterTransactions = renterRentals; // Only use completed rentals
+      const uniqueOwnerTransactions = ownerRentals; // Only use completed rentals
+      
       const totalRentalsAsRenter = uniqueRenterTransactions.length;
       const totalRentalsAsOwner = uniqueOwnerTransactions.length;
       
@@ -275,21 +288,9 @@ export class UserService {
       const completedRentalsAsOwner = uniqueOwnerTransactions
         .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved').length;
       
-      // Combine and deduplicate owner rentals by ID to avoid double counting
-      const allOwnerTransactions = [...ownerRequests, ...ownerRentals];
-      const uniqueOwnerTransactions = allOwnerTransactions.filter((rental, index, self) => 
-        index === self.findIndex(r => r.id === rental.id)
-      );
-      
       const totalEarnings = uniqueOwnerTransactions
         .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved')
         .reduce((sum, r) => sum + r.totalCost, 0);
-      
-      // Combine and deduplicate rentals by ID to avoid double counting
-      const allRenterTransactions = [...renterRequests, ...renterRentals];
-      const uniqueRenterTransactions = allRenterTransactions.filter((rental, index, self) => 
-        index === self.findIndex(r => r.id === rental.id)
-      );
       
       const totalSpent = uniqueRenterTransactions
         .filter(r => r.status === 'completed' || r.status === 'active' || r.status === 'approved')
