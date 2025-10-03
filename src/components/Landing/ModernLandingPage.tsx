@@ -187,18 +187,13 @@ const ModernLandingPage: React.FC<ModernLandingPageProps> = ({ onGetStarted }) =
           position: 'relative'
         }}>
           <img
-            src="/images/stanny7.jpg"
-            alt="Stanny 7 - Beautiful companion dog available for rent"
+            src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=600&fit=crop&auto=format&q=80"
+            alt="Beautiful Golden Retriever - Perfect companion for walks and adventures"
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center'
-            }}
-            onError={(e) => {
-              // Fallback to stock image if Stanny 7 doesn't load
-              e.currentTarget.src = 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2124&q=80';
-              e.currentTarget.alt = 'Happy Golden Retriever';
             }}
           />
           
