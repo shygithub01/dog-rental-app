@@ -8,6 +8,26 @@ interface ModernLandingPageProps {
 const ModernLandingPage: React.FC<ModernLandingPageProps> = ({ onGetStarted }) => {
   const isMobile = useIsMobile();
 
+  // Add CSS animation for scrolling
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
       {/* Navigation */}
@@ -333,6 +353,171 @@ const ModernLandingPage: React.FC<ModernLandingPageProps> = ({ onGetStarted }) =
                 Spend quality time with your furry friend. Leave reviews to help the community grow.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Dogs Carousel */}
+      <section style={{
+        padding: isMobile ? '60px 0' : '80px 0',
+        background: '#fafaf9',
+        overflow: 'hidden'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          <h2 style={{
+            fontSize: isMobile ? '2rem' : '2.5rem',
+            fontWeight: '800',
+            color: '#1f2937',
+            marginBottom: '16px',
+            textAlign: 'center'
+          }}>
+            Meet Our Amazing Dogs
+          </h2>
+          <p style={{
+            fontSize: isMobile ? '1rem' : '1.2rem',
+            color: '#6b7280',
+            marginBottom: '60px',
+            textAlign: 'center',
+            maxWidth: '600px',
+            margin: '0 auto 60px auto'
+          }}>
+            Discover loving companions ready for walks, adventures, and quality time
+          </p>
+        </div>
+
+        {/* Auto-scrolling Dogs Carousel */}
+        <div style={{
+          position: 'relative',
+          height: '280px',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            display: 'flex',
+            animation: 'scroll 30s linear infinite',
+            gap: '20px'
+          }}>
+            {/* Dog Cards */}
+            {[
+              {
+                name: 'Buddy',
+                breed: 'Golden Retriever',
+                image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$25'
+              },
+              {
+                name: 'Luna',
+                breed: 'Labrador',
+                image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$30'
+              },
+              {
+                name: 'Max',
+                breed: 'German Shepherd',
+                image: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$35'
+              },
+              {
+                name: 'Bella',
+                breed: 'Border Collie',
+                image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$28'
+              },
+              {
+                name: 'Charlie',
+                breed: 'Beagle',
+                image: 'https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$22'
+              },
+              {
+                name: 'Daisy',
+                breed: 'Poodle',
+                image: 'https://images.unsplash.com/photo-1616190264687-b7ebf7aa2eb4?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$32'
+              }
+            ].concat([
+              // Duplicate for seamless loop
+              {
+                name: 'Buddy',
+                breed: 'Golden Retriever',
+                image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$25'
+              },
+              {
+                name: 'Luna',
+                breed: 'Labrador',
+                image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$30'
+              },
+              {
+                name: 'Max',
+                breed: 'German Shepherd',
+                image: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=300&h=200&fit=crop&auto=format&q=80',
+                price: '$35'
+              }
+            ]).map((dog, index) => (
+              <div
+                key={index}
+                style={{
+                  minWidth: '280px',
+                  height: '240px',
+                  backgroundColor: 'white',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                  transition: 'transform 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <div style={{ height: '160px', overflow: 'hidden' }}>
+                  <img
+                    src={dog.image}
+                    alt={`${dog.name} - ${dog.breed}`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '16px' }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px'
+                  }}>
+                    <h3 style={{
+                      fontSize: '1.1rem',
+                      fontWeight: '700',
+                      color: '#1f2937',
+                      margin: 0
+                    }}>
+                      {dog.name}
+                    </h3>
+                    <div style={{
+                      fontSize: '1.1rem',
+                      fontWeight: '700',
+                      color: '#FF6B35'
+                    }}>
+                      {dog.price}/day
+                    </div>
+                  </div>
+                  <p style={{
+                    fontSize: '0.9rem',
+                    color: '#6b7280',
+                    margin: 0
+                  }}>
+                    {dog.breed}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
